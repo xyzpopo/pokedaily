@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포켓몬 데일리 도감</title>
+<link href="https://fonts.googleapis.com/css2?family=Galmuri11&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --surface: #13132b;
+    --card: #1a1a35;
+    --accent: #ffcb05;
+    --accent2: #3b4cca;
+    --red: #ff0000;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --border: rgba(255,203,5,0.15);
+    --glow: rgba(255,203,5,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG Stars */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(2px 2px at 45% 10%, rgba(255,203,5,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 65%, rgba(59,76,202,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 2rem 2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .pokeball-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(180deg, var(--red) 50%, white 50%);
+    border-radius: 50%;
+    border: 3px solid #222;
+    position: relative;
+    flex-shrink: 0;
+    animation: spin-slow 8s linear infinite;
+  }
+  .pokeball-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; height: 10px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #222;
+    z-index: 1;
+  }
+  .pokeball-icon::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 1.5px);
+    left: 0; right: 0;
+    height: 3px;
+    background: #222;
+  }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  .logo h1 {
+    font-family: 'Galmuri11', monospace;
+    font-size: 1.4rem;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--glow);
+    letter-spacing: 0.05em;
+  }
+
+  .date-badge {
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  /* TABS */
+  .tabs {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 0;
+    padding: 1.5rem 2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--glow);
+  }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  /* MAIN */
+  main {
+    position: relative;
+    z-index: 5;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* LOADING */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 1.5rem;
+  }
+
+  .pokeball-loader {
+    width: 60px; height: 60px;
+    background: linear-gradient(180deg, var(--red) 50%, white 50%);
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    position: relative;
+    animation: pokeball-spin 1s ease-in-out infinite;
+    box-shadow: 0 0 30px var(--glow);
+  }
+  .pokeball-loader::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+  }
+  .pokeball-loader::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 2px); left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+  }
+  @keyframes pokeball-spin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  .loading p {
+    font-family: 'Galmuri11', monospace;
+    color: var(--muted);
+    font-size: 0.9rem;
+    animation: blink 1.2s step-end infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+  /* POKEMON CARDS */
+  .pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .pokemon-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    animation: slideUp 0.5s ease both;
+  }
+  .pokemon-card:nth-child(2) { animation-delay: 0.1s; }
+  .pokemon-card:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pokemon-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px var(--card-glow, rgba(255,203,5,0.2));
+    border-color: var(--card-color, var(--accent));
+  }
+
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background: radial-gradient(circle at 70% 30%, var(--card-color, var(--accent)), transparent 60%);
+    pointer-events: none;
+  }
+
+  .card-number {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-image-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .card-image-wrap::before {
+    content: '';
+    position: absolute;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, var(--card-color, rgba(255,203,5,0.3)), transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    filter: blur(20px);
+  }
+
+  .card-image {
+    width: 100px; height: 100px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 5px 20px var(--card-color, rgba(255,203,5,0.4)));
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+  .pokemon-card:hover .card-image { transform: scale(1.1) translateY(-5px); }
+
+  .card-name {
+    font-family: 'Galmuri11', monospace;
+    font-size: 1.2rem;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .type-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .type-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: white;
+  }
+
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .stat-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+  }
+
+  .stat-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--card-color, var(--accent));
+    transition: width 1s ease;
+  }
+
+  .stat-value {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.7rem;
+    color: var(--text);
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-tag {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(255,203,5,0.1);
+    border: 1px solid rgba(255,203,5,0.3);
+    padding: 0.2rem 0.75rem;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  /* QUIZ PAGE */
+  .quiz-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .dot.done { background: #4ade80; border-color: #4ade80; }
+  .dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--glow); }
+  .dot.wrong { background: var(--red); border-color: var(--red); }
+
+  .score-display {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .quiz-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .quiz-question-num {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .quiz-image-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .quiz-pokemon-img {
+    width: 120px; height: 120px;
+    image-rendering: pixelated;
+    transition: filter 0.5s ease;
+  }
+  .quiz-pokemon-img.hidden { filter: brightness(0) drop-shadow(0 0 20px var(--accent)); }
+
+  .quiz-question {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .quiz-hint {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .option-btn {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: rgba(255,203,5,0.08);
+    border-color: rgba(255,203,5,0.4);
+    color: var(--accent);
+    transform: scale(1.02);
+  }
+  .option-btn.correct {
+    background: rgba(74,222,128,0.15);
+    border-color: #4ade80;
+    color: #4ade80;
+  }
+  .option-btn.wrong {
+    background: rgba(255,0,0,0.1);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .option-btn:disabled { cursor: default; }
+
+  .quiz-feedback {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .quiz-feedback.correct-fb { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
+  .quiz-feedback.wrong-fb { background: rgba(255,0,0,0.07); border: 1px solid rgba(255,0,0,0.2); color: #ff6b6b; }
+
+  .next-btn {
+    margin-top: 1rem;
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.85rem;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+  .next-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--glow); }
+  .next-btn.show { display: inline-block; animation: fadeIn 0.3s ease; }
+
+  /* RESULT */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .result-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: bounce 0.6s ease;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .result-score {
+    font-family: 'Galmuri11', monospace;
+    font-size: 3rem;
+    color: var(--accent);
+    text-shadow: 0 0 30px var(--glow);
+    margin-bottom: 0.5rem;
+  }
+
+  .result-msg {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  .result-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border-radius: 10px;
+    font-size: 0.82rem;
+  }
+
+  .breakdown-name { color: var(--text); font-weight: 700; }
+  .breakdown-result { font-family: 'Galmuri11', monospace; }
+  .breakdown-result.ok { color: #4ade80; }
+  .breakdown-result.bad { color: var(--red); }
+
+  .restart-btn {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.85rem;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    padding: 0.85rem 2.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+  .restart-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--glow); }
+
+  /* TYPE COLORS */
+  .type-normal    { background: #A8A878; }
+  .type-fire      { background: #F08030; }
+  .type-water     { background: #6890F0; }
+  .type-electric  { background: #F8D030; color: #333 !important; }
+  .type-grass     { background: #78C850; }
+  .type-ice       { background: #98D8D8; color: #333 !important; }
+  .type-fighting  { background: #C03028; }
+  .type-poison    { background: #A040A0; }
+  .type-ground    { background: #E0C068; color: #333 !important; }
+  .type-flying    { background: #A890F0; }
+  .type-psychic   { background: #F85888; }
+  .type-bug       { background: #A8B820; }
+  .type-rock      { background: #B8A038; }
+  .type-ghost     { background: #705898; }
+  .type-dragon    { background: #7038F8; }
+  .type-dark      { background: #705848; }
+  .type-steel     { background: #B8B8D0; color: #333 !important; }
+  .type-fairy     { background: #EE99AC; color: #333 !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 600px) {
+    header { padding: 1.25rem 1rem 1rem; }
+    .logo h1 { font-size: 1.1rem; }
+    main { padding: 1rem; }
+    .pokemon-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    .quiz-card { padding: 1.5rem; }
+    .tabs { padding: 1rem 1rem 0; }
+    .tab-btn { padding: 0.5rem 1rem; font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="pokeball-icon"></div>
+    <h1>포켓몬 데일리 도감</h1>
+  </div>
+  <div class="date-badge" id="dateDisplay"></div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('dex')">📖 오늘의 도감</button>
+  <button class="tab-btn" onclick="showTab('quiz')">⚡ 퀴즈</button>
+</div>
+
+<main>
+  <!-- DEX PAGE -->
+  <div id="dex-page" class="page active">
+    <div id="dex-loading" class="loading">
+      <div class="pokeball-loader"></div>
+      <p>포켓몬을 불러오는 중...</p>
+    </div>
+    <div id="dex-content" style="display:none">
+      <div class="section-header">
+        <span class="section-tag">TODAY</span>
+        <span class="section-title">오늘의 포켓몬 3마리</span>
+      </div>
+      <div class="pokemon-grid" id="pokemonGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ PAGE -->
+  <div id="quiz-page" class="page">
+    <div id="quiz-loading" class="loading" style="display:none">
+      <div class="pokeball-loader"></div>
+      <p>퀴즈 준비 중...</p>
+    </div>
+    <div id="quiz-wait" class="loading">
+      <div style="text-align:center">
+        <div style="font-size:3rem;margin-bottom:1rem">🎯</div>
+        <h2 style="font-family:'Galmuri11',monospace;color:var(--accent);margin-bottom:0.75rem;font-size:1.1rem">먼저 도감을 확인하세요!</h2>
+        <p style="color:var(--muted);font-size:0.85rem;line-height:1.7">오늘의 포켓몬 3마리를 확인한 뒤<br>퀴즈에 도전할 수 있어요.</p>
+        <button onclick="showTab('dex')" style="margin-top:1.5rem;font-family:'Galmuri11',monospace;font-size:0.8rem;color:var(--bg);background:var(--accent);border:none;padding:0.7rem 1.8rem;border-radius:30px;cursor:pointer;box-shadow:0 4px 20px var(--glow)">도감 보기</button>
+      </div>
+    </div>
+    <div id="quiz-content" style="display:none">
+      <div class="quiz-container">
+        <div class="quiz-progress">
+          <div class="progress-dots" id="progressDots"></div>
+          <div class="score-display" id="scoreDisplay">0 / 0</div>
+        </div>
+        <div id="quizArea"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const TYPE_KO = {
+  normal:'노말', fire:'불꽃', water:'물', electric:'전기', grass:'풀', ice:'얼음',
+  fighting:'격투', poison:'독', ground:'땅', flying:'비행', psychic:'에스퍼', bug:'벌레',
+  rock:'바위', ghost:'고스트', dragon:'드래곤', dark:'악', steel:'강철', fairy:'페어리'
+};
+
+const STAT_KO = {
+  hp:'HP', attack:'공격', defense:'방어',
+  'special-attack':'특공', 'special-defense':'특방', speed:'스피드'
+};
+
+const TYPE_COLOR = {
+  normal:'#A8A878', fire:'#F08030', water:'#6890F0', electric:'#F8D030',
+  grass:'#78C850', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0',
+  ground:'#E0C068', flying:'#A890F0', psychic:'#F85888', bug:'#A8B820',
+  rock:'#B8A038', ghost:'#705898', dragon:'#7038F8', dark:'#705848',
+  steel:'#B8B8D0', fairy:'#EE99AC'
+};
+
+// Seeded RNG for daily selection
+function seededRand(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function getDailySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+}
+
+// 9세대까지 유효한 포켓몬 번호: 1~1025 (일부 특수 ID는 fallback 처리)
+const MAX_POKEMON_ID = 1025;
+
+function pickDailyIds() {
+  const rand = seededRand(getDailySeed());
+  const ids = new Set();
+  while (ids.size < 3) ids.add(Math.floor(rand() * MAX_POKEMON_ID) + 1);
+  return [...ids];
+}
+
+// Fetch with Korean name (error-safe: fallback to Gen1~8 if ID fails)
+async function fetchPokemon(id, _depth = 0) {
+  if (_depth > 5) return null; // 무한 루프 방지
+  let poke, spec;
+  try {
+    [poke, spec] = await Promise.all([
+      fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r=>{ if(!r.ok) throw new Error(); return r.json(); }),
+      fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>{ if(!r.ok) throw new Error(); return r.json(); })
+    ]);
+  } catch(e) {
+    // 특수 폼 등 일부 ID가 species API 없음 → 1~898 에서 fallback
+    console.warn(`No data for #${id}, trying fallback`);
+    const fallback = Math.floor(Math.random() * 898) + 1;
+    return fetchPokemon(fallback, _depth + 1);
+  }
+
+  const nameKo = spec.names.find(n=>n.language.name==='ko')?.name
+               || spec.names.find(n=>n.language.name==='ja-Hrkt')?.name
+               || poke.name;
+
+  const desc = spec.flavor_text_entries.find(e=>e.language.name==='ko')?.flavor_text
+             || spec.flavor_text_entries.find(e=>e.language.name==='en')?.flavor_text
+             || '';
+
+  return {
+    id, name: nameKo,
+    nameEn: poke.name,
+    image: poke.sprites.other['official-artwork']?.front_default || poke.sprites.front_default,
+    imagePixel: poke.sprites.front_default,
+    types: poke.types.map(t=>t.type.name),
+    stats: poke.stats.slice(0,6).map(s=>({ name:s.stat.name, value:s.base_stat })),
+    desc: desc.replace(/\f/g,' ').replace(/\n/g,' '),
+    category: spec.genera.find(g=>g.language.name==='ko')?.genus || '',
+    height: poke.height / 10,
+    weight: poke.weight / 10,
+    genus: spec.genera.find(g=>g.language.name==='ko')?.genus || '',
+  };
+}
+
+// STATE
+let pokemonData = [];
+let dexViewed = false;
+let quizQuestions = [];
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = [];
+
+// Date
+const d = new Date();
+document.getElementById('dateDisplay').textContent =
+  `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+
+// INIT
+async function init() {
+  const ids = pickDailyIds();
+  const results = await Promise.all(ids.map(fetchPokemon));
+  pokemonData = results.filter(Boolean);
+  renderDex();
+}
+
+function renderDex() {
+  document.getElementById('dex-loading').style.display = 'none';
+  document.getElementById('dex-content').style.display = 'block';
+  const grid = document.getElementById('pokemonGrid');
+  grid.innerHTML = '';
+  pokemonData.forEach((p, i) => {
+    const mainType = p.types[0];
+    const color = TYPE_COLOR[mainType] || '#ffcb05';
+    const card = document.createElement('div');
+    card.className = 'pokemon-card';
+    card.style.setProperty('--card-color', color);
+    card.style.setProperty('--card-glow', color+'44');
+    card.innerHTML = `
+      <div class="card-bg"></div>
+      <div class="card-number">No.${String(p.id).padStart(3,'0')} · ${p.genus}</div>
+      <div class="card-image-wrap">
+        <img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/>
+      </div>
+      <div class="card-name">${p.name}</div>
+      <div class="type-badges">
+        ${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}
+      </div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="card-stats">
+        ${p.stats.map(s=>`
+          <div class="stat-row">
+            <span class="stat-label">${STAT_KO[s.name]||s.name}</span>
+            <div class="stat-bar-wrap"><div class="stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div></div>
+            <span class="stat-value">${s.value}</span>
+          </div>`).join('')}
+      </div>
+      <div style="margin-top:0.75rem;display:flex;gap:1rem;justify-content:center">
+        <span style="font-size:0.72rem;color:var(--muted)">키 ${p.height}m</span>
+        <span style="font-size:0.72rem;color:var(--muted)">무게 ${p.weight}kg</span>
+      </div>
+    `;
+    grid.appendChild(card);
+    setTimeout(()=>{
+      card.querySelectorAll('.stat-bar').forEach(bar=>{
+        bar.style.width = bar.dataset.val + '%';
+      });
+    }, 600 + i * 150);
+  });
+  dexViewed = true;
+}
+
+// QUIZ SETUP
+function buildQuiz() {
+  quizQuestions = [];
+  quizIdx = 0;
+  quizScore = 0;
+  quizAnswered = [];
+
+  // 3 types of questions per pokemon: silhouette name, type, stat comparison
+  const allNames = pokemonData.map(p=>p.name);
+
+  pokemonData.forEach((p, i) => {
+    const others = pokemonData.filter((_,j)=>j!==i);
+
+    // Q1: 실루엣 맞추기
+    const wrongNames = others.map(o=>o.name);
+    const extra = ['이상해씨','리자몽','거북왕','피카츄','파이리','꼬부기','잠만보','뮤츠','마자용','한카리아스']
+      .filter(n=>!allNames.includes(n));
+    const nameOpts = shuffle([p.name, ...shuffle([...wrongNames,...extra]).slice(0,3-wrongNames.length+wrongNames.length)].slice(0,4));
+    // simpler: use other 2 + 2 extras
+    const pool = shuffle([...pokemonData.filter((_,j)=>j!==i).map(o=>o.name), ...extra]);
+    const nameOptions = shuffle([p.name, pool[0], pool[1], pool[2]]);
+
+    quizQuestions.push({
+      type: 'silhouette',
+      pokemon: p,
+      question: `이 포켓몬의 이름은?`,
+      hint: p.desc.slice(0,60)+'…',
+      answer: p.name,
+      options: nameOptions
+    });
+
+    // Q2: 타입 맞추기
+    const allTypes = Object.keys(TYPE_KO);
+    const wrongTypes = shuffle(allTypes.filter(t=>!p.types.includes(t))).slice(0,3);
+    const typeOptions = shuffle([TYPE_KO[p.types[0]], ...wrongTypes.map(t=>TYPE_KO[t])]);
+    quizQuestions.push({
+      type: 'type',
+      pokemon: p,
+      question: `${p.name}의 주요 타입은?`,
+      hint: `힌트: ${p.category} 포켓몬이에요.`,
+      answer: TYPE_KO[p.types[0]],
+      options: typeOptions
+    });
+  });
+
+  // shuffle all
+  quizQuestions = shuffle(quizQuestions).slice(0, 6);
+  renderQuiz();
+}
+
+function renderQuiz() {
+  document.getElementById('quiz-wait').style.display = 'none';
+  document.getElementById('quiz-content').style.display = 'block';
+  renderProgressDots();
+  renderQuestion();
+}
+
+function renderProgressDots() {
+  const wrap = document.getElementById('progressDots');
+  wrap.innerHTML = quizQuestions.map((_, i) => {
+    let cls = 'dot';
+    if (i < quizIdx) cls += quizAnswered[i] ? ' done' : ' wrong';
+    else if (i === quizIdx) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  document.getElementById('scoreDisplay').textContent = `${quizScore} / ${quizIdx}`;
+}
+
+function renderQuestion() {
+  const area = document.getElementById('quizArea');
+  if (quizIdx >= quizQuestions.length) { renderResult(); return; }
+  const q = quizQuestions[quizIdx];
+  const isHidden = q.type === 'silhouette';
+
+  area.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-question-num">Q${quizIdx+1} / ${quizQuestions.length}</div>
+      <div class="quiz-image-wrap">
+        <img id="quizImg" class="quiz-pokemon-img${isHidden?' hidden':''}" src="${q.pokemon.image}" alt="?"/>
+      </div>
+      <div class="quiz-question">${q.question}</div>
+      <div class="quiz-hint">${q.hint}</div>
+      <div class="options-grid">
+        ${q.options.map(opt=>`
+          <button class="option-btn" onclick="answerQuiz('${opt.replace(/'/g,"\\'")}', this)">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${quizIdx < quizQuestions.length-1 ? '다음 문제 →' : '결과 보기 →'}
+      </button>
+    </div>
+  `;
+  renderProgressDots();
+}
+
+function answerQuiz(chosen, btn) {
+  const q = quizQuestions[quizIdx];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b=>b.disabled=true);
+
+  const correct = chosen === q.answer;
+  const feedback = document.getElementById('quizFeedback');
+  const nextBtn = document.getElementById('nextBtn');
+  const img = document.getElementById('quizImg');
+
+  if (img) img.classList.remove('hidden');
+
+  if (correct) {
+    btn.classList.add('correct');
+    quizScore++;
+    feedback.className = 'quiz-feedback show correct-fb';
+    feedback.textContent = `✅ 정답! ${q.pokemon.name}이(가) 맞아요.`;
+    quizAnswered.push(true);
+  } else {
+    btn.classList.add('wrong');
+    allBtns.forEach(b=>{ if(b.textContent.trim()===q.answer) b.classList.add('correct'); });
+    feedback.className = 'quiz-feedback show wrong-fb';
+    feedback.textContent = `❌ 오답! 정답은 "${q.answer}"이에요.`;
+    quizAnswered.push(false);
+  }
+
+  nextBtn.classList.add('show');
+  renderProgressDots();
+}
+
+function nextQuestion() {
+  quizIdx++;
+  renderQuestion();
+}
+
+function renderResult() {
+  const area = document.getElementById('quizArea');
+  const pct = Math.round(quizScore/quizQuestions.length*100);
+  const emoji = pct===100?'🏆':pct>=70?'⭐':pct>=40?'💪':'😅';
+  const msg = pct===100?'완벽해요! 포켓몬 마스터네요!':pct>=70?'훌륭해요! 오늘도 열공!':pct>=40?'나쁘지 않아요. 다시 도전!':'오늘의 포켓몬을 다시 공부해봐요!';
+
+  area.innerHTML = `
+    <div class="result-card">
+      <span class="result-emoji">${emoji}</span>
+      <div class="result-score">${quizScore}/${quizQuestions.length}</div>
+      <div class="result-msg">${msg}</div>
+      <div class="result-breakdown">
+        ${quizQuestions.map((q,i)=>`
+          <div class="breakdown-row">
+            <span class="breakdown-name">${q.pokemon.name} (${q.type==='silhouette'?'이름':'타입'})</span>
+            <span class="breakdown-result ${quizAnswered[i]?'ok':'bad'}">${quizAnswered[i]?'정답✓':'오답✗'}</span>
+          </div>
+        `).join('')}
+      </div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 다시 풀기</button>
+    </div>
+  `;
+  renderProgressDots();
+}
+
+function restartQuiz() {
+  buildQuiz();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// TABS
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', (i===0&&tab==='dex')||(i===1&&tab==='quiz'));
+  });
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+
+  if (tab==='dex') {
+    document.getElementById('dex-page').classList.add('active');
+  } else {
+    document.getElementById('quiz-page').classList.add('active');
+    if (!dexViewed) {
+      document.getElementById('quiz-wait').style.display = 'flex';
+      document.getElementById('quiz-content').style.display = 'none';
+    } else if (quizQuestions.length===0) {
+      document.getElementById('quiz-wait').style.display = 'none';
+      document.getElementById('quiz-loading').style.display = 'flex';
+      setTimeout(()=>{
+        document.getElementById('quiz-loading').style.display = 'none';
+        buildQuiz();
+      }, 800);
+    }
+  }
+}
+
+init();
+</script>
+</body>
+</html>
