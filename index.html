@@ -1077,9 +1077,16 @@ async function fetchPokemon(id, _depth = 0) {
              || spec.flavor_text_entries.find(e=>e.language.name==='en')?.flavor_text
              || '';
 
-  const abilities = poke.abilities.map(a=>({
-    name: a.ability.name,
-    isHidden: a.is_hidden,
+  // 특성 한국어 이름 fetch
+  const abilities = await Promise.all(poke.abilities.map(async a => {
+    let nameKo = a.ability.name;
+    try {
+      const abilData = await fetch(a.ability.url).then(r=>r.json());
+      nameKo = abilData.names.find(n=>n.language.name==='ko')?.name
+             || abilData.names.find(n=>n.language.name==='ja')?.name
+             || a.ability.name;
+    } catch(e) {}
+    return { name: nameKo, isHidden: a.is_hidden };
   }));
 
   // 등장 게임 목록
@@ -1306,19 +1313,21 @@ async function openModal(p) {
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-title">🌍 등장 세대 & 게임</div>
+        <div class="modal-section-title">🌍 등장 세대</div>
         <div class="modal-gen-block">
           <div class="modal-gen-row">
             <span class="modal-gen-label">첫 등장</span>
-            <span class="modal-gen-val">${genInfo.name} (${genInfo.games.join(', ') || '-'})</span>
+            <span class="modal-gen-val">${genInfo.name}</span>
           </div>
-          ${Object.keys(genMap).length > 0 ? `
-          <div style="margin-top:0.65rem">
-            <div style="font-size:0.65rem;color:var(--muted);margin-bottom:0.45rem;text-transform:uppercase;letter-spacing:0.07em;">등장 게임</div>
-            <div class="modal-game-tags">
-              ${Object.entries(genMap).sort().map(([gen, vers])=>
-                [...new Set(vers)].map(v=>`<span class="modal-game-tag">${v}</span>`).join('')
-              ).join('')}
+          <div class="modal-gen-row">
+            <span class="modal-gen-label">대표 타이틀</span>
+            <span class="modal-gen-val" style="font-size:0.72rem">${genInfo.games.join(' · ') || '-'}</span>
+          </div>
+          ${Object.keys(genMap).length > 1 ? `
+          <div class="modal-gen-row" style="align-items:flex-start">
+            <span class="modal-gen-label" style="padding-top:0.15rem">이후 등장</span>
+            <div class="modal-game-tags" style="justify-content:flex-end">
+              ${Object.keys(genMap).filter(g=>g!==genInfo.name).sort().map(g=>`<span class="modal-game-tag">${g}</span>`).join('')}
             </div>
           </div>` : ''}
         </div>
