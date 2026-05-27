@@ -29,7 +29,6 @@
     overflow-x: hidden;
   }
 
-  /* BG Stars */
   body::before {
     content: '';
     position: fixed;
@@ -40,8 +39,6 @@
       radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
       radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
       radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,0.2) 0%, transparent 100%),
-      radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
       radial-gradient(2px 2px at 45% 10%, rgba(255,203,5,0.4) 0%, transparent 100%),
       radial-gradient(2px 2px at 85% 65%, rgba(59,76,202,0.4) 0%, transparent 100%);
     pointer-events: none;
@@ -52,7 +49,7 @@
   header {
     position: relative;
     z-index: 10;
-    padding: 2rem 2rem 1rem;
+    padding: 1.25rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -60,17 +57,13 @@
     backdrop-filter: blur(10px);
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
+  .logo { display: flex; align-items: center; gap: 0.75rem; }
 
   .pokeball-icon {
-    width: 36px; height: 36px;
+    width: 32px; height: 32px;
     background: linear-gradient(180deg, var(--red) 50%, white 50%);
     border-radius: 50%;
-    border: 3px solid #222;
+    border: 3px solid #333;
     position: relative;
     flex-shrink: 0;
     animation: spin-slow 8s linear infinite;
@@ -80,10 +73,10 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px; height: 10px;
+    width: 9px; height: 9px;
     background: white;
     border-radius: 50%;
-    border: 3px solid #222;
+    border: 2px solid #333;
     z-index: 1;
   }
   .pokeball-icon::after {
@@ -92,26 +85,24 @@
     top: calc(50% - 1.5px);
     left: 0; right: 0;
     height: 3px;
-    background: #222;
+    background: #333;
   }
   @keyframes spin-slow { to { transform: rotate(360deg); } }
 
   .logo h1 {
     font-family: 'Galmuri11', monospace;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--accent);
     text-shadow: 0 0 20px var(--glow);
-    letter-spacing: 0.05em;
   }
 
   .date-badge {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--muted);
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 0.35rem 0.9rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 20px;
-    letter-spacing: 0.05em;
   }
 
   /* TABS */
@@ -119,28 +110,30 @@
     position: relative;
     z-index: 10;
     display: flex;
-    gap: 0;
-    padding: 1.5rem 2rem 0;
+    padding: 0 1.5rem;
     border-bottom: 1px solid var(--border);
+    background: rgba(13,13,26,0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
   }
 
   .tab-btn {
     font-family: 'Galmuri11', monospace;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--muted);
     background: transparent;
     border: none;
-    padding: 0.6rem 1.5rem;
+    padding: 1rem 1.25rem;
     cursor: pointer;
     position: relative;
     transition: color 0.2s;
-    letter-spacing: 0.05em;
   }
   .tab-btn.active { color: var(--accent); }
   .tab-btn.active::after {
     content: '';
     position: absolute;
-    bottom: -1px; left: 0; right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 2px;
     background: var(--accent);
     box-shadow: 0 0 10px var(--glow);
@@ -151,14 +144,14 @@
   main {
     position: relative;
     z-index: 5;
-    padding: 2rem;
-    max-width: 1100px;
+    padding: 1.5rem;
+    max-width: 1200px;
     margin: 0 auto;
   }
 
   .page { display: none; }
-  .page.active { display: block; animation: fadeIn 0.4s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
   /* LOADING */
   .loading {
@@ -166,12 +159,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
-    gap: 1.5rem;
+    min-height: 55vh;
+    gap: 1.25rem;
   }
 
   .pokeball-loader {
-    width: 60px; height: 60px;
+    width: 56px; height: 56px;
     background: linear-gradient(180deg, var(--red) 50%, white 50%);
     border-radius: 50%;
     border: 4px solid var(--accent);
@@ -184,10 +177,10 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 16px; height: 16px;
+    width: 14px; height: 14px;
     background: white;
     border-radius: 50%;
-    border: 4px solid var(--accent);
+    border: 3px solid var(--accent);
   }
   .pokeball-loader::after {
     content: '';
@@ -201,416 +194,520 @@
     50% { transform: rotate(180deg) scale(1.1); }
     100% { transform: rotate(360deg) scale(1); }
   }
-
   .loading p {
     font-family: 'Galmuri11', monospace;
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     animation: blink 1.2s step-end infinite;
   }
   @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-  /* POKEMON CARDS */
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .section-tag {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(255,203,5,0.1);
+    border: 1px solid rgba(255,203,5,0.3);
+    padding: 0.18rem 0.65rem;
+    border-radius: 20px;
+  }
+  .section-title { font-size: 1rem; font-weight: 900; color: var(--text); }
+
+  /* POKEMON GRID - 반응형 */
   .pokemon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 
+  @media (max-width: 900px) {
+    .pokemon-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 540px) {
+    .pokemon-grid { grid-template-columns: 1fr; }
+  }
+
+  /* POKEMON CARD */
   .pokemon-card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1.75rem;
+    border-radius: 18px;
+    padding: 1.4rem 1.2rem;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
-    animation: slideUp 0.5s ease both;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: slideUp 0.45s ease both;
   }
-  .pokemon-card:nth-child(2) { animation-delay: 0.1s; }
-  .pokemon-card:nth-child(3) { animation-delay: 0.2s; }
+  .pokemon-card:nth-child(1) { animation-delay: 0s; }
+  .pokemon-card:nth-child(2) { animation-delay: 0.08s; }
+  .pokemon-card:nth-child(3) { animation-delay: 0.16s; }
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .pokemon-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px var(--card-glow, rgba(255,203,5,0.2));
+    transform: translateY(-5px);
+    box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 24px var(--card-glow, rgba(255,203,5,0.2));
     border-color: var(--card-color, var(--accent));
   }
+  .pokemon-card:active { transform: scale(0.98); }
 
   .card-bg {
     position: absolute;
     inset: 0;
-    opacity: 0.05;
-    background: radial-gradient(circle at 70% 30%, var(--card-color, var(--accent)), transparent 60%);
+    opacity: 0.06;
+    background: radial-gradient(circle at 70% 20%, var(--card-color, var(--accent)), transparent 65%);
     pointer-events: none;
+  }
+
+  .card-hint {
+    position: absolute;
+    top: 0.75rem; right: 0.85rem;
+    font-size: 0.6rem;
+    color: var(--muted);
+    opacity: 0.7;
+    font-family: 'Galmuri11', monospace;
   }
 
   .card-number {
     font-family: 'Galmuri11', monospace;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--muted);
     letter-spacing: 0.1em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
   }
 
   .card-image-wrap {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
     position: relative;
   }
-
   .card-image-wrap::before {
     content: '';
     position: absolute;
-    width: 80px; height: 80px;
-    background: radial-gradient(circle, var(--card-color, rgba(255,203,5,0.3)), transparent 70%);
+    width: 70px; height: 70px;
+    background: radial-gradient(circle, var(--card-color, rgba(255,203,5,0.25)), transparent 70%);
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    filter: blur(20px);
+    filter: blur(16px);
   }
-
   .card-image {
-    width: 100px; height: 100px;
+    width: 90px; height: 90px;
     image-rendering: pixelated;
-    filter: drop-shadow(0 5px 20px var(--card-color, rgba(255,203,5,0.4)));
+    filter: drop-shadow(0 4px 16px var(--card-color, rgba(255,203,5,0.4)));
     transition: transform 0.3s ease;
     position: relative;
     z-index: 1;
   }
-  .pokemon-card:hover .card-image { transform: scale(1.1) translateY(-5px); }
+  .pokemon-card:hover .card-image { transform: scale(1.08) translateY(-4px); }
 
   .card-name {
     font-family: 'Galmuri11', monospace;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     color: var(--text);
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.45rem;
   }
 
   .type-badges {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.4rem;
+    margin-bottom: 0.85rem;
     flex-wrap: wrap;
   }
-
   .type-badge {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 0.2rem 0.75rem;
+    padding: 0.18rem 0.65rem;
     border-radius: 20px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     color: white;
   }
 
   .card-desc {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
     color: var(--muted);
-    line-height: 1.7;
+    line-height: 1.65;
     text-align: center;
     border-top: 1px solid var(--border);
-    padding-top: 1rem;
-    margin-top: 0.5rem;
+    padding-top: 0.8rem;
+    margin-top: 0.4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .card-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
   }
-
-  .stat-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
+  .stat-row { display: flex; flex-direction: column; gap: 0.15rem; }
   .stat-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
   }
-
   .stat-bar-wrap {
     background: rgba(255,255,255,0.05);
     border-radius: 4px;
-    height: 5px;
+    height: 4px;
     overflow: hidden;
   }
-
   .stat-bar {
     height: 100%;
     border-radius: 4px;
     background: var(--card-color, var(--accent));
     transition: width 1s ease;
   }
-
   .stat-value {
     font-family: 'Galmuri11', monospace;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text);
   }
 
-  /* SECTION HEADER */
-  .section-header {
+  .card-meta {
     display: flex;
-    align-items: center;
+    justify-content: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-top: 0.7rem;
+  }
+  .card-meta span {
+    font-size: 0.68rem;
+    color: var(--muted);
   }
 
-  .section-tag {
-    font-family: 'Galmuri11', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    background: rgba(255,203,5,0.1);
-    border: 1px solid rgba(255,203,5,0.3);
-    padding: 0.2rem 0.75rem;
-    border-radius: 20px;
-    letter-spacing: 0.08em;
-  }
-
-  .section-title {
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: var(--text);
-  }
-
-  /* QUIZ PAGE */
-  .quiz-container {
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .quiz-progress {
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
   }
 
-  .progress-dots {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    transition: all 0.3s;
-  }
-  .dot.done { background: #4ade80; border-color: #4ade80; }
-  .dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--glow); }
-  .dot.wrong { background: var(--red); border-color: var(--red); }
-
-  .score-display {
-    font-family: 'Galmuri11', monospace;
-    font-size: 0.85rem;
-    color: var(--accent);
-  }
-
-  .quiz-card {
+  .modal {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 24px;
-    padding: 2.5rem;
-    text-align: center;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .modal-overlay.open .modal {
+    transform: scale(1) translateY(0);
   }
 
-  .quiz-question-num {
-    font-family: 'Galmuri11', monospace;
-    font-size: 0.7rem;
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border);
     color: var(--muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
   }
+  .modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text); }
 
-  .quiz-image-wrap {
+  .modal-header {
+    padding: 2rem 2rem 1.25rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px 24px 0 0;
+  }
+  .modal-header-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    background: radial-gradient(circle at 80% 20%, var(--modal-color, var(--accent)), transparent 60%);
+  }
+  .modal-header-inner {
+    position: relative;
+    z-index: 1;
     display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .modal-image-wrap {
+    flex-shrink: 0;
     position: relative;
   }
-
-  .quiz-pokemon-img {
-    width: 120px; height: 120px;
+  .modal-image-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle, var(--modal-color, rgba(255,203,5,0.3)), transparent 70%);
+    filter: blur(20px);
+    border-radius: 50%;
+  }
+  .modal-image {
+    width: 130px; height: 130px;
     image-rendering: pixelated;
-    transition: filter 0.5s ease;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 6px 20px var(--modal-color, rgba(255,203,5,0.5)));
   }
-  .quiz-pokemon-img.hidden { filter: brightness(0) drop-shadow(0 0 20px var(--accent)); }
-
-  .quiz-question {
-    font-size: 1rem;
-    font-weight: 700;
+  .modal-title-block { flex: 1; min-width: 0; }
+  .modal-number {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .modal-name {
+    font-family: 'Galmuri11', monospace;
+    font-size: 1.8rem;
     color: var(--text);
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
   }
-
-  .quiz-hint {
+  .modal-name-en {
     font-size: 0.8rem;
     color: var(--muted);
-    margin-bottom: 1.75rem;
-    line-height: 1.6;
-    padding: 0.75rem;
-    background: rgba(255,255,255,0.03);
-    border-radius: 10px;
-    border: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+    text-transform: capitalize;
+  }
+  .modal-types { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+  .modal-body { padding: 0 2rem 2rem; }
+
+  /* MODAL SECTIONS */
+  .modal-section { margin-top: 1.5rem; }
+  .modal-section-title {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .modal-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
-  .options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .option-btn {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
+  /* FLAVOR TEXT */
+  .modal-desc {
+    font-size: 0.82rem;
     color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 0.9rem 1rem;
+    line-height: 1.8;
+    background: rgba(255,255,255,0.03);
     border-radius: 12px;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+  }
+
+  /* STATS */
+  .modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .modal-stat-row { display: flex; flex-direction: column; gap: 0.25rem; }
+  .modal-stat-top { display: flex; justify-content: space-between; align-items: center; }
+  .modal-stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+  .modal-stat-val { font-family: 'Galmuri11', monospace; font-size: 0.75rem; color: var(--text); font-weight: 700; }
+  .modal-stat-bar-wrap { background: rgba(255,255,255,0.05); border-radius: 4px; height: 6px; overflow: hidden; }
+  .modal-stat-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--modal-color, var(--accent));
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* INFO GRID */
+  .modal-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+  .modal-info-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 0.85rem;
+    text-align: center;
+  }
+  .modal-info-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+  .modal-info-val { font-family: 'Galmuri11', monospace; font-size: 0.9rem; color: var(--text); font-weight: 700; }
+
+  /* GENERATION */
+  .modal-gen-block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+  }
+  .modal-gen-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+  }
+  .modal-gen-row + .modal-gen-row {
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .modal-gen-label { font-size: 0.72rem; color: var(--muted); }
+  .modal-gen-val {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+  .modal-game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+  }
+  .modal-game-tag {
+    font-size: 0.6rem;
+    font-family: 'Galmuri11', monospace;
+    padding: 0.18rem 0.55rem;
+    border-radius: 20px;
+    background: rgba(255,203,5,0.08);
+    border: 1px solid rgba(255,203,5,0.2);
+    color: var(--accent);
+  }
+
+  /* EVOLUTION CHAIN */
+  .evo-chain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 0;
+  }
+  .evo-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.2s;
+  }
+  .evo-step:hover { transform: scale(1.05); }
+  .evo-step.current .evo-img-wrap {
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--glow);
+  }
+  .evo-img-wrap {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
     position: relative;
     overflow: hidden;
   }
-  .option-btn:hover:not(:disabled) {
-    background: rgba(255,203,5,0.08);
-    border-color: rgba(255,203,5,0.4);
-    color: var(--accent);
-    transform: scale(1.02);
+  .evo-img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--evo-color, rgba(255,203,5,0.15)), transparent 70%);
   }
-  .option-btn.correct {
-    background: rgba(74,222,128,0.15);
-    border-color: #4ade80;
-    color: #4ade80;
+  .evo-img {
+    width: 52px; height: 52px;
+    image-rendering: pixelated;
+    position: relative;
+    z-index: 1;
   }
-  .option-btn.wrong {
-    background: rgba(255,0,0,0.1);
-    border-color: var(--red);
-    color: var(--red);
-  }
-  .option-btn:disabled { cursor: default; }
-
-  .quiz-feedback {
-    margin-top: 1.25rem;
-    padding: 1rem;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    display: none;
-  }
-  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
-  .quiz-feedback.correct-fb { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
-  .quiz-feedback.wrong-fb { background: rgba(255,0,0,0.07); border: 1px solid rgba(255,0,0,0.2); color: #ff6b6b; }
-
-  .next-btn {
-    margin-top: 1rem;
+  .evo-name {
     font-family: 'Galmuri11', monospace;
-    font-size: 0.85rem;
-    color: var(--bg);
-    background: var(--accent);
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: none;
-    letter-spacing: 0.05em;
-    box-shadow: 0 4px 20px var(--glow);
-  }
-  .next-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--glow); }
-  .next-btn.show { display: inline-block; animation: fadeIn 0.3s ease; }
-
-  /* RESULT */
-  .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 3rem 2rem;
+    font-size: 0.65rem;
+    color: var(--text);
     text-align: center;
-    max-width: 500px;
-    margin: 0 auto;
+    max-width: 72px;
+    line-height: 1.3;
   }
-
-  .result-emoji {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    display: block;
-    animation: bounce 0.6s ease;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-  }
-
-  .result-score {
-    font-family: 'Galmuri11', monospace;
-    font-size: 3rem;
-    color: var(--accent);
-    text-shadow: 0 0 30px var(--glow);
-    margin-bottom: 0.5rem;
-  }
-
-  .result-msg {
+  .evo-num {
+    font-size: 0.58rem;
     color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-    line-height: 1.7;
   }
-
-  .result-breakdown {
+  .evo-arrow {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .breakdown-row {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.6rem 1rem;
-    background: var(--surface);
-    border-radius: 10px;
-    font-size: 0.82rem;
+    gap: 0.2rem;
+    color: var(--muted);
+    font-size: 1.1rem;
+    flex-shrink: 0;
   }
-
-  .breakdown-name { color: var(--text); font-weight: 700; }
-  .breakdown-result { font-family: 'Galmuri11', monospace; }
-  .breakdown-result.ok { color: #4ade80; }
-  .breakdown-result.bad { color: var(--red); }
-
-  .restart-btn {
+  .evo-method {
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-align: center;
+    max-width: 60px;
+    line-height: 1.4;
+  }
+  .evo-loading {
     font-family: 'Galmuri11', monospace;
-    font-size: 0.85rem;
-    color: var(--bg);
-    background: var(--accent);
-    border: none;
-    padding: 0.85rem 2.5rem;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
-    box-shadow: 0 4px 20px var(--glow);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 1.5rem;
+    animation: blink 1.2s step-end infinite;
   }
-  .restart-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--glow); }
+
+  /* ABILITY */
+  .ability-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .ability-tag {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 700;
+  }
+  .ability-tag.hidden-ability {
+    border-color: rgba(255,203,5,0.3);
+    background: rgba(255,203,5,0.06);
+    color: var(--accent);
+  }
+  .ability-tag .hidden-label {
+    font-size: 0.55rem;
+    color: var(--muted);
+    margin-left: 0.3rem;
+  }
 
   /* TYPE COLORS */
   .type-normal    { background: #A8A878; }
@@ -632,20 +729,162 @@
   .type-steel     { background: #B8B8D0; color: #333 !important; }
   .type-fairy     { background: #EE99AC; color: #333 !important; }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
+  /* ===== QUIZ PAGE ===== */
+  .quiz-container { max-width: 650px; margin: 0 auto; }
+  .quiz-progress { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .progress-dots { display: flex; gap: 0.45rem; }
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .dot.done { background: #4ade80; border-color: #4ade80; }
+  .dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--glow); }
+  .dot.wrong { background: var(--red); border-color: var(--red); }
+  .score-display { font-family: 'Galmuri11', monospace; font-size: 0.82rem; color: var(--accent); }
+
+  .quiz-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 2rem;
+    text-align: center;
+  }
+  .quiz-question-num { font-family: 'Galmuri11', monospace; font-size: 0.68rem; color: var(--muted); margin-bottom: 0.85rem; }
+  .quiz-image-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+  .quiz-pokemon-img { width: 110px; height: 110px; image-rendering: pixelated; transition: filter 0.5s ease; }
+  .quiz-pokemon-img.hidden { filter: brightness(0) drop-shadow(0 0 18px var(--accent)); }
+  .quiz-question { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.45rem; line-height: 1.6; }
+  .quiz-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.65;
+    padding: 0.65rem 0.9rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+  .option-btn {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.85rem 0.9rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option-btn:hover:not(:disabled) { background: rgba(255,203,5,0.08); border-color: rgba(255,203,5,0.4); color: var(--accent); transform: scale(1.02); }
+  .option-btn.correct { background: rgba(74,222,128,0.15); border-color: #4ade80; color: #4ade80; }
+  .option-btn.wrong { background: rgba(255,0,0,0.1); border-color: var(--red); color: var(--red); }
+  .option-btn:disabled { cursor: default; }
+
+  .quiz-feedback {
+    margin-top: 1rem;
+    padding: 0.85rem;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .quiz-feedback.correct-fb { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
+  .quiz-feedback.wrong-fb { background: rgba(255,0,0,0.07); border: 1px solid rgba(255,0,0,0.2); color: #ff6b6b; }
+
+  .next-btn {
+    margin-top: 0.85rem;
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.82rem;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    box-shadow: 0 4px 18px var(--glow);
+  }
+  .next-btn:hover { transform: scale(1.05); }
+  .next-btn.show { display: inline-block; animation: fadeIn 0.3s ease; }
+
+  /* RESULT */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 2.5rem 1.75rem;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 0.85rem; display: block; animation: bounce 0.6s ease; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  .result-score { font-family: 'Galmuri11', monospace; font-size: 2.8rem; color: var(--accent); text-shadow: 0 0 28px var(--glow); margin-bottom: 0.4rem; }
+  .result-msg { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.75rem; line-height: 1.7; }
+  .result-breakdown { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.75rem; }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0.9rem;
+    background: var(--surface);
+    border-radius: 10px;
+    font-size: 0.78rem;
+  }
+  .breakdown-name { color: var(--text); font-weight: 700; }
+  .breakdown-result { font-family: 'Galmuri11', monospace; }
+  .breakdown-result.ok { color: #4ade80; }
+  .breakdown-result.bad { color: var(--red); }
+  .restart-btn {
+    font-family: 'Galmuri11', monospace;
+    font-size: 0.82rem;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    padding: 0.8rem 2.2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 18px var(--glow);
+  }
+  .restart-btn:hover { transform: scale(1.05); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+  /* MOBILE */
   @media (max-width: 600px) {
-    header { padding: 1.25rem 1rem 1rem; }
-    .logo h1 { font-size: 1.1rem; }
+    header { padding: 1rem; }
+    .logo h1 { font-size: 1rem; }
     main { padding: 1rem; }
-    .pokemon-grid { grid-template-columns: 1fr; }
     .options-grid { grid-template-columns: 1fr; }
-    .quiz-card { padding: 1.5rem; }
-    .tabs { padding: 1rem 1rem 0; }
-    .tab-btn { padding: 0.5rem 1rem; font-size: 0.78rem; }
+    .quiz-card { padding: 1.5rem 1.1rem; }
+    .modal { border-radius: 18px; }
+    .modal-header { padding: 1.5rem 1.25rem 1rem; }
+    .modal-header-inner { gap: 1rem; }
+    .modal-image { width: 100px; height: 100px; }
+    .modal-name { font-size: 1.4rem; }
+    .modal-body { padding: 0 1.25rem 1.5rem; }
+    .modal-stats { grid-template-columns: 1fr 1fr; }
+    .modal-info-grid { grid-template-columns: repeat(3, 1fr); }
+    .evo-img-wrap { width: 60px; height: 60px; }
+    .evo-img { width: 42px; height: 42px; }
+    .evo-name { font-size: 0.6rem; max-width: 60px; }
+  }
+
+  @media (max-width: 400px) {
+    .modal-header-inner { flex-direction: column; text-align: center; }
+    .modal-types { justify-content: center; }
+    .modal-info-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -689,9 +928,9 @@
     <div id="quiz-wait" class="loading">
       <div style="text-align:center">
         <div style="font-size:3rem;margin-bottom:1rem">🎯</div>
-        <h2 style="font-family:'Galmuri11',monospace;color:var(--accent);margin-bottom:0.75rem;font-size:1.1rem">먼저 도감을 확인하세요!</h2>
-        <p style="color:var(--muted);font-size:0.85rem;line-height:1.7">오늘의 포켓몬 3마리를 확인한 뒤<br>퀴즈에 도전할 수 있어요.</p>
-        <button onclick="showTab('dex')" style="margin-top:1.5rem;font-family:'Galmuri11',monospace;font-size:0.8rem;color:var(--bg);background:var(--accent);border:none;padding:0.7rem 1.8rem;border-radius:30px;cursor:pointer;box-shadow:0 4px 20px var(--glow)">도감 보기</button>
+        <h2 style="font-family:'Galmuri11',monospace;color:var(--accent);margin-bottom:0.75rem;font-size:1.05rem">먼저 도감을 확인하세요!</h2>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.7">오늘의 포켓몬 3마리를 확인한 뒤<br>퀴즈에 도전할 수 있어요.</p>
+        <button onclick="showTab('dex')" style="margin-top:1.5rem;font-family:'Galmuri11',monospace;font-size:0.78rem;color:var(--bg);background:var(--accent);border:none;padding:0.65rem 1.6rem;border-radius:30px;cursor:pointer;box-shadow:0 4px 18px var(--glow)">도감 보기</button>
       </div>
     </div>
     <div id="quiz-content" style="display:none">
@@ -706,18 +945,24 @@
   </div>
 </main>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 <script>
 const TYPE_KO = {
   normal:'노말', fire:'불꽃', water:'물', electric:'전기', grass:'풀', ice:'얼음',
   fighting:'격투', poison:'독', ground:'땅', flying:'비행', psychic:'에스퍼', bug:'벌레',
   rock:'바위', ghost:'고스트', dragon:'드래곤', dark:'악', steel:'강철', fairy:'페어리'
 };
-
 const STAT_KO = {
   hp:'HP', attack:'공격', defense:'방어',
   'special-attack':'특공', 'special-defense':'특방', speed:'스피드'
 };
-
 const TYPE_COLOR = {
   normal:'#A8A878', fire:'#F08030', water:'#6890F0', electric:'#F8D030',
   grass:'#78C850', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0',
@@ -726,7 +971,68 @@ const TYPE_COLOR = {
   steel:'#B8B8D0', fairy:'#EE99AC'
 };
 
-// Seeded RNG for daily selection
+// 세대 정보
+const GEN_INFO = {
+  'generation-i':   { name: '1세대', games: ['레드·그린', '블루', '피카츄'] },
+  'generation-ii':  { name: '2세대', games: ['골드·실버', '크리스탈'] },
+  'generation-iii': { name: '3세대', games: ['루비·사파이어', '에메랄드', 'FR·LG'] },
+  'generation-iv':  { name: '4세대', games: ['다이아몬드·펄', '플라티나', 'HG·SS'] },
+  'generation-v':   { name: '5세대', games: ['블랙·화이트', 'B2·W2'] },
+  'generation-vi':  { name: '6세대', games: ['X·Y', '오메가루비·알파사파이어'] },
+  'generation-vii': { name: '7세대', games: ['썬·문', '울트라썬·울트라문', 'Let\'s Go'] },
+  'generation-viii':{ name: '8세대', games: ['소드·실드', '브릴다이아·샤이닝펄', '레전드 아르세우스'] },
+  'generation-ix':  { name: '9세대', games: ['스칼렛·바이올렛'] },
+};
+
+// 게임 버전 → 세대 매핑
+const VERSION_GEN = {
+  'red':'1세대','blue':'1세대','yellow':'1세대',
+  'gold':'2세대','silver':'2세대','crystal':'2세대',
+  'ruby':'3세대','sapphire':'3세대','emerald':'3세대','firered':'3세대','leafgreen':'3세대',
+  'diamond':'4세대','pearl':'4세대','platinum':'4세대','heartgold':'4세대','soulsilver':'4세대',
+  'black':'5세대','white':'5세대','black-2':'5세대','white-2':'5세대',
+  'x':'6세대','y':'6세대','omega-ruby':'6세대','alpha-sapphire':'6세대',
+  'sun':'7세대','moon':'7세대','ultra-sun':'7세대','ultra-moon':'7세대',
+  'lets-go-pikachu':'7세대','lets-go-eevee':'7세대',
+  'sword':'8세대','shield':'8세대',
+  'brilliant-diamond':'8세대','shining-pearl':'8세대','legends-arceus':'8세대',
+  'scarlet':'9세대','violet':'9세대',
+};
+const VERSION_KO = {
+  'red':'레드','blue':'블루','yellow':'피카츄','gold':'골드','silver':'실버','crystal':'크리스탈',
+  'ruby':'루비','sapphire':'사파이어','emerald':'에메랄드','firered':'파이어레드','leafgreen':'리프그린',
+  'diamond':'다이아몬드','pearl':'펄','platinum':'플라티나','heartgold':'하트골드','soulsilver':'소울실버',
+  'black':'블랙','white':'화이트','black-2':'블랙2','white-2':'화이트2',
+  'x':'X','y':'Y','omega-ruby':'오메가루비','alpha-sapphire':'알파사파이어',
+  'sun':'썬','moon':'문','ultra-sun':'울트라썬','ultra-moon':'울트라문',
+  'lets-go-pikachu':'렛츠고 피카츄','lets-go-eevee':'렛츠고 이브이',
+  'sword':'소드','shield':'실드','brilliant-diamond':'브릴다이아','shining-pearl':'샤이닝펄',
+  'legends-arceus':'레전드 아르세우스','scarlet':'스칼렛','violet':'바이올렛',
+};
+
+// 진화 방법 한국어
+function evoMethodKo(detail) {
+  if (!detail) return '';
+  if (detail.min_level) return `Lv.${detail.min_level}`;
+  if (detail.item) return `아이템: ${detail.item.name}`;
+  if (detail.min_happiness) return `친밀도 ↑`;
+  if (detail.min_beauty) return `아름다움 ↑`;
+  if (detail.min_affection) return `친애도 ↑`;
+  if (detail.held_item) return `소지: ${detail.held_item.name}`;
+  if (detail.known_move) return `기술: ${detail.known_move.name}`;
+  if (detail.known_move_type) return `타입기술 습득`;
+  if (detail.location) return `특정 장소`;
+  if (detail.needs_overworld_rain) return `비 속에서`;
+  if (detail.time_of_day === 'day') return `낮`;
+  if (detail.time_of_day === 'night') return `밤`;
+  if (detail.trade_species) return `통신 교환`;
+  if (detail.trigger?.name === 'trade') return `통신 교환`;
+  if (detail.trigger?.name === 'use-item') return `아이템 사용`;
+  if (detail.trigger?.name === 'shed') return `레벨업`;
+  return '레벨업';
+}
+
+// Seeded RNG
 function seededRand(seed) {
   let s = seed;
   return function() {
@@ -734,25 +1040,24 @@ function seededRand(seed) {
     return (s >>> 0) / 0xffffffff;
   };
 }
-
 function getDailySeed() {
   const d = new Date();
   return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
 }
 
-// 9세대까지 유효한 포켓몬 번호: 1~1025 (일부 특수 ID는 fallback 처리)
 const MAX_POKEMON_ID = 1025;
 
 function pickDailyIds() {
   const rand = seededRand(getDailySeed());
   const ids = new Set();
   while (ids.size < 3) ids.add(Math.floor(rand() * MAX_POKEMON_ID) + 1);
-  return [...ids];
+  // 번호 순 정렬
+  return [...ids].sort((a,b)=>a-b);
 }
 
-// Fetch with Korean name (error-safe: fallback to Gen1~8 if ID fails)
+// Fetch pokemon data
 async function fetchPokemon(id, _depth = 0) {
-  if (_depth > 5) return null; // 무한 루프 방지
+  if (_depth > 5) return null;
   let poke, spec;
   try {
     [poke, spec] = await Promise.all([
@@ -760,8 +1065,6 @@ async function fetchPokemon(id, _depth = 0) {
       fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>{ if(!r.ok) throw new Error(); return r.json(); })
     ]);
   } catch(e) {
-    // 특수 폼 등 일부 ID가 species API 없음 → 1~898 에서 fallback
-    console.warn(`No data for #${id}, trying fallback`);
     const fallback = Math.floor(Math.random() * 898) + 1;
     return fetchPokemon(fallback, _depth + 1);
   }
@@ -773,6 +1076,17 @@ async function fetchPokemon(id, _depth = 0) {
   const desc = spec.flavor_text_entries.find(e=>e.language.name==='ko')?.flavor_text
              || spec.flavor_text_entries.find(e=>e.language.name==='en')?.flavor_text
              || '';
+
+  const abilities = poke.abilities.map(a=>({
+    name: a.ability.name,
+    isHidden: a.is_hidden,
+  }));
+
+  // 등장 게임 목록
+  const gameVersions = spec.flavor_text_entries
+    .map(e=>e.version?.name)
+    .filter(Boolean);
+  const uniqueVersions = [...new Set(gameVersions)];
 
   return {
     id, name: nameKo,
@@ -786,7 +1100,51 @@ async function fetchPokemon(id, _depth = 0) {
     height: poke.height / 10,
     weight: poke.weight / 10,
     genus: spec.genera.find(g=>g.language.name==='ko')?.genus || '',
+    generation: spec.generation?.name || '',
+    evoChainUrl: spec.evolution_chain?.url || '',
+    abilities,
+    gameVersions: uniqueVersions,
+    captureRate: spec.capture_rate,
+    baseHappiness: spec.base_happiness,
+    speciesId: spec.id,
   };
+}
+
+// Fetch evolution chain
+async function fetchEvoChain(url) {
+  try {
+    const data = await fetch(url).then(r=>r.json());
+    return data.chain;
+  } catch(e) { return null; }
+}
+
+// Parse evolution chain into flat list of steps
+async function parseEvoChain(chain) {
+  const steps = [];
+
+  async function walk(node, prevName) {
+    const speciesId = parseInt(node.species.url.split('/').filter(Boolean).pop());
+    let img = null;
+    let nameKo = node.species.name;
+    try {
+      const [pk, sp] = await Promise.all([
+        fetch(`https://pokeapi.co/api/v2/pokemon/${speciesId}`).then(r=>r.json()),
+        fetch(`https://pokeapi.co/api/v2/pokemon-species/${speciesId}`).then(r=>r.json()),
+      ]);
+      img = pk.sprites.other['official-artwork']?.front_default || pk.sprites.front_default;
+      nameKo = sp.names.find(n=>n.language.name==='ko')?.name || node.species.name;
+    } catch(e) {}
+
+    const methods = node.evolution_details?.map(d => evoMethodKo(d)).filter(Boolean) || [];
+    steps.push({ id: speciesId, name: nameKo, img, methods });
+
+    for (const evo of (node.evolves_to || [])) {
+      await walk(evo, nameKo);
+    }
+  }
+
+  await walk(chain);
+  return steps;
 }
 
 // STATE
@@ -815,6 +1173,7 @@ function renderDex() {
   document.getElementById('dex-content').style.display = 'block';
   const grid = document.getElementById('pokemonGrid');
   grid.innerHTML = '';
+
   pokemonData.forEach((p, i) => {
     const mainType = p.types[0];
     const color = TYPE_COLOR[mainType] || '#ffcb05';
@@ -822,9 +1181,11 @@ function renderDex() {
     card.className = 'pokemon-card';
     card.style.setProperty('--card-color', color);
     card.style.setProperty('--card-glow', color+'44');
+    card.onclick = () => openModal(p);
     card.innerHTML = `
       <div class="card-bg"></div>
-      <div class="card-number">No.${String(p.id).padStart(3,'0')} · ${p.genus}</div>
+      <span class="card-hint">탭하면 자세히 ▶</span>
+      <div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div>
       <div class="card-image-wrap">
         <img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/>
       </div>
@@ -841,9 +1202,9 @@ function renderDex() {
             <span class="stat-value">${s.value}</span>
           </div>`).join('')}
       </div>
-      <div style="margin-top:0.75rem;display:flex;gap:1rem;justify-content:center">
-        <span style="font-size:0.72rem;color:var(--muted)">키 ${p.height}m</span>
-        <span style="font-size:0.72rem;color:var(--muted)">무게 ${p.weight}kg</span>
+      <div class="card-meta">
+        <span>키 ${p.height}m</span>
+        <span>무게 ${p.weight}kg</span>
       </div>
     `;
     grid.appendChild(card);
@@ -851,30 +1212,204 @@ function renderDex() {
       card.querySelectorAll('.stat-bar').forEach(bar=>{
         bar.style.width = bar.dataset.val + '%';
       });
-    }, 600 + i * 150);
+    }, 500 + i * 120);
   });
   dexViewed = true;
 }
 
-// QUIZ SETUP
+// ===== MODAL =====
+async function openModal(p) {
+  const color = TYPE_COLOR[p.types[0]] || '#ffcb05';
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  modal.style.setProperty('--modal-color', color);
+
+  // 등장 세대 계산
+  const genInfo = GEN_INFO[p.generation] || { name: '알 수 없음', games: [] };
+
+  // 등장 게임 버전 → 세대 그룹화
+  const genMap = {};
+  p.gameVersions.forEach(v => {
+    const g = VERSION_GEN[v];
+    if (g) {
+      if (!genMap[g]) genMap[g] = [];
+      if (VERSION_KO[v]) genMap[g].push(VERSION_KO[v]);
+    }
+  });
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div class="modal-header-bg"></div>
+      <div class="modal-header-inner">
+        <div class="modal-image-wrap">
+          <img class="modal-image" src="${p.image}" alt="${p.name}"/>
+        </div>
+        <div class="modal-title-block">
+          <div class="modal-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div>
+          <div class="modal-name">${p.name}</div>
+          <div class="modal-name-en">${p.nameEn}</div>
+          <div class="modal-types">
+            ${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">📖 도감 설명</div>
+        <div class="modal-desc">${p.desc}</div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">📊 기본 스탯</div>
+        <div class="modal-stats">
+          ${p.stats.map(s=>`
+            <div class="modal-stat-row">
+              <div class="modal-stat-top">
+                <span class="modal-stat-label">${STAT_KO[s.name]||s.name}</span>
+                <span class="modal-stat-val">${s.value}</span>
+              </div>
+              <div class="modal-stat-bar-wrap">
+                <div class="modal-stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">📏 기본 정보</div>
+        <div class="modal-info-grid">
+          <div class="modal-info-item">
+            <div class="modal-info-label">키</div>
+            <div class="modal-info-val">${p.height}m</div>
+          </div>
+          <div class="modal-info-item">
+            <div class="modal-info-label">무게</div>
+            <div class="modal-info-val">${p.weight}kg</div>
+          </div>
+          <div class="modal-info-item">
+            <div class="modal-info-label">포획률</div>
+            <div class="modal-info-val">${p.captureRate ?? '-'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">✨ 특성</div>
+        <div class="ability-list">
+          ${p.abilities.map(a=>`
+            <span class="ability-tag ${a.isHidden?'hidden-ability':''}">
+              ${a.name}${a.isHidden?'<span class="hidden-label">숨겨진특성</span>':''}
+            </span>`).join('')}
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">🌍 등장 세대 & 게임</div>
+        <div class="modal-gen-block">
+          <div class="modal-gen-row">
+            <span class="modal-gen-label">첫 등장</span>
+            <span class="modal-gen-val">${genInfo.name} (${genInfo.games.join(', ') || '-'})</span>
+          </div>
+          ${Object.keys(genMap).length > 0 ? `
+          <div style="margin-top:0.65rem">
+            <div style="font-size:0.65rem;color:var(--muted);margin-bottom:0.45rem;text-transform:uppercase;letter-spacing:0.07em;">등장 게임</div>
+            <div class="modal-game-tags">
+              ${Object.entries(genMap).sort().map(([gen, vers])=>
+                [...new Set(vers)].map(v=>`<span class="modal-game-tag">${v}</span>`).join('')
+              ).join('')}
+            </div>
+          </div>` : ''}
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">🔄 진화 과정</div>
+        <div id="evoChainArea">
+          <div class="evo-loading">진화 정보 불러오는 중...</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // 스탯 애니메이션
+  setTimeout(() => {
+    document.querySelectorAll('.modal-stat-bar').forEach(bar => {
+      bar.style.width = bar.dataset.val + '%';
+    });
+  }, 100);
+
+  // 진화 체인 비동기 로드
+  if (p.evoChainUrl) {
+    const chain = await fetchEvoChain(p.evoChainUrl);
+    if (chain) {
+      const steps = await parseEvoChain(chain);
+      renderEvoChain(steps, p.id);
+    } else {
+      document.getElementById('evoChainArea').innerHTML = '<div style="color:var(--muted);font-size:0.75rem;text-align:center;padding:1rem">진화 없음 (단일 진화)</div>';
+    }
+  } else {
+    document.getElementById('evoChainArea').innerHTML = '<div style="color:var(--muted);font-size:0.75rem;text-align:center;padding:1rem">진화 정보 없음</div>';
+  }
+}
+
+function renderEvoChain(steps, currentId) {
+  const area = document.getElementById('evoChainArea');
+  if (!area) return;
+  if (steps.length <= 1) {
+    area.innerHTML = '<div style="color:var(--muted);font-size:0.75rem;text-align:center;padding:1rem">진화 없음 (단일 진화)</div>';
+    return;
+  }
+
+  let html = '<div class="evo-chain">';
+  steps.forEach((step, i) => {
+    const isCurrent = step.id === currentId;
+    const typeColor = '#ffcb05';
+    if (i > 0) {
+      const method = step.methods?.[0] || '';
+      html += `<div class="evo-arrow"><span>→</span><span class="evo-method">${method}</span></div>`;
+    }
+    html += `
+      <div class="evo-step ${isCurrent?'current':''}" style="--evo-color:${typeColor}">
+        <div class="evo-img-wrap">
+          ${step.img ? `<img class="evo-img" src="${step.img}" alt="${step.name}" loading="lazy"/>` : '<div style="width:42px;height:42px;"></div>'}
+        </div>
+        <div class="evo-name">${step.name}</div>
+        <div class="evo-num">No.${String(step.id).padStart(4,'0')}</div>
+      </div>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// ESC to close
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ===== QUIZ =====
 function buildQuiz() {
   quizQuestions = [];
   quizIdx = 0;
   quizScore = 0;
   quizAnswered = [];
 
-  // 3 types of questions per pokemon: silhouette name, type, stat comparison
   const allNames = pokemonData.map(p=>p.name);
 
   pokemonData.forEach((p, i) => {
-    const others = pokemonData.filter((_,j)=>j!==i);
-
-    // Q1: 실루엣 맞추기
-    const wrongNames = others.map(o=>o.name);
     const extra = ['이상해씨','리자몽','거북왕','피카츄','파이리','꼬부기','잠만보','뮤츠','마자용','한카리아스']
       .filter(n=>!allNames.includes(n));
-    const nameOpts = shuffle([p.name, ...shuffle([...wrongNames,...extra]).slice(0,3-wrongNames.length+wrongNames.length)].slice(0,4));
-    // simpler: use other 2 + 2 extras
     const pool = shuffle([...pokemonData.filter((_,j)=>j!==i).map(o=>o.name), ...extra]);
     const nameOptions = shuffle([p.name, pool[0], pool[1], pool[2]]);
 
@@ -887,7 +1422,6 @@ function buildQuiz() {
       options: nameOptions
     });
 
-    // Q2: 타입 맞추기
     const allTypes = Object.keys(TYPE_KO);
     const wrongTypes = shuffle(allTypes.filter(t=>!p.types.includes(t))).slice(0,3);
     const typeOptions = shuffle([TYPE_KO[p.types[0]], ...wrongTypes.map(t=>TYPE_KO[t])]);
@@ -901,7 +1435,6 @@ function buildQuiz() {
     });
   });
 
-  // shuffle all
   quizQuestions = shuffle(quizQuestions).slice(0, 6);
   renderQuiz();
 }
@@ -961,7 +1494,6 @@ function answerQuiz(chosen, btn) {
   const feedback = document.getElementById('quizFeedback');
   const nextBtn = document.getElementById('nextBtn');
   const img = document.getElementById('quizImg');
-
   if (img) img.classList.remove('hidden');
 
   if (correct) {
@@ -977,15 +1509,11 @@ function answerQuiz(chosen, btn) {
     feedback.textContent = `❌ 오답! 정답은 "${q.answer}"이에요.`;
     quizAnswered.push(false);
   }
-
   nextBtn.classList.add('show');
   renderProgressDots();
 }
 
-function nextQuestion() {
-  quizIdx++;
-  renderQuestion();
-}
+function nextQuestion() { quizIdx++; renderQuestion(); }
 
 function renderResult() {
   const area = document.getElementById('quizArea');
@@ -1003,8 +1531,7 @@ function renderResult() {
           <div class="breakdown-row">
             <span class="breakdown-name">${q.pokemon.name} (${q.type==='silhouette'?'이름':'타입'})</span>
             <span class="breakdown-result ${quizAnswered[i]?'ok':'bad'}">${quizAnswered[i]?'정답✓':'오답✗'}</span>
-          </div>
-        `).join('')}
+          </div>`).join('')}
       </div>
       <button class="restart-btn" onclick="restartQuiz()">🔄 다시 풀기</button>
     </div>
@@ -1012,9 +1539,7 @@ function renderResult() {
   renderProgressDots();
 }
 
-function restartQuiz() {
-  buildQuiz();
-}
+function restartQuiz() { buildQuiz(); }
 
 function shuffle(arr) {
   const a = [...arr];
@@ -1045,7 +1570,7 @@ function showTab(tab) {
       setTimeout(()=>{
         document.getElementById('quiz-loading').style.display = 'none';
         buildQuiz();
-      }, 800);
+      }, 600);
     }
   }
 }
