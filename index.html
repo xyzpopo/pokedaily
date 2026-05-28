@@ -45,7 +45,6 @@
     z-index: 0;
   }
 
-  /* HEADER */
   header {
     position: relative;
     z-index: 10;
@@ -105,7 +104,6 @@
     border-radius: 20px;
   }
 
-  /* TABS */
   .tabs {
     position: relative;
     z-index: 10;
@@ -140,7 +138,6 @@
   }
   .tab-btn:hover:not(.active) { color: var(--text); }
 
-  /* MAIN */
   main {
     position: relative;
     z-index: 5;
@@ -153,7 +150,6 @@
   .page.active { display: block; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* LOADING */
   .loading {
     display: flex;
     flex-direction: column;
@@ -202,7 +198,6 @@
   }
   @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-  /* SECTION HEADER */
   .section-header {
     display: flex;
     align-items: center;
@@ -220,7 +215,6 @@
   }
   .section-title { font-size: 1rem; font-weight: 900; color: var(--text); }
 
-  /* POKEMON GRID - 반응형 */
   .pokemon-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -234,7 +228,6 @@
     .pokemon-grid { grid-template-columns: 1fr; }
   }
 
-  /* POKEMON CARD */
   .pokemon-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -392,7 +385,6 @@
     color: var(--muted);
   }
 
-  /* ===== MODAL ===== */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -508,7 +500,6 @@
 
   .modal-body { padding: 0 2rem 2rem; }
 
-  /* MODAL SECTIONS */
   .modal-section { margin-top: 1.5rem; }
   .modal-section-title {
     font-family: 'Galmuri11', monospace;
@@ -527,7 +518,6 @@
     background: var(--border);
   }
 
-  /* FLAVOR TEXT */
   .modal-desc {
     font-size: 0.82rem;
     color: var(--text);
@@ -538,7 +528,6 @@
     border: 1px solid var(--border);
   }
 
-  /* STATS */
   .modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
   .modal-stat-row { display: flex; flex-direction: column; gap: 0.25rem; }
   .modal-stat-top { display: flex; justify-content: space-between; align-items: center; }
@@ -552,7 +541,6 @@
     transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
   }
 
-  /* INFO GRID */
   .modal-info-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -568,7 +556,6 @@
   .modal-info-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
   .modal-info-val { font-family: 'Galmuri11', monospace; font-size: 0.9rem; color: var(--text); font-weight: 700; }
 
-  /* GENERATION */
   .modal-gen-block {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
@@ -606,7 +593,6 @@
     color: var(--accent);
   }
 
-  /* EVOLUTION CHAIN */
   .evo-chain {
     display: flex;
     align-items: center;
@@ -687,7 +673,6 @@
     animation: blink 1.2s step-end infinite;
   }
 
-  /* ABILITY */
   .ability-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .ability-tag {
     font-size: 0.72rem;
@@ -709,7 +694,6 @@
     margin-left: 0.3rem;
   }
 
-  /* TYPE COLORS */
   .type-normal    { background: #A8A878; }
   .type-fire      { background: #F08030; }
   .type-water     { background: #6890F0; }
@@ -729,7 +713,6 @@
   .type-steel     { background: #B8B8D0; color: #333 !important; }
   .type-fairy     { background: #EE99AC; color: #333 !important; }
 
-  /* ===== QUIZ PAGE ===== */
   .quiz-container { max-width: 650px; margin: 0 auto; }
   .quiz-progress { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
   .progress-dots { display: flex; gap: 0.45rem; }
@@ -814,7 +797,6 @@
   .next-btn:hover { transform: scale(1.05); }
   .next-btn.show { display: inline-block; animation: fadeIn 0.3s ease; }
 
-  /* RESULT */
   .result-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -856,12 +838,10 @@
   }
   .restart-btn:hover { transform: scale(1.05); }
 
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  /* MOBILE */
   @media (max-width: 600px) {
     header { padding: 1rem; }
     .logo h1 { font-size: 1rem; }
@@ -904,7 +884,6 @@
 </div>
 
 <main>
-  <!-- DEX PAGE -->
   <div id="dex-page" class="page active">
     <div id="dex-loading" class="loading">
       <div class="pokeball-loader"></div>
@@ -919,7 +898,6 @@
     </div>
   </div>
 
-  <!-- QUIZ PAGE -->
   <div id="quiz-page" class="page">
     <div id="quiz-loading" class="loading" style="display:none">
       <div class="pokeball-loader"></div>
@@ -945,7 +923,6 @@
   </div>
 </main>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -971,7 +948,6 @@ const TYPE_COLOR = {
   steel:'#B8B8D0', fairy:'#EE99AC'
 };
 
-// 세대 정보
 const GEN_INFO = {
   'generation-i':   { name: '1세대', games: ['레드·그린', '블루', '피카츄'] },
   'generation-ii':  { name: '2세대', games: ['골드·실버', '크리스탈'] },
@@ -984,7 +960,6 @@ const GEN_INFO = {
   'generation-ix':  { name: '9세대', games: ['스칼렛·바이올렛'] },
 };
 
-// 게임 버전 → 세대 매핑
 const VERSION_GEN = {
   'red':'1세대','blue':'1세대','yellow':'1세대',
   'gold':'2세대','silver':'2세대','crystal':'2세대',
@@ -1010,7 +985,6 @@ const VERSION_KO = {
   'legends-arceus':'레전드 아르세우스','scarlet':'스칼렛','violet':'바이올렛',
 };
 
-// 진화 방법 한국어
 function evoMethodKo(detail) {
   if (!detail) return '';
   if (detail.min_level) return `Lv.${detail.min_level}`;
@@ -1032,7 +1006,23 @@ function evoMethodKo(detail) {
   return '레벨업';
 }
 
-// Seeded RNG
+// ===== 핵심 수정: 한국어 도감 설명 추출 함수 =====
+// ko → ja-Hrkt → ja → en 순서로 폴백하며,
+// 같은 언어 내에서는 가장 최신 버전(배열 끝)의 텍스트를 우선 사용
+function getBestFlavorText(entries) {
+  const langPriority = ['ko', 'ja-Hrkt', 'ja', 'en'];
+  for (const lang of langPriority) {
+    // 해당 언어 항목들만 필터링 (최신 버전이 배열 뒤쪽에 있음)
+    const candidates = entries.filter(e => e.language.name === lang);
+    if (candidates.length > 0) {
+      // 마지막(최신) 항목 사용, 특수문자 정리
+      const text = candidates[candidates.length - 1].flavor_text;
+      return text.replace(/\f/g, ' ').replace(/\n/g, ' ').trim();
+    }
+  }
+  return '';
+}
+
 function seededRand(seed) {
   let s = seed;
   return function() {
@@ -1051,11 +1041,9 @@ function pickDailyIds() {
   const rand = seededRand(getDailySeed());
   const ids = new Set();
   while (ids.size < 3) ids.add(Math.floor(rand() * MAX_POKEMON_ID) + 1);
-  // 번호 순 정렬
   return [...ids].sort((a,b)=>a-b);
 }
 
-// Fetch pokemon data
 async function fetchPokemon(id, _depth = 0) {
   if (_depth > 5) return null;
   let poke, spec;
@@ -1073,11 +1061,9 @@ async function fetchPokemon(id, _depth = 0) {
                || spec.names.find(n=>n.language.name==='ja-Hrkt')?.name
                || poke.name;
 
-  const desc = spec.flavor_text_entries.find(e=>e.language.name==='ko')?.flavor_text
-             || spec.flavor_text_entries.find(e=>e.language.name==='en')?.flavor_text
-             || '';
+  // ★ 수정된 부분: getBestFlavorText로 한국어 우선 추출
+  const desc = getBestFlavorText(spec.flavor_text_entries);
 
-  // 특성 한국어 이름 fetch
   const abilities = await Promise.all(poke.abilities.map(async a => {
     let nameKo = a.ability.name;
     try {
@@ -1089,7 +1075,6 @@ async function fetchPokemon(id, _depth = 0) {
     return { name: nameKo, isHidden: a.is_hidden };
   }));
 
-  // 등장 게임 목록
   const gameVersions = spec.flavor_text_entries
     .map(e=>e.version?.name)
     .filter(Boolean);
@@ -1102,7 +1087,7 @@ async function fetchPokemon(id, _depth = 0) {
     imagePixel: poke.sprites.front_default,
     types: poke.types.map(t=>t.type.name),
     stats: poke.stats.slice(0,6).map(s=>({ name:s.stat.name, value:s.base_stat })),
-    desc: desc.replace(/\f/g,' ').replace(/\n/g,' '),
+    desc,
     category: spec.genera.find(g=>g.language.name==='ko')?.genus || '',
     height: poke.height / 10,
     weight: poke.weight / 10,
@@ -1117,7 +1102,6 @@ async function fetchPokemon(id, _depth = 0) {
   };
 }
 
-// Fetch evolution chain
 async function fetchEvoChain(url) {
   try {
     const data = await fetch(url).then(r=>r.json());
@@ -1125,7 +1109,6 @@ async function fetchEvoChain(url) {
   } catch(e) { return null; }
 }
 
-// Parse evolution chain into flat list of steps
 async function parseEvoChain(chain) {
   const steps = [];
 
@@ -1154,7 +1137,6 @@ async function parseEvoChain(chain) {
   return steps;
 }
 
-// STATE
 let pokemonData = [];
 let dexViewed = false;
 let quizQuestions = [];
@@ -1162,12 +1144,10 @@ let quizIdx = 0;
 let quizScore = 0;
 let quizAnswered = [];
 
-// Date
 const d = new Date();
 document.getElementById('dateDisplay').textContent =
   `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
 
-// INIT
 async function init() {
   const ids = pickDailyIds();
   const results = await Promise.all(ids.map(fetchPokemon));
@@ -1224,17 +1204,14 @@ function renderDex() {
   dexViewed = true;
 }
 
-// ===== MODAL =====
 async function openModal(p) {
   const color = TYPE_COLOR[p.types[0]] || '#ffcb05';
   const overlay = document.getElementById('modalOverlay');
   const modal = document.getElementById('modal');
   modal.style.setProperty('--modal-color', color);
 
-  // 등장 세대 계산
   const genInfo = GEN_INFO[p.generation] || { name: '알 수 없음', games: [] };
 
-  // 등장 게임 버전 → 세대 그룹화
   const genMap = {};
   p.gameVersions.forEach(v => {
     const g = VERSION_GEN[v];
@@ -1346,14 +1323,12 @@ async function openModal(p) {
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // 스탯 애니메이션
   setTimeout(() => {
     document.querySelectorAll('.modal-stat-bar').forEach(bar => {
       bar.style.width = bar.dataset.val + '%';
     });
   }, 100);
 
-  // 진화 체인 비동기 로드
   if (p.evoChainUrl) {
     const chain = await fetchEvoChain(p.evoChainUrl);
     if (chain) {
@@ -1404,10 +1379,8 @@ function closeModalOnBg(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
-// ESC to close
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ===== QUIZ =====
 function buildQuiz() {
   quizQuestions = [];
   quizIdx = 0;
@@ -1559,7 +1532,6 @@ function shuffle(arr) {
   return a;
 }
 
-// TABS
 function showTab(tab) {
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{
     b.classList.toggle('active', (i===0&&tab==='dex')||(i===1&&tab==='quiz'));
