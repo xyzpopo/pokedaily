@@ -56,7 +56,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .ball-card-hint{font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);text-align:center;}
 
 /* SVG 몬스터볼 */
-.ball-svg-wrap{width:110px;height:110px;position:relative;filter:drop-shadow(0 6px 20px rgba(0,0,0,.5));transition:transform .3s ease;}
+.ball-svg-wrap{width:120px;height:120px;position:relative;filter:drop-shadow(0 6px 22px rgba(0,0,0,.55));transition:transform .3s ease;}
 .ball-card:hover .ball-svg-wrap{transform:rotate(-15deg) scale(1.06);}
 .ball-card.legendary .ball-svg-wrap{filter:drop-shadow(0 6px 24px rgba(255,203,5,.6));}
 @keyframes ball-shake{0%,100%{transform:rotate(0);}20%{transform:rotate(-18deg);}40%{transform:rotate(16deg);}60%{transform:rotate(-12deg);}80%{transform:rotate(8deg);}}
@@ -72,7 +72,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .card-image-wrap::before{content:'';position:absolute;width:65px;height:65px;background:radial-gradient(circle,var(--card-color,rgba(255,203,5,.25)),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;filter:blur(14px);}
 .card-image{width:85px;height:85px;image-rendering:pixelated;filter:drop-shadow(0 4px 14px var(--card-color,rgba(255,203,5,.4)));transition:transform .3s;position:relative;z-index:1;}
 .pokemon-card:hover .card-image{transform:scale(1.08) translateY(-4px);}
-.shiny-toggle{position:absolute;top:.7rem;left:.8rem;font-size:.72rem;cursor:pointer;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:20px;padding:.15rem .5rem;transition:all .2s;font-family:'Galmuri11',monospace;color:var(--muted);}
+.shiny-toggle{display:inline-block;font-size:.65rem;cursor:pointer;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:20px;padding:.18rem .6rem;transition:all .2s;font-family:'Galmuri11',monospace;color:var(--muted);margin-top:.5rem;}
 .shiny-toggle:hover,.shiny-toggle.active{background:rgba(255,203,5,.12);border-color:rgba(255,203,5,.4);color:var(--accent);}
 .card-name{font-family:'Galmuri11',monospace;font-size:1rem;color:var(--text);text-align:center;margin-bottom:.4rem;}
 .type-badges{display:flex;justify-content:center;gap:.35rem;margin-bottom:.8rem;flex-wrap:wrap;}
@@ -496,26 +496,53 @@ async function init(){
 /* ============================================================ DAILY DEX — 몬스터볼 */
 function makeBallSVG(isLegendary){
   if(isLegendary){
-    // 마스터볼 SVG
-    return`<svg viewBox="0 0 100 100" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#6a0dad" stroke="#333" stroke-width="3"/>
-      <path d="M2 50 Q2 2 50 2 Q98 2 98 50 Z" fill="#8b00ff"/>
-      <rect x="2" y="47" width="96" height="6" fill="#222"/>
-      <circle cx="50" cy="50" r="10" fill="white" stroke="#333" stroke-width="3"/>
-      <circle cx="50" cy="50" r="5" fill="#6a0dad"/>
-      <text x="28" y="35" font-size="14" fill="white" font-family="sans-serif" font-weight="bold">M</text>
-      <circle cx="70" cy="22" r="4" fill="white" opacity=".7"/>
-      <circle cx="78" cy="32" r="2.5" fill="white" opacity=".5"/>
+    // 마스터볼 - 원작 디자인 (보라/분홍 + M자 + 귀 장식)
+    return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="ballClip"><circle cx="60" cy="60" r="57"/></clipPath>
+        <radialGradient id="topGrad" cx="40%" cy="30%"><stop offset="0%" stop-color="#c060e0"/><stop offset="100%" stop-color="#6a0dad"/></radialGradient>
+        <radialGradient id="dotGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient>
+      </defs>
+      <!-- 외곽 원 -->
+      <circle cx="60" cy="60" r="57" fill="#6a0dad" stroke="#1a003a" stroke-width="4"/>
+      <!-- 윗면: 보라 그라디언트 -->
+      <path d="M3 60 Q3 3 60 3 Q117 3 117 60 Z" fill="url(#topGrad)" clip-path="url(#ballClip)"/>
+      <!-- 아랫면: 진한 보라 -->
+      <path d="M3 60 Q3 117 60 117 Q117 117 117 60 Z" fill="#3d007a" clip-path="url(#ballClip)"/>
+      <!-- 중앙 띠 -->
+      <rect x="3" y="56" width="114" height="8" fill="#1a003a" clip-path="url(#ballClip)"/>
+      <!-- 중앙 버튼 -->
+      <circle cx="60" cy="60" r="12" fill="url(#dotGrad)" stroke="#1a003a" stroke-width="3"/>
+      <circle cx="60" cy="60" r="5" fill="#9030c0"/>
+      <!-- M자 글자 -->
+      <text x="60" y="38" font-size="18" fill="white" font-family="Arial Black,sans-serif" font-weight="900" text-anchor="middle" letter-spacing="1">M</text>
+      <!-- 왼쪽 귀 장식 (작은 반원) -->
+      <ellipse cx="28" cy="28" rx="10" ry="7" fill="#ff80ff" transform="rotate(-30 28 28)" clip-path="url(#ballClip)"/>
+      <ellipse cx="28" cy="28" rx="6" ry="4" fill="#cc40cc" transform="rotate(-30 28 28)" clip-path="url(#ballClip)"/>
+      <!-- 하이라이트 -->
+      <ellipse cx="42" cy="30" rx="10" ry="6" fill="rgba(255,255,255,0.18)" transform="rotate(-20 42 30)" clip-path="url(#ballClip)"/>
     </svg>`;
   }
-  // 몬스터볼 SVG
-  return`<svg viewBox="0 0 100 100" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="48" fill="#cc0000" stroke="#333" stroke-width="3"/>
-    <path d="M2 50 Q2 98 50 98 Q98 98 98 50 Z" fill="white"/>
-    <rect x="2" y="47" width="96" height="6" fill="#222"/>
-    <circle cx="50" cy="50" r="10" fill="white" stroke="#333" stroke-width="3"/>
-    <circle cx="50" cy="50" r="5" fill="#cc0000"/>
-    <circle cx="30" cy="25" r="5" fill="rgba(255,255,255,0.3)"/>
+  // 몬스터볼 - 원형 클립으로 완전한 원
+  return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="mballClip"><circle cx="60" cy="60" r="57"/></clipPath>
+      <radialGradient id="mRedGrad" cx="38%" cy="30%"><stop offset="0%" stop-color="#ff4444"/><stop offset="100%" stop-color="#bb0000"/></radialGradient>
+      <radialGradient id="mBtnGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient>
+    </defs>
+    <!-- 외곽 원 -->
+    <circle cx="60" cy="60" r="57" fill="#bb0000" stroke="#222" stroke-width="4"/>
+    <!-- 윗면: 빨간 그라디언트 -->
+    <path d="M3 60 Q3 3 60 3 Q117 3 117 60 Z" fill="url(#mRedGrad)" clip-path="url(#mballClip)"/>
+    <!-- 아랫면: 흰색 -->
+    <path d="M3 60 Q3 117 60 117 Q117 117 117 60 Z" fill="white" clip-path="url(#mballClip)"/>
+    <!-- 중앙 띠 -->
+    <rect x="3" y="56" width="114" height="8" fill="#111" clip-path="url(#mballClip)"/>
+    <!-- 중앙 버튼 -->
+    <circle cx="60" cy="60" r="12" fill="url(#mBtnGrad)" stroke="#111" stroke-width="3"/>
+    <circle cx="60" cy="60" r="5" fill="#cc0000"/>
+    <!-- 하이라이트 -->
+    <ellipse cx="42" cy="30" rx="12" ry="7" fill="rgba(255,255,255,0.25)" transform="rotate(-20 42 30)" clip-path="url(#mballClip)"/>
   </svg>`;
 }
 
@@ -531,7 +558,7 @@ function renderDex(){
     grid.appendChild(wrapper);
     renderBallCard(wrapper,p);
   });
-  dexViewed=true;
+  // dexViewed는 최소 1개 볼을 열면 true가 됨 (renderPokemonCard에서 설정)
 }
 
 function renderBallCard(wrapper,p){
@@ -552,6 +579,7 @@ function renderPokemonCard(wrapper,p){
   const color=TYPE_COLOR[p.types[0]]||'#ffcb05';
   wrapper.innerHTML='';
   wrapper.dataset.opened='true';
+  dexViewed=true;
   const card=document.createElement('div');
   card.className='pokemon-card';
   card.style.setProperty('--card-color',color);
@@ -568,8 +596,7 @@ function renderPokemonCard(wrapper,p){
 
   card.innerHTML=`
     <div class="card-bg"></div>
-    <span class="shiny-toggle">✨이로치</span>
-    <span class="card-hint">탭하면 자세히 ▶</span>
+    <span class="card-hint">자세히 ▶</span>
     <div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div>
     <div class="card-image-wrap"><img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/></div>
     <div class="card-name">${p.name}</div>
@@ -582,7 +609,8 @@ function renderPokemonCard(wrapper,p){
         <span class="stat-value">${s.value}</span>
       </div>`).join('')}
     </div>
-    <div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div>`;
+    <div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div>
+    <div style="text-align:center"><span class="shiny-toggle">✨ 이로치</span></div>`;
 
   card.querySelector('.shiny-toggle').onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};
   card.onclick=e=>{if(e.target.classList.contains('shiny-toggle'))return;openModal(p,isShiny);};
@@ -918,10 +946,15 @@ function showTab(tab){
       document.getElementById('quiz-wait').style.display='flex';
       document.getElementById('quiz-difficulty').style.display='none';
       document.getElementById('quiz-content').style.display='none';
-    } else if(!quizQuestions.length&&document.getElementById('quiz-content').style.display==='none'){
+    } else {
+      // 도감 봤으면 항상 난이도 선택 또는 진행 중 화면 표시
       document.getElementById('quiz-wait').style.display='none';
-      document.getElementById('quiz-difficulty').style.display='block';
-      document.getElementById('quiz-content').style.display='none';
+      if(quizQuestions.length===0){
+        // 아직 시작 안 함
+        document.getElementById('quiz-difficulty').style.display='block';
+        document.getElementById('quiz-content').style.display='none';
+      }
+      // 진행 중이면 quiz-content는 이미 표시되어 있음
     }
   }
 }
