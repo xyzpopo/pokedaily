@@ -58,7 +58,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 /* SVG 몬스터볼 */
 .ball-svg-wrap{width:120px;height:120px;position:relative;filter:drop-shadow(0 6px 22px rgba(0,0,0,.55));transition:transform .3s ease;}
 .ball-card:hover .ball-svg-wrap{transform:rotate(-15deg) scale(1.06);}
-.ball-card.legendary .ball-svg-wrap{filter:drop-shadow(0 6px 24px rgba(180,0,255,.55));}
+.ball-card.legendary .ball-svg-wrap{filter:drop-shadow(0 6px 24px rgba(255,203,5,.6));}
 @keyframes ball-shake{0%,100%{transform:rotate(0);}20%{transform:rotate(-18deg);}40%{transform:rotate(16deg);}60%{transform:rotate(-12deg);}80%{transform:rotate(8deg);}}
 .ball-card.shaking .ball-svg-wrap{animation:ball-shake .5s ease;}
 
@@ -222,11 +222,11 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .quiz-question{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.4rem;line-height:1.65;}
 .quiz-hint{font-size:.73rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.65;padding:.55rem .8rem;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid var(--border);}
 .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
-.option-btn{font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);background:var(--surface);border:1px solid var(--border);padding:.75rem .8rem;border-radius:12px;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .15s;-webkit-tap-highlight-color:transparent;}
-.option-btn:hover:not(.answered){background:rgba(255,203,5,.08);border-color:rgba(255,203,5,.4);color:var(--accent);transform:scale(1.02);}
-.option-btn.answered{cursor:default;pointer-events:none;}
-.option-btn.correct{background:rgba(74,222,128,.15)!important;border-color:#4ade80!important;color:#4ade80!important;transform:none!important;}
-.option-btn.wrong{background:rgba(255,0,0,.1)!important;border-color:var(--red)!important;color:var(--red)!important;transform:none!important;}
+.option-btn{font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);background:var(--surface);border:1px solid var(--border);padding:.75rem .8rem;border-radius:12px;cursor:pointer;transition:all .2s;}
+.option-btn:hover:not(:disabled){background:rgba(255,203,5,.08);border-color:rgba(255,203,5,.4);color:var(--accent);transform:scale(1.02);}
+.option-btn.correct{background:rgba(74,222,128,.15);border-color:#4ade80;color:#4ade80;}
+.option-btn.wrong{background:rgba(255,0,0,.1);border-color:var(--red);color:var(--red);}
+.option-btn:disabled{cursor:default;}
 .quiz-feedback{margin-top:.85rem;padding:.75rem;border-radius:10px;font-size:.78rem;line-height:1.6;display:none;}
 .quiz-feedback.show{display:block;animation:fadeIn .3s ease;}
 .quiz-feedback.correct-fb{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80;}
@@ -312,7 +312,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 
   <!-- QUIZ -->
   <div id="quiz-page" class="page">
-    <div id="quiz-wait" class="loading" style="display:none">
+    <div id="quiz-wait" class="loading">
       <div style="text-align:center">
         <div style="font-size:3rem;margin-bottom:.9rem">🎯</div>
         <h2 style="font-family:'Galmuri11',monospace;color:var(--accent);margin-bottom:.65rem;font-size:1rem">먼저 도감을 확인하세요!</h2>
@@ -496,80 +496,54 @@ async function init(){
 /* ============================================================ DAILY DEX — 몬스터볼 */
 function makeBallSVG(isLegendary){
   if(isLegendary){
-    // 마스터볼 - 원작 게임 디자인 재현
-    // 특징: 보라색 상단, 흰색 하단, 중앙 흰 버튼+보라 내부, M 레터, 양쪽 핑크 반원 귀, 핑크 점 2개
+    // 마스터볼 - 원작 디자인 (보라/분홍 + M자 + 귀 장식)
     return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <clipPath id="mbClip"><circle cx="60" cy="60" r="56"/></clipPath>
-    <radialGradient id="mbTopGrad" cx="38%" cy="28%" r="65%">
-      <stop offset="0%" stop-color="#b060e8"/>
-      <stop offset="100%" stop-color="#5a00aa"/>
-    </radialGradient>
-    <radialGradient id="mbBtnGrad" cx="30%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#dddddd"/>
-    </radialGradient>
-  </defs>
-  <!-- 외곽 테두리 -->
-  <circle cx="60" cy="60" r="56" fill="#1a0030" stroke="#1a0030" stroke-width="2"/>
-  <!-- 하단 흰색 반구 -->
-  <path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#mbClip)"/>
-  <!-- 상단 보라 반구 -->
-  <path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#mbTopGrad)" clip-path="url(#mbClip)"/>
-  <!-- 중앙 검은 띠 -->
-  <rect x="4" y="55.5" width="112" height="9" fill="#1a0030" clip-path="url(#mbClip)"/>
-  <!-- 왼쪽 핑크 반원 귀 (게임 원작의 특징적인 장식) -->
-  <ellipse cx="22" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/>
-  <ellipse cx="22" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/>
-  <!-- 오른쪽 핑크 반원 귀 -->
-  <ellipse cx="98" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/>
-  <ellipse cx="98" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/>
-  <!-- M 글자 (굵은 흰색, 상단 중앙) -->
-  <text x="60" y="44" font-size="20" fill="white" font-family="Arial Black,Impact,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">M</text>
-  <!-- 왼쪽 핑크 점 -->
-  <circle cx="36" cy="50" r="4" fill="#ff80cc"/>
-  <!-- 오른쪽 핑크 점 -->
-  <circle cx="84" cy="50" r="4" fill="#ff80cc"/>
-  <!-- 중앙 버튼 외곽 -->
-  <circle cx="60" cy="60" r="11" fill="url(#mbBtnGrad)" stroke="#1a0030" stroke-width="2.5"/>
-  <!-- 중앙 버튼 내부 보라 -->
-  <circle cx="60" cy="60" r="5.5" fill="#8800cc"/>
-  <!-- 버튼 하이라이트 -->
-  <circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.6)"/>
-  <!-- 상단 전체 하이라이트 -->
-  <ellipse cx="44" cy="22" rx="14" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20 44 22)" clip-path="url(#mbClip)"/>
-</svg>`;
+      <defs>
+        <clipPath id="ballClip"><circle cx="60" cy="60" r="57"/></clipPath>
+        <radialGradient id="topGrad" cx="40%" cy="30%"><stop offset="0%" stop-color="#c060e0"/><stop offset="100%" stop-color="#6a0dad"/></radialGradient>
+        <radialGradient id="dotGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient>
+      </defs>
+      <!-- 외곽 원 -->
+      <circle cx="60" cy="60" r="57" fill="#6a0dad" stroke="#1a003a" stroke-width="4"/>
+      <!-- 윗면: 보라 그라디언트 -->
+      <path d="M3 60 Q3 3 60 3 Q117 3 117 60 Z" fill="url(#topGrad)" clip-path="url(#ballClip)"/>
+      <!-- 아랫면: 진한 보라 -->
+      <path d="M3 60 Q3 117 60 117 Q117 117 117 60 Z" fill="#3d007a" clip-path="url(#ballClip)"/>
+      <!-- 중앙 띠 -->
+      <rect x="3" y="56" width="114" height="8" fill="#1a003a" clip-path="url(#ballClip)"/>
+      <!-- 중앙 버튼 -->
+      <circle cx="60" cy="60" r="12" fill="url(#dotGrad)" stroke="#1a003a" stroke-width="3"/>
+      <circle cx="60" cy="60" r="5" fill="#9030c0"/>
+      <!-- M자 글자 -->
+      <text x="60" y="38" font-size="18" fill="white" font-family="Arial Black,sans-serif" font-weight="900" text-anchor="middle" letter-spacing="1">M</text>
+      <!-- 왼쪽 귀 장식 (작은 반원) -->
+      <ellipse cx="28" cy="28" rx="10" ry="7" fill="#ff80ff" transform="rotate(-30 28 28)" clip-path="url(#ballClip)"/>
+      <ellipse cx="28" cy="28" rx="6" ry="4" fill="#cc40cc" transform="rotate(-30 28 28)" clip-path="url(#ballClip)"/>
+      <!-- 하이라이트 -->
+      <ellipse cx="42" cy="30" rx="10" ry="6" fill="rgba(255,255,255,0.18)" transform="rotate(-20 42 30)" clip-path="url(#ballClip)"/>
+    </svg>`;
   }
-  // 몬스터볼 - 원작 디자인
+  // 몬스터볼 - 원형 클립으로 완전한 원
   return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <clipPath id="pbClip"><circle cx="60" cy="60" r="56"/></clipPath>
-    <radialGradient id="pbRedGrad" cx="38%" cy="28%" r="65%">
-      <stop offset="0%" stop-color="#ff5555"/>
-      <stop offset="100%" stop-color="#cc0000"/>
-    </radialGradient>
-    <radialGradient id="pbBtnGrad" cx="30%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#cccccc"/>
-    </radialGradient>
-  </defs>
-  <!-- 외곽 테두리 -->
-  <circle cx="60" cy="60" r="56" fill="#111111" stroke="#111111" stroke-width="2"/>
-  <!-- 하단 흰색 반구 -->
-  <path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#pbClip)"/>
-  <!-- 상단 빨간 반구 -->
-  <path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#pbRedGrad)" clip-path="url(#pbClip)"/>
-  <!-- 중앙 검은 띠 -->
-  <rect x="4" y="55.5" width="112" height="9" fill="#111111" clip-path="url(#pbClip)"/>
-  <!-- 중앙 버튼 외곽 -->
-  <circle cx="60" cy="60" r="11" fill="url(#pbBtnGrad)" stroke="#111111" stroke-width="2.5"/>
-  <!-- 중앙 버튼 내부 빨강 -->
-  <circle cx="60" cy="60" r="5.5" fill="#dd0000"/>
-  <!-- 버튼 하이라이트 -->
-  <circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.65)"/>
-  <!-- 상단 하이라이트 -->
-  <ellipse cx="42" cy="24" rx="14" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-20 42 24)" clip-path="url(#pbClip)"/>
-</svg>`;
+    <defs>
+      <clipPath id="mballClip"><circle cx="60" cy="60" r="57"/></clipPath>
+      <radialGradient id="mRedGrad" cx="38%" cy="30%"><stop offset="0%" stop-color="#ff4444"/><stop offset="100%" stop-color="#bb0000"/></radialGradient>
+      <radialGradient id="mBtnGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient>
+    </defs>
+    <!-- 외곽 원 -->
+    <circle cx="60" cy="60" r="57" fill="#bb0000" stroke="#222" stroke-width="4"/>
+    <!-- 윗면: 빨간 그라디언트 -->
+    <path d="M3 60 Q3 3 60 3 Q117 3 117 60 Z" fill="url(#mRedGrad)" clip-path="url(#mballClip)"/>
+    <!-- 아랫면: 흰색 -->
+    <path d="M3 60 Q3 117 60 117 Q117 117 117 60 Z" fill="white" clip-path="url(#mballClip)"/>
+    <!-- 중앙 띠 -->
+    <rect x="3" y="56" width="114" height="8" fill="#111" clip-path="url(#mballClip)"/>
+    <!-- 중앙 버튼 -->
+    <circle cx="60" cy="60" r="12" fill="url(#mBtnGrad)" stroke="#111" stroke-width="3"/>
+    <circle cx="60" cy="60" r="5" fill="#cc0000"/>
+    <!-- 하이라이트 -->
+    <ellipse cx="42" cy="30" rx="12" ry="7" fill="rgba(255,255,255,0.25)" transform="rotate(-20 42 30)" clip-path="url(#mballClip)"/>
+  </svg>`;
 }
 
 function renderDex(){
@@ -584,6 +558,7 @@ function renderDex(){
     grid.appendChild(wrapper);
     renderBallCard(wrapper,p);
   });
+  // dexViewed는 최소 1개 볼을 열면 true가 됨 (renderPokemonCard에서 설정)
 }
 
 function renderBallCard(wrapper,p){
@@ -604,10 +579,7 @@ function renderPokemonCard(wrapper,p){
   const color=TYPE_COLOR[p.types[0]]||'#ffcb05';
   wrapper.innerHTML='';
   wrapper.dataset.opened='true';
-
-  // ★ BUG FIX: 볼을 열 때마다 dexViewed 설정
   dexViewed=true;
-
   const card=document.createElement('div');
   card.className='pokemon-card';
   card.style.setProperty('--card-color',color);
@@ -760,21 +732,32 @@ async function openModal(p,startShiny=false){
       <div class="modal-section"><div class="modal-section-title">🔄 진화 과정</div><div id="evoChainArea"><div class="evo-loading">진화 정보 불러오는 중...</div></div></div>
     </div>`;
 
+  // 현재 표시 중인 폼의 이미지 상태 (폼 선택 시 업데이트됨)
+  let currentFormNormal=p.image;
+  let currentFormShiny=p.shinyImage||p.image;
+  // 이로치 토글 함수
   window.toggleModalShiny=()=>{
-    if(!p.shinyImage) return;
+    if(!p.shinyImage&&!currentFormShiny) return;
     modalShiny=!modalShiny;
     const img=document.getElementById('modalMainImg');
     const btn=document.getElementById('modalShinyBtn');
-    if(img) img.src=modalShiny?p.shinyImage:p.image;
+    if(img){
+      img.src=modalShiny?currentFormShiny:currentFormNormal;
+      img.style.animation=modalShiny?'shiny-sparkle 1.5s ease-in-out infinite':'';
+    }
     if(btn) btn.className='modal-shiny-btn'+(modalShiny?' active':'');
-    if(modalShiny) img.style.animation='shiny-sparkle 1.5s ease-in-out infinite';
-    else img.style.animation='';
   };
 
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
   setTimeout(()=>{document.querySelectorAll('.modal-stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});},120);
-  if(hasMultiForms) loadForms(p);
+  if(hasMultiForms) loadForms(p, (normal,shiny)=>{
+    currentFormNormal=normal;
+    currentFormShiny=shiny||normal;
+    const mainImg=document.getElementById('modalMainImg');
+    if(mainImg) mainImg.src=modalShiny?currentFormShiny:currentFormNormal;
+  });
+  // 진화 체인
   if(p.evoChainUrl){
     const chain=await fetchEvoChain(p.evoChainUrl);
     if(chain){const steps=await parseEvoChain(chain);renderEvoChain(steps,p.id);}
@@ -784,18 +767,29 @@ async function openModal(p,startShiny=false){
   }
 }
 
-async function loadForms(p){
+async function loadForms(p, onFormSelect){
   const grid=document.getElementById('formsGrid');
   if(!grid) return;
   const results=await Promise.all(p.forms.map(async f=>{
-    try{const pk=await fetch(f.url).then(r=>r.json());const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;const label=getFormLabel(f.name,p.forms.find(x=>x.isDefault)?.name||p.nameEn)||'기본 폼';return{name:f.name,label,img,isDefault:f.isDefault};}catch(e){return null;}
+    try{
+      const pk=await fetch(f.url).then(r=>r.json());
+      const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;
+      const shinyImg=pk.sprites.other['official-artwork']?.front_shiny||pk.sprites.front_shiny||null;
+      const label=getFormLabel(f.name,p.forms.find(x=>x.isDefault)?.name||p.nameEn)||'기본 폼';
+      return{name:f.name,label,img,shinyImg,isDefault:f.isDefault};
+    }catch(e){return null;}
   }));
   grid.innerHTML='';
   results.filter(Boolean).forEach(f=>{
     const card=document.createElement('div');
     card.className='form-card'+(f.isDefault?' active-form':'');
     card.innerHTML=`<img src="${f.img||''}" alt="${f.label}"/><div class="form-card-name">${f.label}</div>`;
-    card.onclick=()=>{if(f.img)document.getElementById('modalMainImg').src=f.img;grid.querySelectorAll('.form-card').forEach(c=>c.classList.remove('active-form'));card.classList.add('active-form');};
+    card.onclick=()=>{
+      // 콜백으로 현재 폼 이미지 상태 업데이트
+      if(onFormSelect) onFormSelect(f.img||p.image, f.shinyImg||p.shinyImage||null);
+      grid.querySelectorAll('.form-card').forEach(c=>c.classList.remove('active-form'));
+      card.classList.add('active-form');
+    };
     grid.appendChild(card);
   });
 }
@@ -852,16 +846,21 @@ function buildQuiz(diff){
     const genInfo=GEN_INFO[p.generation]||{name:'알 수 없음'};
 
     if(diff==='easy'){
+      // 이름(4지선다, 힌트 풍부), 타입(4지선다)
       quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`${p.genus} 포켓몬이에요.\n${p.desc.slice(0,60)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});
       quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`키 ${p.height}m, 무게 ${p.weight}kg`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});
+
     } else if(diff==='normal'){
+      // 이름, 타입, 세대, 키
       quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`힌트: ${p.desc.slice(0,50)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});
       quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${p.genus} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});
       const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);
       if(wrongGens.length>=3) quizQuestions.push({type:'gen',pokemon:p,question:`${p.name}가 처음 등장한 세대는?`,hint:`타입: ${p.types.map(t=>TYPE_KO[t]).join(' / ')}`,answer:genInfo.name,options:shuffle([genInfo.name,...wrongGens])});
       const hOpts=[p.height];while(hOpts.length<4){const v=+(Math.random()*3.5+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}
       quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:`${p.genus} 포켓몬`,answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});
+
     } else {
+      // 하드: 이름(힌트 없음), 타입, 세대, 키, 무게, 스탯, 설명→이름
       quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`포획률: ${p.captureRate??'?'}`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});
       quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${genInfo.name} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});
       const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);
@@ -870,9 +869,11 @@ function buildQuiz(diff){
       quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:'신중하게 고르세요!',answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});
       const wOpts=[p.weight];while(wOpts.length<4){const v=+(Math.random()*200+0.5).toFixed(1);if(!wOpts.includes(v))wOpts.push(v);}
       quizQuestions.push({type:'weight',pokemon:p,question:`${p.name}의 무게는?`,hint:'소수점까지 정확히!',answer:`${p.weight}kg`,options:shuffle(wOpts.map(v=>`${v}kg`))});
+      // 스탯 퀴즈: HP
       const hpVal=p.stats[0].value;
       const hpOpts=[hpVal];while(hpOpts.length<4){const v=Math.floor(Math.random()*200)+1;if(!hpOpts.includes(v))hpOpts.push(v);}
       quizQuestions.push({type:'stat',pokemon:p,question:`${p.name}의 기본 HP 수치는?`,hint:'종족값을 맞혀보세요.',answer:String(hpVal),options:shuffle(hpOpts.map(String))});
+      // 설명→이름
       quizQuestions.push({type:'desc',pokemon:p,question:'이 도감 설명의 포켓몬은?',hint:p.desc.slice(0,80)+'…',answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});
     }
   });
@@ -901,58 +902,26 @@ function renderQuestion(){
     <div class="quiz-image-wrap"><img id="quizImg" class="quiz-pokemon-img${hidden?' hidden':''}" src="${q.pokemon.image}" alt="?"/></div>
     <div class="quiz-question">${q.question}</div>
     <div class="quiz-hint">${q.hint}</div>
-    <div class="options-grid" id="optionsGrid">${q.options.map((opt,i)=>`<button class="option-btn" data-idx="${i}">${opt}</button>`).join('')}</div>
+    <div class="options-grid">${q.options.map(opt=>`<button class="option-btn" onclick="answerQuiz(${JSON.stringify(opt)},this)">${opt}</button>`).join('')}</div>
     <div class="quiz-feedback" id="quizFeedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">${quizIdx<quizQuestions.length-1?'다음 문제 →':'결과 보기 →'}</button>
   </div>`;
-
-  // 이벤트 위임 — 그리드 한 곳에만 리스너, 중복 발화 없음
-  const grid=document.getElementById('optionsGrid');
-  let answered=false;
-  grid.addEventListener('click',e=>{
-    const btn=e.target.closest('.option-btn');
-    if(!btn||answered) return;
-    answered=true;
-    answerQuiz(btn.textContent.trim(), btn, grid);
-  });
-
   renderProgressDots();
 }
 
-function answerQuiz(chosen, btn, grid){
+function answerQuiz(chosen,btn){
   const q=quizQuestions[quizIdx];
-  // 모든 버튼에 answered 클래스 → hover 완전 차단
-  grid.querySelectorAll('.option-btn').forEach(b=>b.classList.add('answered'));
-
+  document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
   const correct=chosen===q.answer;
   const fb=document.getElementById('quizFeedback');
   const img=document.getElementById('quizImg');
   if(img) img.classList.remove('hidden');
-
-  if(correct){
-    btn.classList.add('correct');
-    quizScore++;
-    fb.className='quiz-feedback show correct-fb';
-    fb.textContent=`✅ 정답! ${q.pokemon.name} 맞아요!`;
-    quizAnswered.push(true);
-  } else {
-    btn.classList.add('wrong');
-    // 정답 버튼 표시
-    grid.querySelectorAll('.option-btn').forEach(b=>{
-      if(b.textContent.trim()===q.answer) b.classList.add('correct');
-    });
-    fb.className='quiz-feedback show wrong-fb';
-    fb.textContent=`❌ 오답! 정답은 "${q.answer}"이에요.`;
-    quizAnswered.push(false);
-  }
-
+  if(correct){btn.classList.add('correct');quizScore++;fb.className='quiz-feedback show correct-fb';fb.textContent=`✅ 정답! ${q.pokemon.name} 맞아요!`;quizAnswered.push(true);}
+  else{btn.classList.add('wrong');document.querySelectorAll('.option-btn').forEach(b=>{if(b.textContent.trim()===q.answer)b.classList.add('correct');});fb.className='quiz-feedback show wrong-fb';fb.textContent=`❌ 오답! 정답은 "${q.answer}"이에요.`;quizAnswered.push(false);}
+  document.getElementById('nextBtn').classList.add('show');
   renderProgressDots();
-
-  // 1.1초 후 자동으로 다음 문제
-  setTimeout(()=>{
-    quizIdx++;
-    renderQuestion();
-  }, 1100);
 }
+function nextQuestion(){quizIdx++;renderQuestion();}
 
 function renderResult(){
   const area=document.getElementById('quizArea');
@@ -991,33 +960,21 @@ function showTab(tab){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz'][i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab+'-page').classList.add('active');
-
   if(tab==='ndex') initNdex();
-
   if(tab==='quiz'){
-    const waitEl=document.getElementById('quiz-wait');
-    const diffEl=document.getElementById('quiz-difficulty');
-    const contentEl=document.getElementById('quiz-content');
-
     if(!dexViewed){
-      // 아직 볼을 열지 않음 → 안내 화면
-      waitEl.style.display='flex';
-      diffEl.style.display='none';
-      contentEl.style.display='none';
-    } else if(quizQuestions.length>0 && quizIdx<quizQuestions.length){
-      // 퀴즈 진행 중 → 그대로 유지
-      waitEl.style.display='none';
-      diffEl.style.display='none';
-      contentEl.style.display='block';
-    } else if(contentEl.style.display==='block'){
-      // 결과 화면 표시 중 → 그대로 유지
-      waitEl.style.display='none';
-      diffEl.style.display='none';
+      document.getElementById('quiz-wait').style.display='flex';
+      document.getElementById('quiz-difficulty').style.display='none';
+      document.getElementById('quiz-content').style.display='none';
     } else {
-      // 도감은 봤지만 퀴즈 미시작 → 난이도 선택
-      waitEl.style.display='none';
-      diffEl.style.display='block';
-      contentEl.style.display='none';
+      // 도감 봤으면 항상 난이도 선택 또는 진행 중 화면 표시
+      document.getElementById('quiz-wait').style.display='none';
+      if(quizQuestions.length===0){
+        // 아직 시작 안 함
+        document.getElementById('quiz-difficulty').style.display='block';
+        document.getElementById('quiz-content').style.display='none';
+      }
+      // 진행 중이면 quiz-content는 이미 표시되어 있음
     }
   }
 }
