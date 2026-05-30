@@ -279,6 +279,20 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .met-modal-btn{display:inline-flex;align-items:center;gap:.4rem;font-family:'Galmuri11',monospace;font-size:.72rem;padding:.42rem 1rem;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s;margin-top:.5rem;}
 .met-modal-btn:hover{border-color:rgba(255,203,5,.4);color:var(--accent);}
 .met-modal-btn.met-active{background:rgba(255,203,5,.12);border-color:rgba(255,203,5,.5);color:var(--accent);}
+/* ===== 퀴즈 기록 ===== */
+.quiz-history-section{margin-top:1.5rem;}
+.quiz-history-title{font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--accent);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+.quiz-history-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.history-list{display:flex;flex-direction:column;gap:.45rem;max-height:260px;overflow-y:auto;}
+.history-row{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.65rem .9rem;gap:.5rem;}
+.history-diff{font-family:'Galmuri11',monospace;font-size:.65rem;padding:.15rem .5rem;border-radius:10px;background:rgba(255,203,5,.08);border:1px solid rgba(255,203,5,.2);color:var(--accent);white-space:nowrap;}
+.history-score{font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text);font-weight:700;}
+.history-pct{font-size:.65rem;color:var(--muted);}
+.history-date{font-size:.6rem;color:var(--muted);white-space:nowrap;}
+.history-empty{font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);text-align:center;padding:1.5rem;animation:blink 1.2s step-end infinite;}
+/* 오답 재풀이 버튼 */
+.retry-wrong-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:#ff6b6b;background:rgba(255,0,0,.07);border:1px solid rgba(255,0,0,.25);padding:.7rem 1.4rem;border-radius:30px;cursor:pointer;transition:all .2s;}
+.retry-wrong-btn:hover{background:rgba(255,0,0,.13);}
 @media(max-width:560px){
   header{padding:.85rem 1rem;}main{padding:1rem .8rem;}
   .options-grid{grid-template-columns:1fr;}
@@ -374,6 +388,12 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
       <div class="quiz-container">
         <div class="quiz-progress"><div class="progress-dots" id="progressDots"></div><div class="score-display" id="scoreDisplay">0 / 0</div></div>
         <div id="quizArea"></div>
+      </div>
+    </div>
+    <div id="quiz-history-wrap" style="margin-top:1.5rem">
+      <div class="quiz-history-section">
+        <div class="quiz-history-title">📋 내 퀴즈 기록</div>
+        <div class="history-list" id="historyList"><div class="history-empty">로그인 후 기록이 저장돼요</div></div>
       </div>
     </div>
   </div>
@@ -556,6 +576,7 @@ async function renderMetPage() {
 
 // 전역 노출 (기존 JS에서 호출)
 window.renderMetPage = renderMetPage;
+window.markMet = markMet;
 
 async function injectMetButton(p) {
   const existing = document.getElementById('metModalBtn');
@@ -579,6 +600,42 @@ async function injectMetButton(p) {
 }
 
 window.injectMetButton = injectMetButton;
+
+/* ===== 퀴즈 기록 ===== */
+async function saveQuizResult(diff, score, total, wrongQuestions) {
+  if (!currentUser) return;
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  const history = snap.exists() ? (snap.data().quizHistory || []) : [];
+  const d = new Date();
+  const dateStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  history.unshift({ diff, score, total, date: dateStr, wrong: wrongQuestions });
+  if (history.length > 20) history.length = 20; // 최대 20개 보관
+  await updateDoc(doc(db, 'users', currentUser.uid), { quizHistory: history });
+  renderQuizHistory();
+}
+
+async function renderQuizHistory() {
+  const wrap = document.getElementById('historyList');
+  if (!wrap) return;
+  if (!currentUser) { wrap.innerHTML = '<div class="history-empty">로그인 후 기록이 저장돼요</div>'; return; }
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  const history = snap.exists() ? (snap.data().quizHistory || []) : [];
+  if (!history.length) { wrap.innerHTML = '<div class="history-empty">아직 퀴즈 기록이 없어요</div>'; return; }
+  const diffLabel = { easy:'🌱 이지', normal:'⚡ 노말', hard:'🔥 하드' };
+  wrap.innerHTML = history.map(h => {
+    const pct = Math.round(h.score / h.total * 100);
+    const wrongCount = h.wrong ? h.wrong.length : 0;
+    return `<div class="history-row">
+      <span class="history-diff">${diffLabel[h.diff]||h.diff}</span>
+      <span class="history-score">${h.score}/${h.total} <span class="history-pct">(${pct}%)</span></span>
+      ${wrongCount > 0 ? `<span style="font-size:.62rem;color:#ff6b6b;cursor:pointer;font-family:'Galmuri11',monospace" onclick='window.retryWrong(${JSON.stringify(h.wrong)})'>오답 ${wrongCount}개 재풀이</span>` : '<span style="font-size:.62rem;color:#4ade80;font-family:\'Galmuri11\',monospace">✓ 전부 정답</span>'}
+      <span class="history-date">${h.date}</span>
+    </div>`;
+  }).join('');
+}
+
+window.saveQuizResult = saveQuizResult;
+window.renderQuizHistory = renderQuizHistory;
 </script>
 <script>
 // Firebase 모듈에서 전역 노출된 함수 사용
@@ -627,7 +684,7 @@ function makeBallSVG(isLegendary){
   if(isLegendary){return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="mbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="mbTopGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#b060e8"/><stop offset="100%" stop-color="#5a00aa"/></radialGradient><radialGradient id="mbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#1a0030" stroke="#1a0030" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#mbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#mbTopGrad)" clip-path="url(#mbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#1a0030" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><text x="60" y="44" font-size="20" fill="white" font-family="Arial Black,Impact,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">M</text><circle cx="36" cy="50" r="4" fill="#ff80cc"/><circle cx="84" cy="50" r="4" fill="#ff80cc"/><circle cx="60" cy="60" r="11" fill="url(#mbBtnGrad)" stroke="#1a0030" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#8800cc"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.6)"/><ellipse cx="44" cy="22" rx="14" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20 44 22)" clip-path="url(#mbClip)"/></svg>`;}
   return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="pbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="pbRedGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#ff5555"/><stop offset="100%" stop-color="#cc0000"/></radialGradient><radialGradient id="pbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#111111" stroke="#111111" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#pbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#pbRedGrad)" clip-path="url(#pbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#111111" clip-path="url(#pbClip)"/><circle cx="60" cy="60" r="11" fill="url(#pbBtnGrad)" stroke="#111111" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#dd0000"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.65)"/><ellipse cx="42" cy="24" rx="14" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-20 42 24)" clip-path="url(#pbClip)"/></svg>`;}
 function renderDex(){document.getElementById('dex-loading').style.display='none';document.getElementById('dex-content').style.display='block';const grid=document.getElementById('pokemonGrid');grid.innerHTML='';pokemonData.forEach((p,i)=>{const wrapper=document.createElement('div');wrapper.dataset.idx=i;wrapper.dataset.opened='false';grid.appendChild(wrapper);renderBallCard(wrapper,p);});}
-function renderBallCard(wrapper,p){wrapper.innerHTML='';const ball=document.createElement('div');ball.className='ball-card'+(p.isLegendary?' legendary':'');ball.innerHTML=`<div class="ball-svg-wrap">${makeBallSVG(p.isLegendary)}</div><div class="ball-card-hint">No.${String(p.id).padStart(4,'0')}<br>${p.isLegendary?'✨ 마스터볼':'🔴 몬스터볼'}<br><br>탭해서 열기!</div>`;ball.onclick=()=>{ball.classList.add('shaking');setTimeout(()=>{renderPokemonCard(wrapper,p);},520);};wrapper.appendChild(ball);}
+function renderBallCard(wrapper,p){wrapper.innerHTML='';const ball=document.createElement('div');ball.className='ball-card'+(p.isLegendary?' legendary':'');ball.innerHTML=`<div class="ball-svg-wrap">${makeBallSVG(p.isLegendary)}</div><div class="ball-card-hint">No.${String(p.id).padStart(4,'0')}<br>${p.isLegendary?'✨ 마스터볼':'🔴 몬스터볼'}<br><br>탭해서 열기!</div>`;ball.onclick=()=>{ball.classList.add('shaking');setTimeout(()=>{renderPokemonCard(wrapper,p);if(window.markMet)window.markMet(p);},520);};wrapper.appendChild(ball);}
 function renderPokemonCard(wrapper,p){const color=TYPE_COLOR[p.types[0]]||'#ffcb05';wrapper.innerHTML='';wrapper.dataset.opened='true';dexViewed=true;const card=document.createElement('div');card.className='pokemon-card';card.style.setProperty('--card-color',color);card.style.setProperty('--card-glow',color+'44');card.style.animation='slideUp .4s ease both';let isShiny=false;const updateImg=()=>{const img=card.querySelector('.card-image');const toggle=card.querySelector('.shiny-toggle');if(img){img.src=isShiny&&p.shinyImage?p.shinyImage:p.image;img.className='card-image'+(isShiny?' shiny-img':'');}if(toggle)toggle.className='shiny-toggle'+(isShiny?' active':'');};card.innerHTML=`<div class="card-bg"></div><span class="card-hint">자세히 ▶</span><div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div><div class="card-image-wrap"><img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/></div><div class="card-name">${p.name}</div><div class="type-badges">${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}</div><div class="card-desc">${p.desc}</div><div class="card-stats">${p.stats.map(s=>`<div class="stat-row"><span class="stat-label">${STAT_KO[s.name]||s.name}</span><div class="stat-bar-wrap"><div class="stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div></div><span class="stat-value">${s.value}</span></div>`).join('')}</div><div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div><div style="text-align:center"><span class="shiny-toggle"><span class="sw-track"><span class="sw-thumb"></span></span>✨ 이로치</span></div>`;card.querySelector('.shiny-toggle').onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};card.onclick=e=>{if(e.target.classList.contains('shiny-toggle'))return;openModal(p,isShiny);};wrapper.appendChild(card);setTimeout(()=>{card.querySelectorAll('.stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});},400);}
 function initNdex(){if(ndexAllIds.length)return;ndexAllIds=Array.from({length:MAX_ID},(_,i)=>i+1);ndexFiltered=[...ndexAllIds];buildTypeFilterUI();renderNdexPage();}
 function buildTypeFilterUI(){const wrap=document.getElementById('typeFilter');wrap.innerHTML='';Object.entries(TYPE_KO).forEach(([en,ko])=>{const btn=document.createElement('button');btn.className='type-filter-btn type-'+en;btn.textContent=ko;btn.onclick=()=>toggleTypeFilter(en,btn);wrap.appendChild(btn);});}
@@ -731,10 +788,87 @@ function answerQuiz(chosen,btn){
 }
 
 function nextQuestion(){quizIdx++;renderQuestion();}
-function renderResult(){const area=document.getElementById('quizArea');const pct=Math.round(quizScore/quizQuestions.length*100);const emoji=pct===100?'🏆':pct>=80?'🌟':pct>=60?'⭐':pct>=40?'💪':'😅';const msgs={easy:'이지 클리어! 다음 단계에 도전해봐요!',normal:'노말 클리어! 역시 포켓몬 트레이너!',hard:'하드 클리어! 당신은 포켓몬 마스터!'};const failMsgs={easy:'다시 한번 도전해봐요!',normal:'조금 더 공부하면 될 것 같아요!',hard:'하드는 정말 어려워요. 다시 도전!'};const msg=pct>=60?msgs[currentDiff]||'잘 했어요!':failMsgs[currentDiff]||'다시 도전!';const diffLabel={easy:'🌱 이지',normal:'⚡ 노말',hard:'🔥 하드'}[currentDiff];area.innerHTML=`<div class="result-card"><span class="result-emoji">${emoji}</span><div style="font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.3rem">${diffLabel}</div><div class="result-score">${quizScore}/${quizQuestions.length}</div><div class="result-msg">${msg}</div><div class="result-breakdown">${quizQuestions.map((q,i)=>`<div class="breakdown-row"><span class="breakdown-name">${q.pokemon.name} · ${{silhouette:'실루엣',type:'타입',gen:'세대',height:'키',weight:'무게',stat:'스탯',desc:'설명'}[q.type]||'퀴즈'}</span><span class="breakdown-result ${quizAnswered[i]?'ok':'bad'}">${quizAnswered[i]?'정답✓':'오답✗'}</span></div>`).join('')}</div><div class="result-btns"><button class="restart-btn" onclick="buildQuiz(currentDiff)">🔄 같은 난이도로</button><button class="change-diff-btn" onclick="backToDiffSelect()">난이도 변경</button></div></div>`;renderProgressDots();}
+
+function getWrongQuestions(){
+  return quizQuestions
+    .filter((_,i)=>quizAnswered[i]===false)
+    .map(q=>({type:q.type,pokemonId:q.pokemon.id,pokemonName:q.pokemon.name,question:q.question,answer:q.answer,hint:q.hint}));
+}
+
+function renderResult(){
+  const area=document.getElementById('quizArea');
+  const pct=Math.round(quizScore/quizQuestions.length*100);
+  const emoji=pct===100?'🏆':pct>=80?'🌟':pct>=60?'⭐':pct>=40?'💪':'😅';
+  const msgs={easy:'이지 클리어! 다음 단계에 도전해봐요!',normal:'노말 클리어! 역시 포켓몬 트레이너!',hard:'하드 클리어! 당신은 포켓몬 마스터!'};
+  const failMsgs={easy:'다시 한번 도전해봐요!',normal:'조금 더 공부하면 될 것 같아요!',hard:'하드는 정말 어려워요. 다시 도전!'};
+  const msg=pct>=60?msgs[currentDiff]||'잘 했어요!':failMsgs[currentDiff]||'다시 도전!';
+  const diffLabel={easy:'🌱 이지',normal:'⚡ 노말',hard:'🔥 하드'}[currentDiff];
+  const wrongList=getWrongQuestions();
+  const hasWrong=wrongList.length>0;
+
+  // Firebase에 기록 저장
+  if(window.saveQuizResult) window.saveQuizResult(currentDiff, quizScore, quizQuestions.length, wrongList);
+
+  area.innerHTML=`<div class="result-card">
+    <span class="result-emoji">${emoji}</span>
+    <div style="font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.3rem">${diffLabel}</div>
+    <div class="result-score">${quizScore}/${quizQuestions.length}</div>
+    <div class="result-msg">${msg}</div>
+    <div class="result-breakdown">${quizQuestions.map((q,i)=>`<div class="breakdown-row"><span class="breakdown-name">${q.pokemon.name} · ${{silhouette:'실루엣',type:'타입',gen:'세대',height:'키',weight:'무게',stat:'스탯',desc:'설명'}[q.type]||'퀴즈'}</span><span class="breakdown-result ${quizAnswered[i]?'ok':'bad'}">${quizAnswered[i]?'정답✓':'오답✗'}</span></div>`).join('')}</div>
+    <div class="result-btns">
+      <button class="restart-btn" onclick="buildQuiz(currentDiff)">🔄 같은 난이도로</button>
+      ${hasWrong?`<button class="retry-wrong-btn" id="retryWrongBtn">❌ 오답 ${wrongList.length}개 재풀이</button>`:''}
+      <button class="change-diff-btn" onclick="backToDiffSelect()">난이도 변경</button>
+    </div>
+  </div>`;
+
+  if(hasWrong){
+    document.getElementById('retryWrongBtn').onclick=()=>buildRetryQuiz(wrongList);
+  }
+  renderProgressDots();
+}
+
+// 오답 재풀이 빌드
+function buildRetryQuiz(wrongList){
+  quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];
+  const allNames=pokemonData.map(p=>p.name);
+  const pool=EXTRA_NAMES.filter(n=>!allNames.includes(n));
+  wrongList.forEach(w=>{
+    const pokemon=pokemonData.find(p=>p.id===w.pokemonId)||{id:w.pokemonId,name:w.pokemonName,image:'',types:['normal'],stats:[{name:'hp',value:0}],desc:'',genus:'',height:0,weight:0,generation:'',captureRate:0};
+    const others=pokemonData.filter(p=>p.id!==w.pokemonId).map(p=>p.name);
+    const fill=shuffle([...pool]).slice(0,Math.max(0,3-others.length));
+    const namePool=shuffle([...others,...fill]);
+    // 기존 오답 문제 유형 그대로 재생성
+    const wrongTypes=shuffle(Object.keys(TYPE_KO).filter(t=>!pokemon.types?.includes(t))).slice(0,3);
+    const genInfo=GEN_INFO[pokemon.generation]||{name:'알 수 없음'};
+    if(w.type==='silhouette'||w.type==='desc'){
+      quizQuestions.push({type:w.type,pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,namePool[0],namePool[1],namePool[2]])});
+    } else if(w.type==='type'){
+      quizQuestions.push({type:'type',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,...wrongTypes.map(t=>TYPE_KO[t]).slice(0,3)])});
+    } else if(w.type==='gen'){
+      const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==w.answer)).slice(0,3);
+      quizQuestions.push({type:'gen',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,...wrongGens])});
+    } else if(w.type==='height'){
+      const hOpts=[pokemon.height];while(hOpts.length<4){const v=+(Math.random()*4+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}
+      quizQuestions.push({type:'height',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(hOpts.map(v=>`${v}m`))});
+    } else if(w.type==='weight'){
+      const wOpts=[pokemon.weight];while(wOpts.length<4){const v=+(Math.random()*200+0.5).toFixed(1);if(!wOpts.includes(v))wOpts.push(v);}
+      quizQuestions.push({type:'weight',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(wOpts.map(v=>`${v}kg`))});
+    } else if(w.type==='stat'){
+      const hpVal=parseInt(w.answer);const hpOpts=[hpVal];while(hpOpts.length<4){const v=Math.floor(Math.random()*200)+1;if(!hpOpts.includes(v))hpOpts.push(v);}
+      quizQuestions.push({type:'stat',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(hpOpts.map(String))});
+    }
+  });
+  document.getElementById('quiz-difficulty').style.display='none';
+  document.getElementById('quiz-content').style.display='block';
+  renderProgressDots();renderQuestion();
+}
+
+// 기록 탭에서 오답 재풀이 (저장된 기록으로)
+window.retryWrong = function(wrongList){ buildRetryQuiz(wrongList); showTab('quiz'); };
 function backToDiffSelect(){document.getElementById('quiz-content').style.display='none';document.getElementById('quiz-difficulty').style.display='block';document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));document.getElementById('diffStartBtn').classList.remove('show');selectedDiff=null;}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showTab(tab){document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met'][i]===tab));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(tab+'-page').classList.add('active');if(tab==='ndex')initNdex();if(tab==='met'&&window.renderMetPage)window.renderMetPage();if(tab==='quiz'){const waitEl=document.getElementById('quiz-wait');const diffEl=document.getElementById('quiz-difficulty');const contentEl=document.getElementById('quiz-content');if(!dexViewed){waitEl.style.display='flex';diffEl.style.display='none';contentEl.style.display='none';}else if(quizQuestions.length>0&&quizIdx<quizQuestions.length){waitEl.style.display='none';diffEl.style.display='none';contentEl.style.display='block';}else if(contentEl.style.display==='block'){waitEl.style.display='none';diffEl.style.display='none';}else{waitEl.style.display='none';diffEl.style.display='block';contentEl.style.display='none';}}}
+function showTab(tab){document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met'][i]===tab));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(tab+'-page').classList.add('active');if(tab==='ndex')initNdex();if(tab==='met'&&window.renderMetPage)window.renderMetPage();if(tab==='quiz'){if(window.renderQuizHistory)window.renderQuizHistory();const waitEl=document.getElementById('quiz-wait');const diffEl=document.getElementById('quiz-difficulty');const contentEl=document.getElementById('quiz-content');if(!dexViewed){waitEl.style.display='flex';diffEl.style.display='none';contentEl.style.display='none';}else if(quizQuestions.length>0&&quizIdx<quizQuestions.length){waitEl.style.display='none';diffEl.style.display='none';contentEl.style.display='block';}else if(contentEl.style.display==='block'){waitEl.style.display='none';diffEl.style.display='none';}else{waitEl.style.display='none';diffEl.style.display='block';contentEl.style.display='none';}}}
 init();
 </script>
 </body>
