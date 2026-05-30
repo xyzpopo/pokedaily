@@ -9,6 +9,22 @@
 :root{--bg:#0d0d1a;--surface:#13132b;--card:#1a1a35;--accent:#ffcb05;--red:#ff0000;--text:#e8e8f0;--muted:#7070a0;--border:rgba(255,203,5,0.15);--glow:rgba(255,203,5,0.3);}
 body.light-mode{--bg:#f0f4ff;--surface:#e4eaf8;--card:#ffffff;--accent:#d4a000;--red:#cc0000;--text:#1a1a2e;--muted:#6070a0;--border:rgba(180,140,0,0.2);--glow:rgba(212,160,0,0.25);}
 body.light-mode::before{background-image:radial-gradient(1px 1px at 10% 15%,rgba(0,0,80,.08) 0%,transparent 100%),radial-gradient(2px 2px at 45% 10%,rgba(212,160,0,.2) 0%,transparent 100%),radial-gradient(2px 2px at 85% 65%,rgba(59,76,202,.1) 0%,transparent 100%);}
+body.light-mode .stat-bar-wrap,
+body.light-mode .modal-stat-bar-wrap{background:rgba(0,0,0,.08);}
+body.light-mode .quiz-hint{background:rgba(0,0,0,.04);border-color:var(--border);}
+body.light-mode .option-btn{background:var(--surface);border-color:var(--border);color:var(--text);}
+body.light-mode .option-btn:hover:not(:disabled){background:rgba(212,160,0,.1);}
+body.light-mode .breakdown-row{background:var(--surface);}
+body.light-mode .history-row{background:var(--card);}
+body.light-mode .modal-overlay{background:rgba(0,0,0,.45);}
+body.light-mode .modal{background:var(--card);}
+body.light-mode header{background:rgba(240,244,255,.85);}
+body.light-mode .tabs{background:var(--surface);}
+body.light-mode .ndex-spinner{color:var(--muted);}
+body.light-mode .diff-card{background:var(--card);}
+body.light-mode .quiz-card,body.light-mode .result-card{background:var(--card);}
+body.light-mode .ball-card{background:var(--card);}
+body.light-mode .pokemon-card{background:var(--card);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 55% 25%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 80%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(2px 2px at 45% 10%,rgba(255,203,5,.4) 0%,transparent 100%),radial-gradient(2px 2px at 85% 65%,rgba(59,76,202,.4) 0%,transparent 100%);pointer-events:none;z-index:0;}
@@ -418,6 +434,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   </div>
   <div class="user-badge" id="userBadge" style="display:none">
     <span class="user-name" id="userNameDisplay"></span>
+    <button class="logout-btn" onclick="showTab('settings')" style="background:transparent;border-color:rgba(255,203,5,.25)">⚙️</button>
     <button class="logout-btn" onclick="doLogout()">로그아웃</button>
   </div>
   <div class="date-badge" id="dateDisplay" style="display:none"></div>
@@ -427,7 +444,6 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   <button class="tab-btn" onclick="showTab('ndex')">🗺️ 전국도감</button>
   <button class="tab-btn" onclick="showTab('quiz')">⚡ 퀴즈</button>
   <button class="tab-btn" onclick="showTab('met')">👾 만난 포켓몬</button>
-  <button class="tab-btn" onclick="showTab('settings')">⚙️ 설정</button>
 </div>
 <main>
   <div id="dex-page" class="page active">
@@ -1089,7 +1105,62 @@ function initNdex(){
 function buildTypeFilterUI(){const wrap=document.getElementById('typeFilter');wrap.innerHTML='';Object.entries(TYPE_KO).forEach(([en,ko])=>{const btn=document.createElement('button');btn.className='type-filter-btn type-'+en;btn.textContent=ko;btn.onclick=()=>toggleTypeFilter(en,btn);wrap.appendChild(btn);});}
 function toggleTypeFilter(type,btn){if(activeTypeFilter===type){activeTypeFilter=null;document.querySelectorAll('.type-filter-btn').forEach(b=>b.classList.remove('active'));}else{activeTypeFilter=type;document.querySelectorAll('.type-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}applyNdexFilter();}
 function onSearch(){searchQuery=document.getElementById('ndexSearch').value.trim().toLowerCase();applyNdexFilter();}
-function applyNdexFilter(){if(!searchQuery&&!activeTypeFilter){ndexFiltered=[...ndexAllIds];ndexShown=0;document.getElementById('ndexGrid').innerHTML='';document.getElementById('loadMoreWrap').style.display='none';renderNdexPage();return;}const needQ=searchQuery.length>0,needT=!!activeTypeFilter;const result=[];ndexAllIds.forEach(id=>{const light=ndexCache[id],ko=ndexNameCache[id]||'',en=light?.nameEn||'';const matchQ=!needQ||(ko.includes(searchQuery)||en.includes(searchQuery)||String(id).includes(searchQuery));const matchT=!needT||(light?.types||[]).includes(activeTypeFilter);if(matchQ&&(matchT||(!light&&needT)))result.push(id);});ndexFiltered=needT&&!needQ?ndexAllIds:result.sort((a,b)=>a-b);ndexShown=0;document.getElementById('ndexGrid').innerHTML='';renderNdexPage();}
+
+async function applyNdexFilter(){
+  const q=searchQuery, t=activeTypeFilter;
+  ndexShown=0;
+  document.getElementById('ndexGrid').innerHTML='';
+  document.getElementById('loadMoreWrap').style.display='none';
+
+  if(!q&&!t){
+    ndexFiltered=[...ndexAllIds];
+    renderNdexPage();
+    return;
+  }
+
+  // 번호 단독 입력: 숫자만 입력했을 때 정확히 그 번호만
+  const isNumOnly=/^\d+$/.test(q);
+
+  // 이름 검색 시 캐시 없는 항목은 API로 확인
+  const matchId = id => {
+    if(!q) return true;
+    if(isNumOnly) return String(id)===q || String(id).padStart(4,'0')===q.padStart(4,'0');
+    const ko=ndexNameCache[id]||'';
+    const en=ndexCache[id]?.nameEn||'';
+    return ko.includes(q)||en.toLowerCase().includes(q);
+  };
+
+  const matchType = id => {
+    if(!t) return true;
+    return (ndexCache[id]?.types||[]).includes(t);
+  };
+
+  // 1차: 캐시 기반 필터
+  let result = ndexAllIds.filter(id => matchId(id) && (ndexCache[id] ? matchType(id) : !t));
+
+  // 이름 검색 + 캐시 미스가 있으면 미리 로딩
+  if(q && !isNumOnly){
+    const uncached = ndexAllIds.filter(id => !ndexCache[id] && !ndexNameCache[id]);
+    if(uncached.length > 0){
+      // 배치로 이름 캐시 채우기 (최대 200개씩)
+      const todo = uncached.slice(0,200);
+      await Promise.all(todo.map(async id=>{
+        try{
+          const sp=await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>r.json());
+          const k=sp.names.find(n=>n.language.name==='ko')?.name||sp.names.find(n=>n.language.name==='ja-Hrkt')?.name||String(id);
+          ndexNameCache[id]=k;
+          const el=document.getElementById(`ndex-name-${id}`);
+          if(el)el.textContent=k;
+        }catch(e){}
+      }));
+      // 캐시 채운 후 재필터
+      result = ndexAllIds.filter(id => matchId(id) && (ndexCache[id] ? matchType(id) : !t));
+    }
+  }
+
+  ndexFiltered = result.sort((a,b)=>a-b);
+  renderNdexPage();
+}
 async function renderNdexPage(){if(ndexLoading)return;ndexLoading=true;const grid=document.getElementById('ndexGrid');const ids=ndexFiltered.slice(ndexShown,ndexShown+NDEX_PAGE);if(!ids.length){ndexLoading=false;updateNdexCount();return;}let spinner=document.getElementById('ndexSpinner');if(!spinner){spinner=document.createElement('div');spinner.id='ndexSpinner';spinner.className='ndex-spinner';spinner.textContent='불러오는 중...';document.getElementById('ndexGridWrap').appendChild(spinner);}const batch=await Promise.all(ids.map(async id=>{if(ndexCache[id])return ndexCache[id];const d=await fetchPokemonLight(id);if(d)ndexCache[id]=d;return d;}));spinner.remove();batch.forEach((p,i)=>{if(!p)return;const id=ids[i];if(activeTypeFilter&&!p.types.includes(activeTypeFilter))return;const ko=ndexNameCache[id]||'';if(searchQuery&&!(ko.includes(searchQuery)||p.nameEn.includes(searchQuery)||String(id).includes(searchQuery)))return;const color=TYPE_COLOR[p.types[0]]||'#ffcb05';const card=document.createElement('div');card.className='ndex-card';card.style.setProperty('--nc',color);card.onclick=()=>openModalById(id);card.innerHTML=`<img class="ndex-img" src="${p.image||''}" alt="" loading="lazy"/><div class="ndex-num">No.${String(id).padStart(4,'0')}</div><div class="ndex-name" id="ndex-name-${id}">${ko||p.nameEn}</div><div class="ndex-type-dots">${p.types.map(t=>`<div class="ndex-type-dot" style="background:${TYPE_COLOR[t]||'#888'}" title="${TYPE_KO[t]||t}"></div>`).join('')}</div>`;grid.appendChild(card);if(!ndexNameCache[id]){fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>r.json()).then(sp=>{const k=sp.names.find(n=>n.language.name==='ko')?.name||sp.names.find(n=>n.language.name==='ja-Hrkt')?.name||p.nameEn;ndexNameCache[id]=k;const el=document.getElementById(`ndex-name-${id}`);if(el)el.textContent=k;}).catch(()=>{});}});ndexShown+=NDEX_PAGE;ndexLoading=false;updateNdexCount();document.getElementById('loadMoreWrap').style.display=ndexShown<ndexFiltered.length?'flex':'none';}
 function updateNdexCount(){document.getElementById('ndexCount').textContent=`${document.getElementById('ndexGrid').children.length} / ${MAX_ID}`;}
 function loadMoreNdex(){renderNdexPage();}
@@ -1286,7 +1357,7 @@ window.retryWrong = function(wrongList){ buildRetryQuiz(wrongList); showTab('qui
 function backToDiffSelect(){document.getElementById('quiz-content').style.display='none';document.getElementById('quiz-difficulty').style.display='block';document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));document.getElementById('diffStartBtn').classList.remove('show');selectedDiff=null;}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function showTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met','settings'][i]===tab));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met'][i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab+'-page').classList.add('active');
   if(tab==='ndex')initNdex();
