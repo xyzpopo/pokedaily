@@ -805,25 +805,21 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
     <div id="socialFriendsPanel">
       <!-- 친구 추가 -->
       <div class="add-friend-box">
-        <div class="add-friend-title">👥 친구 추가</div>
-        <div class="add-friend-subtabs">
-          <button class="add-friend-subtab active" id="afTab-id" onclick="switchAddFriendTab('id')">아이디</button>
-          <button class="add-friend-subtab" id="afTab-code" onclick="switchAddFriendTab('code')">친구 코드</button>
-        </div>
-        <!-- 아이디 탭 -->
-        <div id="afPanel-id">
-          <div class="add-friend-row">
-            <input class="add-friend-inp" id="addFriendInp" placeholder="상대방 아이디 입력" onkeydown="if(event.key==='Enter')searchFriend()"/>
-            <button class="add-friend-btn" id="addFriendBtn" onclick="searchFriend()">검색</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;">
+          <div class="add-friend-title" style="margin-bottom:0">👥 친구 추가</div>
+          <div id="myCodeChip" style="display:none;align-items:center;gap:.35rem;font-family:'Galmuri11',monospace;font-size:.72rem;background:rgba(255,203,5,.08);border:1px solid rgba(255,203,5,.3);border-radius:20px;padding:.22rem .65rem;cursor:pointer;" onclick="copyMyFriendCode()" title="클릭해서 복사">
+            <span style="color:var(--muted);font-size:.6rem;">내 코드</span>
+            <span id="myCodeChipVal" style="color:var(--accent)"></span>
+          </div>
+          <div id="myCodeChipNone" style="display:none;">
+            <button class="friend-code-action-btn primary" style="font-size:.65rem;padding:.22rem .6rem;" onclick="issueMyFriendCode()">🎟️ 코드 발급</button>
           </div>
         </div>
-        <!-- 친구 코드 탭 -->
-        <div id="afPanel-code" style="display:none">
-          <div class="add-friend-row">
-            <input class="add-friend-inp" id="addFriendCodeInp" placeholder="#123456 형식으로 입력" onkeydown="if(event.key==='Enter')searchFriendByCode()"/>
-            <button class="add-friend-btn" id="addFriendCodeBtn" onclick="searchFriendByCode()">검색</button>
-          </div>
+        <div class="add-friend-row">
+          <input class="add-friend-inp" id="addFriendInp" placeholder="아이디 또는 #친구코드 입력" onkeydown="if(event.key==='Enter')searchFriendUnified()"/>
+          <button class="add-friend-btn" id="addFriendBtn" onclick="searchFriendUnified()">검색</button>
         </div>
+        <div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;font-family:'Galmuri11',monospace;"># 으로 시작하면 친구 코드로 검색해요</div>
         <div class="add-friend-result" id="addFriendResult"></div>
       </div>
       <!-- 친구 요청 받은 것 -->
@@ -1459,48 +1455,80 @@ async function loadFriends() {
   }
 }
 
-window.searchFriend = async function() {
+window.searchFriendUnified = async function() {
   const inp = document.getElementById('addFriendInp');
   const resultEl = document.getElementById('addFriendResult');
   const btn = document.getElementById('addFriendBtn');
-  const searchInput = inp.value.trim().toLowerCase();
-  if (!searchInput) return;
-  if (searchInput === (_myProfile?.uid||'').toLowerCase()) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; return; }
+  const raw = (inp?.value || '').trim();
+  if (!raw) return;
+
+  const isCode = raw.startsWith('#');
+  const searchVal = isCode ? raw.slice(1).toLowerCase() : raw.toLowerCase();
+
+  if (!searchVal) return;
 
   btn.disabled = true; btn.textContent = '검색 중...';
-  resultEl.textContent = '';
+  resultEl.textContent = ''; resultEl.style.color = '';
 
   try {
-    // 1차: usernames 컬렉션에서 username 필드로 검색
     let targetUid = null;
-    const unameSnap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchInput)));
-    if (!unameSnap.empty) {
-      targetUid = unameSnap.docs[0].id;
+    let tData = {};
+    let displayId = searchVal;
+
+    if (isCode) {
+      // 친구 코드로 검색
+      const snap = await getDocs(query(collection(db, 'users'), where('friendCode', '==', searchVal)));
+      if (!snap.empty) {
+        targetUid = snap.docs[0].id;
+        tData = snap.docs[0].data();
+        displayId = tData.username || searchVal;
+      }
     } else {
-      // 2차: users 컬렉션에서 username 필드로 fallback 검색
-      const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchInput)));
-      if (!usersSnap.empty) targetUid = usersSnap.docs[0].id;
+      // 아이디로 검색 — usernames 컬렉션 우선, users 컬렉션 fallback
+      const unameSnap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchVal)));
+      if (!unameSnap.empty) {
+        targetUid = unameSnap.docs[0].id;
+      } else {
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchVal)));
+        if (!usersSnap.empty) targetUid = usersSnap.docs[0].id;
+      }
+      if (targetUid) {
+        const tSnap = await getDoc(doc(db, 'users', targetUid));
+        tData = tSnap.exists() ? tSnap.data() : {};
+      }
     }
-    if (!targetUid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='해당 아이디의 트레이너를 찾을 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
-    if (targetUid === currentUser.uid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
-    if (_friends.includes(targetUid)) { resultEl.style.color='#ff6b6b'; resultEl.textContent='이미 친구예요!'; btn.disabled=false; btn.textContent='검색'; return; }
 
-    const tSnap = await getDoc(doc(db, 'users', targetUid));
-    const tData = tSnap.exists() ? tSnap.data() : {};
-
-    // 이미 요청을 보냈는지 확인
+    if (!targetUid) {
+      resultEl.style.color = '#ff6b6b';
+      resultEl.textContent = isCode ? '해당 친구 코드의 트레이너를 찾을 수 없어요.' : '해당 아이디의 트레이너를 찾을 수 없어요.';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    if (targetUid === currentUser.uid) {
+      resultEl.style.color = '#ff6b6b'; resultEl.textContent = '자기 자신에게는 친구 요청을 보낼 수 없어요.';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    if (_friends.includes(targetUid)) {
+      resultEl.style.color = '#ff6b6b'; resultEl.textContent = '이미 친구예요!';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
     const sentReqs = tData.friendRequests || [];
-    if (sentReqs.includes(currentUser.uid)) { resultEl.style.color='var(--muted)'; resultEl.textContent='이미 친구 요청을 보냈어요.'; btn.disabled=false; btn.textContent='검색'; return; }
+    if (sentReqs.includes(currentUser.uid)) {
+      resultEl.style.color = 'var(--muted)'; resultEl.textContent = '이미 친구 요청을 보냈어요.';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
 
-    resultEl.innerHTML = `<div style="display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.6rem .85rem;margin-top:.3rem">
+    const codeTag = tData.friendCode ? `<span style="color:var(--muted);font-size:.6rem"> · #${tData.friendCode}</span>` : '';
+    resultEl.innerHTML = `<div style="display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.6rem .85rem;margin-top:.5rem">
       <div style="font-size:1.4rem">${tData.avatar||'🎒'}</div>
-      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||searchInput}</div><div style="font-size:.65rem;color:var(--muted)">@${searchInput}</div></div>
-      <button onclick="sendFriendRequest('${targetUid}','${searchInput}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;">친구 추가</button>
+      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||displayId}</div><div style="font-size:.65rem;color:var(--muted)">@${displayId}${codeTag}</div></div>
+      <button onclick="sendFriendRequest('${targetUid}','${displayId}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;flex-shrink:0">친구 추가</button>
     </div>`;
-    resultEl.style.color = '';
-  } catch(e) { resultEl.style.color='#ff6b6b'; resultEl.textContent='오류: '+e.message; }
+  } catch(e) { resultEl.style.color = '#ff6b6b'; resultEl.textContent = '오류: ' + e.message; }
   btn.disabled = false; btn.textContent = '검색';
 };
+
+// 하위 호환 (혹시 다른 곳에서 호출 시)
+window.searchFriend = window.searchFriendUnified;
 
 window.sendFriendRequest = async function(targetUid, targetUsername) {
   try {
@@ -1755,7 +1783,8 @@ window.issueMyFriendCode = async function() {
     const finalCode = existing.empty ? code : generateRandomCode() + Math.floor(Math.random()*10);
     await updateDoc(doc(db, 'users', currentUser.uid), { friendCode: finalCode });
     showSocialToast('친구 코드가 발급됐어요! 🎟️');
-    window.loadMyFriendCodeUI();
+    window.loadMyFriendCodeUI && window.loadMyFriendCodeUI();
+    loadMyCodeChip();
   } catch(e) { showSocialToast('발급 실패: ' + e.message); }
 };
 
@@ -1785,7 +1814,8 @@ window.saveCustomCode = async function() {
     showSocialToast('친구 코드가 변경됐어요 ✓');
     document.getElementById('customCodeInputWrap').style.display = 'none';
     inp.value = '';
-    window.loadMyFriendCodeUI();
+    window.loadMyFriendCodeUI && window.loadMyFriendCodeUI();
+    loadMyCodeChip();
   } catch(e) { showSocialToast('저장 실패: ' + e.message); }
 };
 
@@ -1860,7 +1890,28 @@ window.initSocialPage = async function() {
   await loadMyProfile();
   if (_socialTab === 'friends') await loadFriends();
   else await loadDmList();
+  // 내 친구 코드 칩 로드
+  loadMyCodeChip();
 };
+
+async function loadMyCodeChip() {
+  if (!currentUser) return;
+  const chip = document.getElementById('myCodeChip');
+  const chipNone = document.getElementById('myCodeChipNone');
+  if (!chip || !chipNone) return;
+  try {
+    const snap = await getDoc(doc(db, 'users', currentUser.uid));
+    const code = snap.exists() ? (snap.data().friendCode || null) : null;
+    if (code) {
+      document.getElementById('myCodeChipVal').textContent = '#' + code;
+      chip.style.display = 'flex';
+      chipNone.style.display = 'none';
+    } else {
+      chip.style.display = 'none';
+      chipNone.style.display = 'block';
+    }
+  } catch(e) {}
+}
 
 // ---------- 유틸 ----------
 function showSocialToast(msg) {
