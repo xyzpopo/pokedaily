@@ -816,21 +816,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+window._auth = auth;
+window._db = db;
 
 /* ===== Firebase 로그인/회원가입 ===== */
 let currentUser = null;
-let loginMode = 'login';
+// loginMode는 window._loginMode 사용 (일반 스크립트에서 관리)
 
-window.switchLoginMode = function(mode) {
-  loginMode = mode;
-  document.getElementById('tabLoginBtn').classList.toggle('active', mode==='login');
-  document.getElementById('tabSignupBtn').classList.toggle('active', mode==='signup');
-  document.getElementById('loginPwConfirmWrap').style.display = mode==='signup' ? 'block' : 'none';
-  document.getElementById('loginActionBtn').textContent = mode==='login' ? '🎮 로그인' : '✨ 회원가입';
-  document.getElementById('loginErr').textContent = '';
-};
+// switchLoginMode는 일반 스크립트에 정의됨 (모듈 로드 타이밍 무관)
 
-window.doLogin = async function() {
+window._doLoginFirebase = async function() {
   const id = document.getElementById('loginId').value.trim();
   const pw = document.getElementById('loginPw').value;
   const err = document.getElementById('loginErr');
@@ -843,7 +838,7 @@ window.doLogin = async function() {
   btn.textContent = '...'; btn.disabled = true;
 
   try {
-    if (loginMode === 'signup') {
+    if ((window._loginMode || 'login') === 'signup') {
       const pw2 = document.getElementById('loginPwConfirm').value;
       if (pw !== pw2) { err.textContent = '비밀번호가 일치하지 않아요.'; btn.textContent='✨ 회원가입'; btn.disabled=false; return; }
       if (id.length < 2) { err.textContent = '아이디는 2자 이상이어야 해요.'; btn.textContent='✨ 회원가입'; btn.disabled=false; return; }
@@ -859,7 +854,7 @@ window.doLogin = async function() {
       await signInWithEmailAndPassword(auth, email, pw);
     }
   } catch(e) {
-    btn.textContent = loginMode==='login' ? '🎮 로그인' : '✨ 회원가입';
+    btn.textContent = (window._loginMode||'login')==='login' ? '🎮 로그인' : '✨ 회원가입';
     btn.disabled = false;
     if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' || e.code === 'auth/invalid-login-credentials') {
       err.textContent = '아이디 또는 비밀번호가 틀렸어요.';
@@ -1355,7 +1350,7 @@ async function loadFriends() {
   if (!list) return;
   list.innerHTML = '';
   if (!_friends.length) {
-    list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;">친구를 추가해보세요!</div>';
+    list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;font-family:Galmuri11,monospace;">친구를 추가해보세요!</div>';
     return;
   }
   for (const fuid of _friends) {
@@ -1531,8 +1526,7 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
 };
 
 function escapeHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/
-/g,'<br>');
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
 }
 
 async function markChatRead(roomId) {
@@ -1664,17 +1658,37 @@ function showSocialToast(msg) {
   t._timer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2200);
 }
 
-// 로그인 화면 버튼 이벤트 - 모듈 로드 후 직접 연결
-document.getElementById('tabLoginBtn').addEventListener('click', () => switchLoginMode('login'));
-document.getElementById('tabSignupBtn').addEventListener('click', () => switchLoginMode('signup'));
-document.getElementById('loginActionBtn').addEventListener('click', doLogin);
-document.getElementById('loginId').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-document.getElementById('loginPw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-document.getElementById('loginPwConfirm').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 </script>
 <script>
-// Firebase 모듈에서 전역 노출된 함수 사용
-// switchLoginMode, doLogin, doLogout, clearMetPokemon, renderMetPage, injectMetButton
+/* ===== 로그인 모드 전환 (모듈 스크립트와 무관하게 즉시 실행) ===== */
+window._loginMode = 'login';
+window.switchLoginMode = function(mode) {
+  window._loginMode = mode;
+  document.getElementById('tabLoginBtn').classList.toggle('active', mode==='login');
+  document.getElementById('tabSignupBtn').classList.toggle('active', mode==='signup');
+  document.getElementById('loginPwConfirmWrap').style.display = mode==='signup' ? 'block' : 'none';
+  document.getElementById('loginActionBtn').textContent = mode==='login' ? '🎮 로그인' : '✨ 회원가입';
+  document.getElementById('loginErr').textContent = '';
+};
+
+window.doLogin = async function() {
+  // Firebase가 아직 로드 안 됐으면 잠깐 기다렸다가 재시도
+  if (!window._doLoginFirebase) {
+    const err = document.getElementById('loginErr');
+    err.textContent = '초기화 중... 잠시 후 다시 시도해주세요.';
+    setTimeout(() => { err.textContent = ''; }, 2000);
+    return;
+  }
+  return window._doLoginFirebase();
+};
+
+// 로그인 화면 버튼 이벤트
+document.getElementById('tabLoginBtn').addEventListener('click', () => window.switchLoginMode('login'));
+document.getElementById('tabSignupBtn').addEventListener('click', () => window.switchLoginMode('signup'));
+document.getElementById('loginActionBtn').addEventListener('click', () => window.doLogin());
+document.getElementById('loginId').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('loginPw').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('loginPwConfirm').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
 
 /* ===== 개인 설정 ===== */
 const SETTING_DEFAULTS={dailyCount:3,autoOpen:false,alwaysShiny:false,defaultDiff:'',showWrong:true,lightMode:false,ndexSort:'id',metView:'grid'};
