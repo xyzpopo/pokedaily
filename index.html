@@ -1484,17 +1484,12 @@ window.searchFriendUnified = async function() {
         displayId = tData.username || searchVal;
       }
     } else {
-      // 아이디로 검색 — usernames 컬렉션 우선, users 컬렉션 fallback
-      const unameSnap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchVal)));
-      if (!unameSnap.empty) {
-        targetUid = unameSnap.docs[0].id;
-      } else {
-        const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchVal)));
-        if (!usersSnap.empty) targetUid = usersSnap.docs[0].id;
-      }
-      if (targetUid) {
-        const tSnap = await getDoc(doc(db, 'users', targetUid));
-        tData = tSnap.exists() ? tSnap.data() : {};
+      // 아이디로 검색 — users 컬렉션 username 필드 기준
+      // (usernames 컬렉션은 doc ID = uid 구조라 where 쿼리 불가)
+      const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchVal)));
+      if (!usersSnap.empty) {
+        targetUid = usersSnap.docs[0].id;
+        tData = usersSnap.docs[0].data();
       }
     }
 
