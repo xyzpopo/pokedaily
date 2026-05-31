@@ -678,7 +678,8 @@ body.light-mode .tour-card{background:var(--surface);}
 .read-receipt{font-size:.55rem;color:var(--muted);margin-top:.08rem;text-align:right;}
 .read-receipt.read{color:var(--accent);}
 /* 멘션 */
-.mention{color:var(--accent);font-weight:700;background:rgba(255,203,5,.1);border-radius:4px;padding:0 .2rem;}
+.mention{color:var(--accent);font-weight:700;background:rgba(255,203,5,.15);border-radius:4px;padding:0 .2rem;}
+.chat-bubble.me .mention{color:var(--bg);background:rgba(0,0,0,.2);font-weight:700;}
 /* 메시지 검색 바 */
 .msg-search-bar{display:none;padding:.5rem .7rem;border-bottom:1px solid var(--border);background:var(--surface);}
 .msg-search-bar.open{display:flex;gap:.4rem;align-items:center;}
@@ -704,6 +705,38 @@ body.light-mode .tour-card{background:var(--surface);}
 .chat-img-bubble img{width:100%;display:block;}
 /* 그룹 발신자 이름 */
 .bubble-sender{font-size:.6rem;color:var(--accent);font-family:'Galmuri11',monospace;margin-bottom:.15rem;}
+/* ===== 이미지 업로드 버튼 ===== */
+.img-upload-btn{width:36px;height:36px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.img-upload-btn:hover{background:rgba(255,255,255,.1);color:var(--text);}
+/* ===== 단체채팅 프로필 모달 ===== */
+.group-profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:.5rem .5rem env(safe-area-inset-bottom,.5rem);opacity:0;pointer-events:none;transition:opacity .25s;}
+.group-profile-modal.open{opacity:1;pointer-events:all;}
+.group-profile-sheet{background:var(--card);border:1px solid var(--border);border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:80dvh;overflow-y:auto;transform:translateY(30px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.group-profile-modal.open .group-profile-sheet{transform:translateY(0);}
+.group-profile-sheet::before{content:'';display:block;width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
+.gp-header{padding:1.2rem 1.2rem .6rem;text-align:center;}
+.gp-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,rgba(59,76,202,.4),rgba(255,203,5,.2));border:3px solid rgba(59,76,202,.4);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto .8rem;}
+.gp-name{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--text);margin-bottom:.2rem;}
+.gp-count{font-size:.7rem;color:var(--muted);}
+.gp-members{padding:.6rem 1.2rem 1.2rem;}
+.gp-members-title{font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--accent);margin-bottom:.55rem;}
+.gp-member-row{display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.gp-member-row:last-child{border-bottom:none;}
+.gp-member-av{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.gp-member-name{font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text);}
+.gp-member-tag{font-size:.58rem;color:var(--muted);}
+/* ===== 친구 검색 (단체채팅 생성 내) ===== */
+.group-search-inp{width:100%;font-family:'Galmuri11',monospace;font-size:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.42rem .75rem;color:var(--text);outline:none;margin-bottom:.5rem;}
+.group-search-inp:focus{border-color:var(--accent);}
+/* ===== 프로필 이미지 업로드 ===== */
+.profile-img-wrap{position:relative;width:80px;height:80px;cursor:pointer;}
+.profile-img-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;font-size:.65rem;color:white;font-family:'Galmuri11',monospace;}
+.profile-img-wrap:hover .profile-img-overlay{display:flex;}
+.profile-real-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border);}
+/* 업로드 진행 오버레이 */
+.upload-progress{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9998;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.upload-progress-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem 2rem;text-align:center;font-family:'Galmuri11',monospace;color:var(--muted);font-size:.8rem;}
+
 </style>
 <body>
 <!-- 로그인 화면 -->
@@ -986,6 +1019,11 @@ body.light-mode .tour-card{background:var(--surface);}
           <div id="avatarPickerInline" style="display:flex;flex-wrap:wrap;gap:.4rem;">
             <!-- JS로 채워짐 -->
           </div>
+          <div style="margin-top:.5rem;display:flex;align-items:center;gap:.5rem;">
+            <input type="file" id="profileImgFileInput" accept="image/*" style="display:none" onchange="uploadProfileImage(this)"/>
+            <button onclick="document.getElementById('profileImgFileInput').click()" style="font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .7rem;cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🖼️ 프로필 이미지 업로드</button>
+            <span id="profileImgStatus" style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;"></span>
+          </div>
         </div>
         <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.3rem;">
           <button onclick="cancelEditProfile()" style="font-family:'Galmuri11',monospace;font-size:.73rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.4rem .8rem;cursor:pointer;">취소</button>
@@ -1043,7 +1081,8 @@ body.light-mode .tour-card{background:var(--surface);}
         <!-- 단체 채팅 생성 패널 -->
         <div class="group-create-panel" id="groupCreatePanel">
           <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--text);margin-bottom:.4rem;">단체 채팅 만들기</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-bottom:.5rem;">참여할 친구를 선택하세요 (2명 이상)</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-bottom:.5rem;">참여할 친구를 선택하세요 (1명 이상)</div>
+          <input class="group-search-inp" id="groupMemberSearch" placeholder="🔍 친구 검색..." oninput="filterGroupMembers(this.value)"/>
           <div class="group-member-list" id="groupMemberList"></div>
           <input class="add-friend-inp" id="groupNameInp" placeholder="채팅방 이름 (선택)" style="width:100%;margin-bottom:.5rem;"/>
           <div style="display:flex;gap:.4rem;justify-content:flex-end;">
@@ -1077,6 +1116,7 @@ body.light-mode .tour-card{background:var(--surface);}
           </div>
           <div class="chat-header-actions">
             <button class="chat-header-icon-btn" onclick="toggleMsgSearch()" title="검색">🔍</button>
+            <button class="chat-header-icon-btn" id="groupProfileBtn" onclick="openGroupProfile()" title="채팅방 정보" style="display:none">👥</button>
             <button class="chat-header-icon-btn" onclick="openChatOptions()" title="더보기">⋯</button>
           </div>
         </div>
@@ -1093,6 +1133,8 @@ body.light-mode .tour-card{background:var(--surface);}
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-row">
+          <input type="file" id="chatImgInput" accept="image/*" style="display:none" onchange="sendImageMessage(this)"/>
+          <button class="img-upload-btn" onclick="document.getElementById('chatImgInput').click()" title="이미지 전송">🖼️</button>
           <button class="tour-send-btn" id="tourSendBtn" onclick="toggleTourPicker()" title="견학 보내기">🎒</button>
           <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
@@ -1107,6 +1149,24 @@ body.light-mode .tour-card{background:var(--surface);}
 
 </main>
 <div class="settings-toast" id="settingsToast">설정이 저장됐어요 ✓</div>
+<!-- 단체 채팅 프로필 모달 -->
+<div class="group-profile-modal" id="groupProfileModal" onclick="closeGroupProfile(event)">
+  <div class="group-profile-sheet" onclick="event.stopPropagation()">
+    <div class="gp-header">
+      <div class="gp-avatar" id="gpAvatar">👥</div>
+      <div class="gp-name" id="gpName"></div>
+      <div class="gp-count" id="gpCount"></div>
+    </div>
+    <div class="gp-members">
+      <div class="gp-members-title">📋 멤버 목록</div>
+      <div id="gpMemberList"></div>
+    </div>
+    <div style="padding:.6rem 1.2rem 1.5rem;display:flex;gap:.5rem;">
+      <button onclick="closeGroupProfile()" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;">닫기</button>
+      <button onclick="leaveGroupChat()" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.25);color:#ff6b6b;border-radius:10px;padding:.5rem;cursor:pointer;">채팅방 나가기</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1538,6 +1598,7 @@ async function loadMyProfile() {
     uid: document.getElementById('loginId')?.value || currentUser.nickname || '',
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
+    profileImage: d.profileImage || null,
     met: (d.met||[]).length,
     quizHistory: (d.quizHistory||[]).length,
   };
@@ -1553,7 +1614,20 @@ function renderMyProfile() {
   const el = n => document.getElementById(n);
   if (el('profileNicknameDisplay')) el('profileNicknameDisplay').textContent = _myProfile.nickname;
   if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + _myProfile.uid;
-  if (el('profileAvatarEmoji')) el('profileAvatarEmoji').textContent = _myProfile.avatar;
+  if (el('profileAvatarEmoji')) {
+    if (_myProfile.profileImage) {
+      el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+    } else {
+      el('profileAvatarEmoji').textContent = _myProfile.avatar;
+    }
+  }
+  if (el('headerAvatar')) {
+    if (_myProfile.profileImage) {
+      el('headerAvatar').innerHTML = `<img src="${_myProfile.profileImage}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+    } else {
+      el('headerAvatar').textContent = _myProfile.avatar;
+    }
+  }
   if (el('profileBioDisplay')) el('profileBioDisplay').textContent = _myProfile.bio || '+ 자기소개 추가';
   if (el('ps-met')) el('ps-met').textContent = _myProfile.met;
   if (el('ps-quiz')) el('ps-quiz').textContent = _myProfile.quizHistory;
@@ -1898,6 +1972,8 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
   document.getElementById('chatFriendAvatar').innerHTML    = friendAvatar + '<div class="online-dot offline" id="chatOnlineDot"></div>';
   document.getElementById('dmListView').style.display = 'none';
   document.getElementById('chatView').style.display   = 'block';
+  const gpBtn = document.getElementById('groupProfileBtn');
+  if (gpBtn) gpBtn.style.display = 'none';
 
   // 투어 피커 초기화
   buildTourPickerGrid();
@@ -1946,6 +2022,8 @@ window.openGroupChat = async function(roomId, roomName, members) {
   document.getElementById('chatFriendAvatar').innerHTML   = '👥<div class="online-dot" style="display:none"></div>';
   document.getElementById('dmListView').style.display = 'none';
   document.getElementById('chatView').style.display   = 'block';
+  const gpBtn = document.getElementById('groupProfileBtn');
+  if (gpBtn) gpBtn.style.display = 'flex';
 
   if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
   if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
@@ -2278,9 +2356,14 @@ window.toggleTourPicker = function() {
 
 function buildTourPickerGrid() {
   const grid = document.getElementById('tourPickerGrid');
-  if (!grid || !window.pokemonData?.length) return;
+  if (!grid) return;
+  const pData = window.pokemonData || (typeof pokemonData !== 'undefined' ? pokemonData : []);
+  if (!pData.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">오늘의 포켓몬을 먼저 확인해주세요</div>';
+    return;
+  }
   grid.innerHTML = '';
-  pokemonData.forEach(p => {
+  pData.forEach(p => {
     const item = document.createElement('div');
     item.className = 'tour-picker-item';
     item.innerHTML = `<img src="${p.image||''}" alt="${p.name}"/><span>${p.name}</span>`;
@@ -2570,16 +2653,29 @@ window.toggleGroupCreatePanel = function() {
 async function loadGroupMemberList() {
   const list = document.getElementById('groupMemberList');
   if (!list) return;
+  list.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.4rem">불러오는 중...</div>';
+  const mySnap = await getDoc(doc(db,'users',currentUser.uid));
+  const myData = mySnap.exists() ? mySnap.data() : {};
+  const friendsData = myData.friendsData || {};
   list.innerHTML = '';
+  if (!_friends.length) {
+    list.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem;text-align:center">친구가 없어요</div>';
+    return;
+  }
   _friends.forEach(uid => {
-    const fData = (_myProfile?.friendsData||{})[uid] || {};
+    const fData = friendsData[uid] || {};
+    const nickname = fData.nickname || '트레이너';
+    const avatar = fData.avatar || '🎒';
     const row = document.createElement('div');
     row.className = 'group-member-row';
     row.dataset.uid = uid;
     row.innerHTML = `
       <div class="group-member-check" id="gcheck_${uid}"></div>
-      <div style="font-size:1.1rem">${fData.avatar||'🎒'}</div>
-      <div style="font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text)">${escapeHtml(fData.nickname||'트레이너')}</div>`;
+      <div style="font-size:1.1rem">${avatar}</div>
+      <div>
+        <div style="font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text)" data-name="${nickname.toLowerCase()}">${escapeHtml(nickname)}</div>
+        <div style="font-size:.6rem;color:var(--muted)">@${escapeHtml(fData.username||'')}</div>
+      </div>`;
     row.onclick = () => {
       const check = document.getElementById('gcheck_'+uid);
       check.classList.toggle('checked');
@@ -2599,10 +2695,28 @@ window.createGroupChat = async function() {
   const myData = mySnap.exists() ? mySnap.data() : {};
   const friendsData = myData.friendsData || {};
   const members = {};
-  members[currentUser.uid] = { nickname: myData.nickname||'트레이너', avatar: myData.avatar||'🎒' };
-  selected.forEach(uid => {
-    members[uid] = friendsData[uid] || { nickname:'트레이너', avatar:'🎒' };
-  });
+  // 내 정보 정확하게
+  members[currentUser.uid] = {
+    nickname: myData.nickname || _myProfile?.nickname || currentUser.nickname || '트레이너',
+    avatar: myData.avatar || _myProfile?.avatar || '🎒',
+    username: myData.username || _myProfile?.uid || ''
+  };
+  // 선택된 친구들 정보
+  for (const uid of selected) {
+    const fd = friendsData[uid];
+    if (fd && (fd.nickname || fd.avatar)) {
+      members[uid] = { nickname: fd.nickname || '트레이너', avatar: fd.avatar || '🎒', username: fd.username || '' };
+    } else {
+      // fallback: Firestore에서 직접 가져오기
+      try {
+        const fSnap = await getDoc(doc(db,'users',uid));
+        const fData = fSnap.exists() ? fSnap.data() : {};
+        members[uid] = { nickname: fData.nickname || '트레이너', avatar: fData.avatar || '🎒', username: fData.username || '' };
+      } catch(e) {
+        members[uid] = { nickname: '트레이너', avatar: '🎒', username: '' };
+      }
+    }
+  }
   try {
     await setDoc(doc(db,'chats',roomId), {
       isGroup: true, groupName, participants, groupMembers: members,
@@ -2610,6 +2724,10 @@ window.createGroupChat = async function() {
       ['unread_'+currentUser.uid]: 0
     });
     document.getElementById('groupCreatePanel')?.classList.remove('open');
+    const nameInp = document.getElementById('groupNameInp');
+    if (nameInp) nameInp.value = '';
+    const searchInp = document.getElementById('groupMemberSearch');
+    if (searchInp) searchInp.value = '';
     showSocialToast(`"${groupName}" 채팅방을 만들었어요 🎉`);
     openGroupChat(roomId, groupName, members);
   } catch(e){ showSocialToast('생성 실패: '+e.message); }
@@ -2618,6 +2736,150 @@ window.createGroupChat = async function() {
 function escapeHtml(str) {
   return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
 }
+
+// ── 친구 검색 (단체채팅 생성) ─────────────────
+window.filterGroupMembers = function(query) {
+  const rows = document.querySelectorAll('#groupMemberList .group-member-row');
+  const q = query.toLowerCase();
+  rows.forEach(row => {
+    const name = row.querySelector('[data-name]')?.dataset.name || row.textContent.toLowerCase();
+    row.style.display = name.includes(q) ? '' : 'none';
+  });
+};
+
+// ── 단체채팅 프로필 ───────────────────────────
+window.openGroupProfile = function() {
+  if (!_currentIsGroup || !_currentRoomId) return;
+  const modal = document.getElementById('groupProfileModal');
+  if (!modal) return;
+  document.getElementById('gpName').textContent = _currentChatName || '단체 채팅';
+  const memberCount = Object.keys(_groupMembers).length;
+  document.getElementById('gpCount').textContent = memberCount + '명';
+  const listEl = document.getElementById('gpMemberList');
+  listEl.innerHTML = '';
+  Object.entries(_groupMembers).forEach(([uid, m]) => {
+    const isMe = uid === currentUser.uid;
+    const row = document.createElement('div');
+    row.className = 'gp-member-row';
+    row.innerHTML = `
+      <div class="gp-member-av">${m.avatar||'🎒'}</div>
+      <div>
+        <div class="gp-member-name">${escapeHtml(m.nickname||'트레이너')}${isMe?' <span style="font-size:.55rem;color:var(--accent);font-family:Galmuri11,monospace">나</span>':''}</div>
+        <div class="gp-member-tag">@${escapeHtml(m.username||'')}</div>
+      </div>`;
+    listEl.appendChild(row);
+  });
+  modal.classList.add('open');
+};
+
+window.closeGroupProfile = function(e) {
+  if (e && e.target !== document.getElementById('groupProfileModal')) return;
+  document.getElementById('groupProfileModal')?.classList.remove('open');
+};
+
+window.leaveGroupChat = async function() {
+  if (!confirm('채팅방을 나갈까요? 나간 후에는 다시 초대받아야 해요.')) return;
+  if (!_currentRoomId || !currentUser) return;
+  try {
+    const roomRef = doc(db,'chats',_currentRoomId);
+    const snap = await getDoc(roomRef);
+    if (!snap.exists()) return;
+    const data = snap.data();
+    const newParticipants = (data.participants||[]).filter(uid => uid !== currentUser.uid);
+    const newMembers = {...(data.groupMembers||{})};
+    delete newMembers[currentUser.uid];
+    await updateDoc(roomRef, { participants: newParticipants, groupMembers: newMembers });
+    document.getElementById('groupProfileModal')?.classList.remove('open');
+    closeChatView();
+    showSocialToast('채팅방을 나왔어요');
+  } catch(e) { showSocialToast('오류: '+e.message); }
+};
+
+// ── 이미지 메시지 전송 ────────────────────────
+window.sendImageMessage = async function(input) {
+  if (!currentUser || !_currentRoomId || !input.files?.[0]) return;
+  const file = input.files[0];
+  input.value = '';
+
+  // 5MB 제한
+  if (file.size > 5 * 1024 * 1024) {
+    showSocialToast('이미지 크기는 5MB 이하여야 해요');
+    return;
+  }
+
+  // 진행 오버레이
+  const prog = document.createElement('div');
+  prog.className = 'upload-progress';
+  prog.innerHTML = '<div class="upload-progress-box"><div style="font-size:1.5rem;margin-bottom:.5rem">🖼️</div>이미지 업로드 중...</div>';
+  document.body.appendChild(prog);
+
+  try {
+    // Firebase Storage 없이 base64로 Firestore에 저장 (5MB 이하 이미지)
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result;
+      try {
+        const msgsRef = collection(db,'chats',_currentRoomId,'messages');
+        await addDoc(msgsRef, {
+          from: currentUser.uid,
+          type: 'image',
+          imageUrl: base64,
+          ts: serverTimestamp(),
+          readBy: [currentUser.uid],
+          ...((_replyTo) ? { replyTo: { msgId:_replyTo.msgId, text:_replyTo.text.slice(0,80), from:_replyTo.from } } : {})
+        });
+        cancelReply();
+        await updateRoomMeta(_currentRoomId, '🖼️ 이미지');
+      } catch(err) { showSocialToast('이미지 전송 실패: ' + err.message); }
+      prog.remove();
+    };
+    reader.onerror = () => { showSocialToast('파일 읽기 실패'); prog.remove(); };
+    reader.readAsDataURL(file);
+  } catch(err) { showSocialToast('오류: ' + err.message); prog.remove(); }
+};
+
+// ── 프로필 이미지 업로드 ─────────────────────
+window.uploadProfileImage = async function(input) {
+  if (!currentUser || !input.files?.[0]) return;
+  const file = input.files[0];
+  input.value = '';
+
+  if (file.size > 2 * 1024 * 1024) {
+    showSocialToast('프로필 이미지는 2MB 이하여야 해요');
+    return;
+  }
+
+  const statusEl = document.getElementById('profileImgStatus');
+  if (statusEl) statusEl.textContent = '업로드 중...';
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result;
+    try {
+      await updateDoc(doc(db,'users',currentUser.uid), { profileImage: base64 });
+      // 프로필 아바타 영역에 이미지 표시
+      const emojiEl = document.getElementById('profileAvatarEmoji');
+      if (emojiEl) {
+        emojiEl.innerHTML = `<img src="${base64}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+      }
+      const headerAv = document.getElementById('headerAvatar');
+      if (headerAv) {
+        headerAv.innerHTML = `<img src="${base64}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+      }
+      if (_myProfile) _myProfile.profileImage = base64;
+      if (statusEl) statusEl.textContent = '저장됨 ✓';
+      setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 2000);
+      showSocialToast('프로필 이미지가 변경됐어요 🖼️');
+      // 친구들에게도 업데이트
+      await updateFriendNicknameCache(_myProfile?.nickname || currentUser.nickname, _myProfile?.avatar || '🎒');
+    } catch(err) {
+      if (statusEl) statusEl.textContent = '실패';
+      showSocialToast('저장 실패: ' + err.message);
+    }
+  };
+  reader.onerror = () => { if (statusEl) statusEl.textContent = '읽기 실패'; };
+  reader.readAsDataURL(file);
+};
 
 // ---------- 친구 코드 ----------
 function generateRandomCode() {
