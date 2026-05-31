@@ -733,6 +733,39 @@ body.light-mode .tour-card{background:var(--surface);}
 .profile-img-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;font-size:.65rem;color:white;font-family:'Galmuri11',monospace;}
 .profile-img-wrap:hover .profile-img-overlay{display:flex;}
 .profile-real-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border);}
+/* ===== 소셜 포켓몬 소개 카드 ===== */
+.pokemon-spotlight{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.1rem;margin-bottom:1rem;position:relative;overflow:hidden;}
+.pokemon-spotlight::before{content:'';position:absolute;inset:0;opacity:.05;background:radial-gradient(circle at 70% 20%,var(--sp-color,var(--accent)),transparent 65%);pointer-events:none;}
+.spotlight-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.spotlight-label{font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--accent);background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.25);padding:.15rem .55rem;border-radius:20px;}
+.spotlight-change-btn{font-family:'Galmuri11',monospace;font-size:.6rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.2rem .5rem;border-radius:8px;cursor:pointer;transition:all .15s;}
+.spotlight-change-btn:hover{border-color:var(--accent);color:var(--accent);}
+.spotlight-body{display:flex;align-items:center;gap:.9rem;}
+.spotlight-img-wrap{flex-shrink:0;position:relative;}
+.spotlight-img{width:80px;height:80px;image-rendering:pixelated;filter:drop-shadow(0 4px 12px var(--sp-color,rgba(255,203,5,.4)));}
+.spotlight-info{flex:1;min-width:0;}
+.spotlight-trainer{font-size:.62rem;color:var(--muted);margin-bottom:.2rem;}
+.spotlight-name{font-family:'Galmuri11',monospace;font-size:1.05rem;color:var(--text);margin-bottom:.3rem;}
+.spotlight-num{font-size:.62rem;color:var(--muted);margin-bottom:.4rem;}
+.spotlight-types{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.5rem;}
+.spotlight-desc{font-size:.7rem;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:.6rem;}
+.spotlight-add-btn{width:100%;font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .7rem;cursor:pointer;transition:opacity .15s;font-weight:700;}
+.spotlight-add-btn:disabled{opacity:.45;cursor:default;}
+.spotlight-add-btn.added{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3);}
+/* 채팅방 초대 버튼 */
+.invite-to-chat-btn{font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid rgba(59,76,202,.4);color:#7090ff;padding:.25rem .6rem;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.invite-to-chat-btn:hover{background:rgba(59,76,202,.1);border-color:rgba(59,76,202,.7);}
+/* 채팅 초대 패널 */
+.invite-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.8rem .9rem;margin-bottom:.65rem;display:none;}
+.invite-panel.open{display:block;animation:fadeIn .2s ease;}
+.invite-panel-title{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--text);margin-bottom:.5rem;}
+.invite-chat-list{display:flex;flex-direction:column;gap:.3rem;max-height:180px;overflow-y:auto;}
+.invite-chat-row{display:flex;align-items:center;gap:.55rem;padding:.35rem .5rem;border-radius:10px;background:var(--surface);cursor:pointer;transition:background .15s;}
+.invite-chat-row:hover{background:rgba(255,255,255,.06);}
+.invite-chat-name{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--text);flex:1;}
+.invite-chat-sub{font-size:.58rem;color:var(--muted);}
+body.light-mode .invite-chat-row{background:var(--surface);}
+body.light-mode .pokemon-spotlight{background:var(--card);}
 /* 업로드 진행 오버레이 */
 .upload-progress{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9998;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .upload-progress-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem 2rem;text-align:center;font-family:'Galmuri11',monospace;color:var(--muted);font-size:.8rem;}
@@ -783,16 +816,16 @@ body.light-mode .tour-card{background:var(--surface);}
 </div>
 <div class="tabs">
   <button class="tab-btn active" onclick="showTab('dex')" id="tabDex">
-    <span class="tab-icon">📖</span><span class="tab-label">도감</span>
+    <span class="tab-icon">📖</span><span class="tab-label">오늘의 포켓몬</span>
   </button>
   <button class="tab-btn" onclick="showTab('ndex')" id="tabNdex">
-    <span class="tab-icon">🗺️</span><span class="tab-label">전국</span>
+    <span class="tab-icon">🗺️</span><span class="tab-label">전국도감</span>
   </button>
   <button class="tab-btn" onclick="showTab('quiz')" id="tabQuiz">
     <span class="tab-icon">⚡</span><span class="tab-label">퀴즈</span>
   </button>
   <button class="tab-btn" onclick="showTab('met')" id="tabMet">
-    <span class="tab-icon">👾</span><span class="tab-label">만남</span>
+    <span class="tab-icon">👾</span><span class="tab-label">만난 포켓몬</span>
   </button>
   <button class="tab-btn" onclick="showTab('social')" id="tabSocial" style="position:relative;">
     <span class="tab-icon">👥</span><span class="tab-label">소셜</span>
@@ -1038,6 +1071,37 @@ body.light-mode .tour-card{background:var(--surface);}
       <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
     </div>
 
+    <!-- 포켓몬 소개 카드 -->
+    <div class="pokemon-spotlight" id="pokemonSpotlight" style="display:none">
+      <div class="spotlight-header">
+        <span class="spotlight-label">✨ 오늘의 포켓몬 소개</span>
+        <button class="spotlight-change-btn" onclick="toggleSpotlightPicker()">🎒 포켓몬 고르기</button>
+      </div>
+      <!-- 포켓몬 선택 피커 -->
+      <div id="spotlightPicker" style="display:none;margin-bottom:.75rem;">
+        <div style="font-family:'Galmuri11',monospace;font-size:.62rem;color:var(--muted);margin-bottom:.45rem;">소개할 포켓몬을 선택하세요</div>
+        <div id="spotlightPickerGrid" style="display:flex;flex-wrap:wrap;gap:.35rem;max-height:130px;overflow-y:auto;"></div>
+      </div>
+      <!-- 선택된 포켓몬 표시 -->
+      <div class="spotlight-body" id="spotlightBody" style="display:none">
+        <div class="spotlight-img-wrap">
+          <img class="spotlight-img" id="spotlightImg" src="" alt=""/>
+        </div>
+        <div class="spotlight-info">
+          <div class="spotlight-trainer" id="spotlightTrainer"></div>
+          <div class="spotlight-name" id="spotlightName"></div>
+          <div class="spotlight-num" id="spotlightNum"></div>
+          <div class="spotlight-types" id="spotlightTypes"></div>
+          <div class="spotlight-desc" id="spotlightDesc"></div>
+          <button class="spotlight-add-btn" id="spotlightAddBtn" onclick="addSpotlightToMet()">👋 내 만난 포켓몬에 추가</button>
+        </div>
+      </div>
+      <!-- 미선택 안내 -->
+      <div id="spotlightEmpty" style="text-align:center;padding:.6rem 0;font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);">
+        위 버튼을 눌러 소개할 포켓몬을 골라보세요 👆
+      </div>
+    </div>
+
     <!-- 친구 탭 -->
     <div id="socialFriendsPanel">
       <!-- 친구 추가 -->
@@ -1076,7 +1140,16 @@ body.light-mode .tour-card{background:var(--surface);}
       <div id="dmListView">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
           <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">💬 대화 목록</div>
-          <button class="group-create-btn" onclick="toggleGroupCreatePanel()">➕ 단체 채팅</button>
+          <div style="display:flex;gap:.4rem;">
+            <button class="invite-to-chat-btn" onclick="toggleInvitePanel()">📨 채팅 초대</button>
+            <button class="group-create-btn" onclick="toggleGroupCreatePanel()">➕ 단체 채팅</button>
+          </div>
+        </div>
+        <!-- 채팅 초대 패널 -->
+        <div class="invite-panel" id="invitePanel">
+          <div class="invite-panel-title">📨 친구를 채팅방에 초대하기</div>
+          <div style="font-size:.63rem;color:var(--muted);margin-bottom:.55rem;font-family:'Galmuri11',monospace">기존 채팅방 또는 1:1 대화를 선택하세요</div>
+          <div class="invite-chat-list" id="inviteChatList"></div>
         </div>
         <!-- 단체 채팅 생성 패널 -->
         <div class="group-create-panel" id="groupCreatePanel">
@@ -1122,7 +1195,7 @@ body.light-mode .tour-card{background:var(--surface);}
         </div>
         <!-- 견학 포켓몬 선택 패널 -->
         <div class="tour-picker" id="tourPicker">
-          <div class="tour-picker-title">🎒 오늘의 포켓몬 중 견학 보낼 포켓몬을 선택하세요</div>
+          <div class="tour-picker-title">🎒 만난 포켓몬 중 견학 보낼 포켓몬을 선택하세요</div>
           <div class="tour-picker-grid" id="tourPickerGrid"></div>
         </div>
         <!-- 답장 미리보기 -->
@@ -1297,6 +1370,7 @@ async function getMetList() {
   const snap = await getDoc(doc(db, 'users', currentUser.uid));
   const list = snap.exists() ? (snap.data().met || []) : [];
   _metIdSet = new Set(list.map(m => m.id)); // 캐시 갱신
+  window._metPokemonCache = list; // 견학 피커용 캐시
   return list;
 }
 
@@ -1449,6 +1523,10 @@ window.openNicknameEdit = function(id, currentNick, btn) {
 // 전역 노출 (기존 JS에서 호출)
 window.renderMetPage = renderMetPage;
 window.markMet = markMet;
+window.addMetPokemon = async function(p) {
+  if (!p || !p.id) return;
+  await markMet({ id: p.id, name: p.name, image: p.image || '', types: p.types || ['normal'] });
+};
 
 async function injectMetButton(p) {
   const existing = document.getElementById('metModalBtn');
@@ -2357,16 +2435,22 @@ window.toggleTourPicker = function() {
 function buildTourPickerGrid() {
   const grid = document.getElementById('tourPickerGrid');
   if (!grid) return;
-  const pData = window.pokemonData || (typeof pokemonData !== 'undefined' ? pokemonData : []);
-  if (!pData.length) {
-    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">오늘의 포켓몬을 먼저 확인해주세요</div>';
+  // 만난 포켓몬 사용 (Firebase에서 가져온 met 목록)
+  let metList = [];
+  if (window._metPokemonCache && window._metPokemonCache.length) {
+    metList = window._metPokemonCache;
+  } else {
+    try { metList = JSON.parse(localStorage.getItem('metPokemon')||'[]'); } catch(e) {}
+  }
+  if (!metList.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">만난 포켓몬이 없어요. 먼저 포켓몬과 만나보세요!</div>';
     return;
   }
   grid.innerHTML = '';
-  pData.forEach(p => {
+  metList.forEach(p => {
     const item = document.createElement('div');
     item.className = 'tour-picker-item';
-    item.innerHTML = `<img src="${p.image||''}" alt="${p.name}"/><span>${p.name}</span>`;
+    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
     item.onclick = () => sendTourPokemon(p);
     grid.appendChild(item);
   });
@@ -2498,6 +2582,14 @@ window.openChatOptions = function() {
     { icon: isPinned ? '📌':'📍', label: isPinned ? '고정 해제':'대화 고정',  action: () => togglePinRoom(roomId) },
     { icon: '🔍', label: '메시지 검색', action: toggleMsgSearch },
   ];
+  // 구분선 + 채팅방 나가기
+  const sep = document.createElement('div');
+  sep.className = 'msg-ctx-sep';
+  const leaveEl = document.createElement('div');
+  leaveEl.className = 'msg-ctx-item danger';
+  leaveEl.innerHTML = '<span>🚪</span><span>채팅방 나가기</span>';
+  leaveEl.onclick = () => { closeContextMenus(); leaveChatRoom(); };
+
   items.forEach(item => {
     const el = document.createElement('div');
     el.className = 'msg-ctx-item';
@@ -2505,6 +2597,8 @@ window.openChatOptions = function() {
     el.onclick = () => { item.action(); closeContextMenus(); };
     menu.appendChild(el);
   });
+  menu.appendChild(sep);
+  menu.appendChild(leaveEl);
   document.body.appendChild(menu);
   setTimeout(() => document.addEventListener('click', closeContextMenus, {once:true}), 50);
 };
@@ -2795,6 +2889,46 @@ window.leaveGroupChat = async function() {
   } catch(e) { showSocialToast('오류: '+e.message); }
 };
 
+// ── 채팅방 나가기 (그룹/1:1 통합) ───────────────
+window.leaveChatRoom = async function() {
+  if (!_currentRoomId || !currentUser) return;
+  const isGroup = _currentIsGroup;
+  const confirmMsg = isGroup
+    ? '단체 채팅방을 나갈까요?\n나간 후에는 다시 초대받아야 해요.'
+    : '이 대화를 나갈까요?\n대화 내역이 목록에서 사라져요.';
+  if (!confirm(confirmMsg)) return;
+  try {
+    const roomRef = doc(db, 'chats', _currentRoomId);
+    const snap = await getDoc(roomRef);
+    if (!snap.exists()) { closeChatView(); return; }
+    const data = snap.data();
+    if (isGroup) {
+      // 단체: 참여자 목록에서 제거
+      const newParticipants = (data.participants||[]).filter(uid => uid !== currentUser.uid);
+      const newMembers = {...(data.groupMembers||{})};
+      delete newMembers[currentUser.uid];
+      if (newParticipants.length === 0) {
+        await deleteDoc(roomRef);
+      } else {
+        await updateDoc(roomRef, { participants: newParticipants, groupMembers: newMembers });
+      }
+    } else {
+      // 1:1 DM: 참여자 목록에서만 제거 (상대방 기록은 유지)
+      const newParticipants = (data.participants||[]).filter(uid => uid !== currentUser.uid);
+      // unread 초기화
+      const updates = { participants: newParticipants, ['unread_' + currentUser.uid]: 0 };
+      await updateDoc(roomRef, updates);
+    }
+    // 로컬 고정/음소거 제거
+    _pinnedRooms.delete(_currentRoomId);
+    _mutedRooms.delete(_currentRoomId);
+    localStorage.setItem('pinnedRooms', JSON.stringify([..._pinnedRooms]));
+    localStorage.setItem('mutedRooms', JSON.stringify([..._mutedRooms]));
+    closeChatView();
+    showSocialToast('채팅방을 나왔어요 👋');
+  } catch(e) { showSocialToast('오류: ' + e.message); }
+};
+
 // ── 이미지 메시지 전송 ────────────────────────
 window.sendImageMessage = async function(input) {
   if (!currentUser || !_currentRoomId || !input.files?.[0]) return;
@@ -3009,6 +3143,223 @@ window.searchFriendByCode = async function() {
 };
 
 
+// ═══════════════════════════════════════════════
+// 포켓몬 소개 (Spotlight) 기능
+// ═══════════════════════════════════════════════
+let _spotlightPokemon = null;
+
+async function loadSpotlight() {
+  if (!currentUser) return;
+  const list = await getMetList();
+  const card = document.getElementById('pokemonSpotlight');
+  if (!card) return;
+  if (!list.length) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  // 이미 선택된 포켓몬이 있으면 유지, 아니면 피커 안내 상태
+  if (_spotlightPokemon && list.find(m => m.id === _spotlightPokemon.id)) {
+    renderSpotlight(_spotlightPokemon);
+  } else {
+    _spotlightPokemon = null;
+    document.getElementById('spotlightBody').style.display = 'none';
+    document.getElementById('spotlightEmpty').style.display = 'block';
+    document.getElementById('spotlightPicker').style.display = 'none';
+  }
+}
+
+window.toggleSpotlightPicker = async function() {
+  const picker = document.getElementById('spotlightPicker');
+  if (!picker) return;
+  const isOpen = picker.style.display !== 'none';
+  picker.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) await buildSpotlightPickerGrid();
+};
+
+async function buildSpotlightPickerGrid() {
+  const grid = document.getElementById('spotlightPickerGrid');
+  if (!grid) return;
+  const list = await getMetList();
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.3rem">만난 포켓몬이 없어요</div>';
+    return;
+  }
+  list.forEach(p => {
+    const item = document.createElement('div');
+    const isSelected = _spotlightPokemon?.id === p.id;
+    item.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:.15rem;background:${isSelected?'rgba(255,203,5,.15)':'var(--surface)'};border:2px solid ${isSelected?'var(--accent)':'var(--border)'};border-radius:10px;padding:.35rem .45rem;cursor:pointer;transition:all .15s;`;
+    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}" style="width:40px;height:40px;image-rendering:pixelated;"/><span style="font-size:.52rem;color:var(--text);font-family:'Galmuri11',monospace;text-align:center;line-height:1.2">${p.name||''}</span>`;
+    item.onclick = () => selectSpotlightPokemon(p);
+    grid.appendChild(item);
+  });
+}
+
+window.selectSpotlightPokemon = function(p) {
+  _spotlightPokemon = p;
+  document.getElementById('spotlightPicker').style.display = 'none';
+  renderSpotlight(p);
+};
+
+function renderSpotlight(p) {
+  const card = document.getElementById('pokemonSpotlight');
+  if (!card || !p) return;
+  const color = (typeof TYPE_COLOR !== 'undefined' ? TYPE_COLOR[p.types?.[0]] : null) || '#ffcb05';
+  card.style.setProperty('--sp-color', color);
+
+  document.getElementById('spotlightEmpty').style.display = 'none';
+  document.getElementById('spotlightBody').style.display = 'flex';
+
+  const img = document.getElementById('spotlightImg');
+  if (img) { img.src = p.image || ''; img.alt = p.name || ''; }
+
+  const trainerEl = document.getElementById('spotlightTrainer');
+  if (trainerEl) trainerEl.textContent = (_myProfile?.nickname || currentUser?.nickname || '트레이너') + ' 트레이너가 소개해요';
+
+  const nameEl = document.getElementById('spotlightName');
+  if (nameEl) nameEl.textContent = p.name || '';
+
+  const numEl = document.getElementById('spotlightNum');
+  if (numEl) numEl.textContent = 'No.' + String(p.id || 0).padStart(4, '0');
+
+  const typesEl = document.getElementById('spotlightTypes');
+  if (typesEl && p.types) {
+    typesEl.innerHTML = p.types.map(t => `<span class="type-badge type-${t}" style="font-size:.55rem;padding:.1rem .4rem">${(typeof TYPE_KO !== 'undefined' ? TYPE_KO[t] : null) || t}</span>`).join('');
+  }
+
+  const descEl = document.getElementById('spotlightDesc');
+  if (descEl) descEl.textContent = p.desc || '멋진 포켓몬이에요!';
+
+  const addBtn = document.getElementById('spotlightAddBtn');
+  if (addBtn) {
+    const alreadyMet = isMetPokemon ? isMetPokemon(p.id) : false;
+    addBtn.disabled = alreadyMet;
+    addBtn.className = 'spotlight-add-btn' + (alreadyMet ? ' added' : '');
+    addBtn.textContent = alreadyMet ? '✅ 이미 만난 포켓몬이에요' : '👋 내 만난 포켓몬에 추가';
+  }
+}
+
+window.addSpotlightToMet = async function() {
+  if (!_spotlightPokemon || !currentUser) return;
+  if (isMetPokemon && isMetPokemon(_spotlightPokemon.id)) return;
+  await markMet(_spotlightPokemon);
+  renderSpotlight(_spotlightPokemon);
+  showSocialToast(`${_spotlightPokemon.name}을(를) 만난 포켓몬에 추가했어요! 🎉`);
+};
+
+// ═══════════════════════════════════════════════
+// 채팅 초대 기능
+// ═══════════════════════════════════════════════
+window.toggleInvitePanel = async function() {
+  const panel = document.getElementById('invitePanel');
+  if (!panel) return;
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) await loadInviteChatList();
+};
+
+async function loadInviteChatList() {
+  const listEl = document.getElementById('inviteChatList');
+  if (!listEl || !currentUser) return;
+  listEl.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.4rem">불러오는 중...</div>';
+  try {
+    const chatsRef = collection(db, 'chats');
+    let snap;
+    try {
+      snap = await getDocs(query(chatsRef, where('participants', 'array-contains', currentUser.uid), orderBy('lastTs', 'desc')));
+    } catch(e) {
+      snap = await getDocs(query(chatsRef, where('participants', 'array-contains', currentUser.uid)));
+    }
+    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const friendsData = mySnap.exists() ? (mySnap.data().friendsData || {}) : {};
+    const friends = mySnap.exists() ? (mySnap.data().friends || []) : [];
+
+    listEl.innerHTML = '';
+
+    // 기존 채팅방 목록
+    if (!snap.empty) {
+      const header = document.createElement('div');
+      header.style.cssText = 'font-size:.6rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.2rem .4rem .35rem;';
+      header.textContent = '📬 기존 채팅방';
+      listEl.appendChild(header);
+
+      snap.docs.forEach(d => {
+        const data = d.data();
+        const roomId = d.id;
+        const isGroup = data.isGroup || false;
+        let name;
+        if (isGroup) {
+          name = data.groupName || '단체 채팅';
+        } else {
+          const fUid = (data.participants || []).find(p => p !== currentUser.uid);
+          name = friendsData[fUid]?.nickname || '트레이너';
+        }
+        const row = document.createElement('div');
+        row.className = 'invite-chat-row';
+        row.innerHTML = `
+          <span style="font-size:1rem">${isGroup ? '👥' : (friendsData[(data.participants||[]).find(p=>p!==currentUser.uid)]?.avatar || '🎒')}</span>
+          <div style="flex:1;min-width:0">
+            <div class="invite-chat-name">${escapeHtml(name)}</div>
+            <div class="invite-chat-sub">${isGroup ? (data.participants||[]).length+'명 · 단체채팅' : '1:1 대화'}</div>
+          </div>
+          <button class="invite-to-chat-btn" style="font-size:.6rem;" onclick="sendInviteToRoom('${roomId}','${escapeHtml(name)}')">초대</button>`;
+        listEl.appendChild(row);
+      });
+    }
+
+    // 친구 목록 (1:1 초대)
+    if (friends.length) {
+      const sep = document.createElement('div');
+      sep.style.cssText = 'font-size:.6rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.4rem .4rem .25rem;border-top:1px solid var(--border);margin-top:.35rem;';
+      sep.textContent = '👥 친구에게 1:1 초대';
+      listEl.appendChild(sep);
+      friends.forEach(fuid => {
+        const fData = friendsData[fuid] || {};
+        const row = document.createElement('div');
+        row.className = 'invite-chat-row';
+        row.innerHTML = `
+          <span style="font-size:1rem">${fData.avatar || '🎒'}</span>
+          <div style="flex:1;min-width:0">
+            <div class="invite-chat-name">${escapeHtml(fData.nickname || '트레이너')}</div>
+            <div class="invite-chat-sub">@${escapeHtml(fData.username || '')}</div>
+          </div>
+          <button class="invite-to-chat-btn" style="font-size:.6rem;" onclick="openChat('${fuid}','${escapeHtml(fData.nickname||'트레이너').replace(/'/g,"\\'")}','${fData.avatar||'🎒'}','${escapeHtml(fData.username||'')}');document.getElementById('invitePanel')?.classList.remove('open')">DM</button>`;
+        listEl.appendChild(row);
+      });
+    }
+
+    if (snap.empty && !friends.length) {
+      listEl.innerHTML = '<div style="font-size:.72rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem;text-align:center">친구나 채팅방이 없어요</div>';
+    }
+  } catch(e) {
+    listEl.innerHTML = '<div style="font-size:.7rem;color:#ff6b6b;font-family:Galmuri11,monospace;padding:.4rem">불러오기 실패</div>';
+  }
+}
+
+window.sendInviteToRoom = async function(roomId, roomName) {
+  if (!currentUser || !roomId) return;
+  // 초대 메시지를 해당 채팅방에 전송
+  try {
+    const msgsRef = collection(db, 'chats', roomId, 'messages');
+    const inviteText = `🎉 ${_myProfile?.nickname || currentUser.nickname || '트레이너'} 트레이너가 여기로 초대했어요!`;
+    await addDoc(msgsRef, {
+      from: currentUser.uid,
+      text: inviteText,
+      ts: serverTimestamp(),
+      readBy: [currentUser.uid]
+    });
+    const roomSnap = await getDoc(doc(db, 'chats', roomId));
+    const rData = roomSnap.exists() ? roomSnap.data() : {};
+    const participants = rData.participants || [];
+    const updates = { lastMsg: inviteText, lastTs: serverTimestamp(), lastFrom: currentUser.uid };
+    participants.forEach(uid => { if (uid !== currentUser.uid) updates['unread_' + uid] = (rData['unread_' + uid] || 0) + 1; });
+    updates['unread_' + currentUser.uid] = 0;
+    await setDoc(doc(db, 'chats', roomId), updates, { merge: true });
+    document.getElementById('invitePanel')?.classList.remove('open');
+    showSocialToast(`"${roomName}"에 초대 메시지를 보냈어요 🎉`);
+  } catch(e) { showSocialToast('초대 실패: ' + e.message); }
+};
+
 let _socialTab = 'friends';
 window.showSocialTab = function(tab) {
   _socialTab = tab;
@@ -3025,6 +3376,7 @@ window.showSocialTab = function(tab) {
 window._loadMyProfile = loadMyProfile;
 window.initSocialPage = async function() {
   await loadMyProfile();
+  await loadSpotlight();
   if (_socialTab === 'friends') await loadFriends();
   else await loadDmList();
   // 내 친구 코드 칩 로드
