@@ -1376,16 +1376,16 @@ window.searchFriend = async function() {
   const inp = document.getElementById('addFriendInp');
   const resultEl = document.getElementById('addFriendResult');
   const btn = document.getElementById('addFriendBtn');
-  const query = inp.value.trim().toLowerCase();
-  if (!query) return;
-  if (query === (_myProfile?.uid||'').toLowerCase()) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; return; }
+  const searchInput = inp.value.trim().toLowerCase();
+  if (!searchInput) return;
+  if (searchInput === (_myProfile?.uid||'').toLowerCase()) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; return; }
 
   btn.disabled = true; btn.textContent = '검색 중...';
   resultEl.textContent = '';
 
   try {
     // username → uid 매핑 (usernames 컬렉션)
-    const snap = await getDocs(query(collection(db, 'usernames'), where('username', '==', query)));
+    const snap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchInput)));
     if (snap.empty) { resultEl.style.color='#ff6b6b'; resultEl.textContent='해당 아이디의 트레이너를 찾을 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
     const targetUid = snap.docs[0].id;
     if (targetUid === currentUser.uid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
@@ -1400,8 +1400,8 @@ window.searchFriend = async function() {
 
     resultEl.innerHTML = `<div style="display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.6rem .85rem;margin-top:.3rem">
       <div style="font-size:1.4rem">${tData.avatar||'🎒'}</div>
-      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||query}</div><div style="font-size:.65rem;color:var(--muted)">@${query}</div></div>
-      <button onclick="sendFriendRequest('${targetUid}','${query}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;">친구 추가</button>
+      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||searchInput}</div><div style="font-size:.65rem;color:var(--muted)">@${searchInput}</div></div>
+      <button onclick="sendFriendRequest('${targetUid}','${searchInput}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;">친구 추가</button>
     </div>`;
     resultEl.style.color = '';
   } catch(e) { resultEl.style.color='#ff6b6b'; resultEl.textContent='오류: '+e.message; }
@@ -2155,7 +2155,7 @@ window.retryWrong = function(wrongList){ buildRetryQuiz(wrongList); showTab('qui
 function backToDiffSelect(){document.getElementById('quiz-content').style.display='none';document.getElementById('quiz-difficulty').style.display='block';document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));document.getElementById('diffStartBtn').classList.remove('show');selectedDiff=null;}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function showTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met','social','settings'][i]===tab));if(tab==='social'&&window.initSocialPage)window.initSocialPage();
+  document.querySelectorAll('.tabs .tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')===`showTab('${tab}')`));if(tab==='social'&&window.initSocialPage)window.initSocialPage();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab+'-page').classList.add('active');
   if(tab==='ndex')initNdex();
