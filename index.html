@@ -1464,6 +1464,7 @@ window.searchFriendUnified = async function() {
 
   const isCode = raw.startsWith('#');
   const searchVal = isCode ? raw.slice(1).toLowerCase() : raw.toLowerCase();
+  const searchValOrig = isCode ? raw.slice(1) : raw; // 원본 대소문자 유지
 
   if (!searchVal) return;
 
@@ -1484,12 +1485,25 @@ window.searchFriendUnified = async function() {
         displayId = tData.username || searchVal;
       }
     } else {
-      // 아이디로 검색 — users 컬렉션 username 필드 기준
-      // (usernames 컬렉션은 doc ID = uid 구조라 where 쿼리 불가)
-      const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchVal)));
+      // 아이디로 검색 — nickname 필드 기준 (원본/소문자 둘 다 시도)
+      const usersSnap = await getDocs(query(collection(db, 'users'), where('nickname', '==', searchValOrig)));
       if (!usersSnap.empty) {
         targetUid = usersSnap.docs[0].id;
         tData = usersSnap.docs[0].data();
+      } else {
+        // 소문자 변환 후 재시도 (nickname이 소문자로 저장된 경우)
+        const usersSnap2 = await getDocs(query(collection(db, 'users'), where('nickname', '==', searchVal)));
+        if (!usersSnap2.empty) {
+          targetUid = usersSnap2.docs[0].id;
+          tData = usersSnap2.docs[0].data();
+        } else {
+          // username 필드도 fallback 시도
+          const usersSnap3 = await getDocs(query(collection(db, 'users'), where('username', '==', searchVal)));
+          if (!usersSnap3.empty) {
+            targetUid = usersSnap3.docs[0].id;
+            tData = usersSnap3.docs[0].data();
+          }
+        }
       }
     }
 
