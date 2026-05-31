@@ -28,20 +28,29 @@ body.light-mode .pokemon-card{background:var(--card);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 55% 25%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 80%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(2px 2px at 45% 10%,rgba(255,203,5,.4) 0%,transparent 100%),radial-gradient(2px 2px at 85% 65%,rgba(59,76,202,.4) 0%,transparent 100%);pointer-events:none;z-index:0;}
-header{position:relative;z-index:10;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);backdrop-filter:blur(10px);}
-.logo{display:flex;align-items:center;gap:.75rem;}
-.pokeball-icon{width:30px;height:30px;background:linear-gradient(180deg,var(--red) 50%,white 50%);border-radius:50%;border:3px solid #333;position:relative;flex-shrink:0;animation:spin-slow 8s linear infinite;}
-.pokeball-icon::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:white;border-radius:50%;border:2px solid #333;z-index:1;}
-.pokeball-icon::after{content:'';position:absolute;top:calc(50% - 1.5px);left:0;right:0;height:3px;background:#333;}
+header{position:sticky;top:0;z-index:30;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(13,13,26,.94);min-height:50px;}
+body.light-mode header{background:rgba(240,244,255,.94);}
+.logo{display:flex;align-items:center;gap:.55rem;}
+.pokeball-icon{width:26px;height:26px;background:linear-gradient(180deg,var(--red) 50%,white 50%);border-radius:50%;border:2.5px solid #333;position:relative;flex-shrink:0;animation:spin-slow 8s linear infinite;}
+.pokeball-icon::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;background:white;border-radius:50%;border:2px solid #333;z-index:1;}
+.pokeball-icon::after{content:'';position:absolute;top:calc(50% - 1.5px);left:0;right:0;height:2.5px;background:#333;}
 @keyframes spin-slow{to{transform:rotate(360deg);}}
-.logo h1{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
-.date-badge{font-size:.72rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:.28rem .75rem;border-radius:20px;}
-.tabs{position:sticky;top:0;z-index:20;display:flex;padding:0 .5rem;border-bottom:1px solid var(--border);background:rgba(13,13,26,.92);backdrop-filter:blur(12px);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}.tabs::-webkit-scrollbar{display:none;}
-.tab-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--muted);background:transparent;border:none;padding:.9rem .85rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.logo h1{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
+@media(max-width:360px){.logo h1{display:none;}}
+.date-badge{font-size:.65rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:.2rem .6rem;border-radius:20px;}
+/* ===== 하단 네비게이션 바 ===== */
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;border-top:1px solid var(--border);background:rgba(13,13,26,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:visible;padding-bottom:env(safe-area-inset-bottom,0px);}
+body.light-mode .tabs{background:rgba(224,230,248,.97);}
+.tab-btn{font-family:'Galmuri11',monospace;color:var(--muted);background:transparent;border:none;cursor:pointer;position:relative;transition:color .15s;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;padding:.5rem .1rem .4rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:54px;}
+.tab-icon{font-size:1.2rem;line-height:1;display:block;transition:transform .2s;}
+.tab-label{font-size:.5rem;line-height:1;display:block;}
 .tab-btn.active{color:var(--accent);}
-.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);box-shadow:0 0 10px var(--glow);}
+.tab-btn.active .tab-icon{transform:translateY(-1px) scale(1.12);}
+.tab-btn.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--accent);border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--glow);}
 .tab-btn:hover:not(.active){color:var(--text);}
-main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 auto;}
+.tab-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--red);color:white;font-size:.48rem;font-family:'Galmuri11',monospace;padding:.05rem .28rem;border-radius:20px;line-height:1.5;min-width:14px;text-align:center;border:1.5px solid var(--bg);}
+/* main 하단 여백 (네비바 + safe area) */
+main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-inset-bottom,0px));max-width:900px;margin:0 auto;}
 .page{display:none;}
 .page.active{display:block;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -360,40 +369,44 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .retry-wrong-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:#ff6b6b;background:rgba(255,0,0,.07);border:1px solid rgba(255,0,0,.25);padding:.7rem 1.4rem;border-radius:30px;cursor:pointer;transition:all .2s;}
 .retry-wrong-btn:hover{background:rgba(255,0,0,.13);}
 @media(max-width:560px){
-  header{padding:.85rem 1rem;}main{padding:1rem .8rem;}
   .options-grid{grid-template-columns:1fr;}
   .quiz-card{padding:1.35rem 1rem;}
-  .modal{border-radius:20px 20px 0 0;width:100%;max-width:100%;}
-  .modal-header{padding:1.35rem 1.1rem .9rem;}
-  .modal-header-inner{gap:.9rem;}
-  .modal-image{width:95px;height:95px;}
-  .modal-name{font-size:1.35rem;}
-  .modal-body{padding:0 1.1rem 1.35rem;}
-  .modal-info-grid{grid-template-columns:repeat(3,1fr);}
 }
 @media(max-width:380px){
   .modal-header-inner{flex-direction:column;text-align:center;}
   .modal-types{justify-content:center;}
   .modal-info-grid{grid-template-columns:repeat(2,1fr);}
-  .tab-btn{font-size:.7rem;padding:.85rem .65rem;}
 }
 /* 모달 드래그 핸들 (모바일 바텀시트) */
 @media(max-width:560px){
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
 }
 /* ===== 반응형 ===== */
+@media(max-width:560px){
+  .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.65rem;}
+  .modal{border-radius:20px 20px 0 0;width:100%;max-width:100%;}
+  .modal-header{padding:1.2rem 1rem .8rem;}
+  .modal-header-inner{gap:.8rem;}
+  .modal-image{width:90px;height:90px;}
+  .modal-name{font-size:1.3rem;}
+  .modal-body{padding:0 1rem 1.2rem;}
+  .modal-info-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:380px){
+  .modal-header-inner{flex-direction:column;text-align:center;}
+  .modal-types{justify-content:center;}
+  .modal-info-grid{grid-template-columns:repeat(2,1fr);}
+}
 @media(min-width:768px){
-  main{max-width:700px;margin:0 auto;}
+  main{max-width:700px;padding:1.25rem 1rem 1.5rem;}
   .pokemon-grid{grid-template-columns:repeat(2,1fr);}
   .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
   .met-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
   .modal{max-width:520px;border-radius:24px;}
-  .tabs{max-width:700px;margin:0 auto .5rem;}
-  header{padding:.8rem 1.5rem;}
+  header{padding:.75rem 1.5rem;}
 }
 @media(min-width:1024px){
   main{max-width:900px;}
-  .tabs{max-width:900px;}
   .pokemon-grid{grid-template-columns:repeat(3,1fr);}
   .quiz-container{max-width:560px;margin:0 auto;}
   .modal{max-width:600px;}
@@ -401,16 +414,15 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 }
 @media(min-width:1400px){
   main{max-width:1100px;}
-  .tabs{max-width:1100px;}
   .pokemon-grid{grid-template-columns:repeat(4,1fr);}
   .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
 }
+/* 가로 모드 (폰) */
 @media(max-height:500px)and(orientation:landscape){
-  header{padding:.4rem 1rem;}
-  .tabs{padding:.2rem .5rem;}
-  .tab-btn{padding:.3rem .7rem;font-size:.65rem;}
-  main{padding:.5rem .8rem 4rem;}
+  header{padding:.35rem 1rem;}
+  main{padding:.5rem .8rem calc(58px + env(safe-area-inset-bottom,0px));}
   .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;}
+  .chat-messages{height:calc(100dvh - 220px);}
 }
 
 /* ===== 프로필/친구/메시지 CSS ===== */
@@ -467,44 +479,87 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 /* 친구 요청 뱃지 */
 .tab-badge{display:inline-block;background:var(--red);color:white;font-size:.55rem;font-family:'Galmuri11',monospace;padding:.05rem .35rem;border-radius:20px;margin-left:.3rem;vertical-align:middle;line-height:1.4;}
 
-/* 채팅/메시지 */
-.chat-header{display:flex;align-items:center;gap:.75rem;padding:.7rem 0 .9rem;border-bottom:1px solid var(--border);margin-bottom:.8rem;}
-.chat-back-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.3rem .65rem;font-size:.75rem;cursor:pointer;font-family:'Galmuri11',monospace;}
+/* 채팅 영역 */
+.chat-header{display:flex;align-items:center;gap:.65rem;padding:.6rem 0 .75rem;border-bottom:1px solid var(--border);margin-bottom:.65rem;}
+.chat-back-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.35rem .7rem;font-size:.75rem;cursor:pointer;font-family:'Galmuri11',monospace;min-height:36px;}
 .chat-back-btn:hover{border-color:var(--accent);color:var(--accent);}
-.chat-friend-avatar{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;}
-.chat-friend-name{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);}
-.chat-messages{display:flex;flex-direction:column;gap:.55rem;min-height:220px;max-height:52vh;overflow-y:auto;padding:.25rem 0 .5rem;scroll-behavior:smooth;}
-.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-friend-avatar{width:34px;height:34px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.chat-friend-name{font-family:'Galmuri11',monospace;font-size:.88rem;color:var(--accent);}
+.chat-messages{display:flex;flex-direction:column;gap:.5rem;overflow-y:auto;padding:.2rem 0 .4rem;scroll-behavior:smooth;
+  /* 화면 높이 기반으로 계산: 헤더50 + 소셜탭44 + 채팅헤더60 + 입력행60 + 하단바58 + 여유 */
+  height:calc(100dvh - 340px);
+  min-height:180px;
+  max-height:calc(100dvh - 300px);}
+.chat-messages::-webkit-scrollbar{width:3px;}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.chat-bubble-wrap{display:flex;flex-direction:column;gap:.08rem;}
+.chat-bubble-wrap{display:flex;flex-direction:column;gap:.06rem;}
 .chat-bubble-wrap.me{align-items:flex-end;}
 .chat-bubble-wrap.them{align-items:flex-start;}
-.chat-bubble{max-width:72%;padding:.5rem .85rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
+.chat-bubble{max-width:78%;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
 .chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
 .chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
-.chat-time{font-size:.58rem;color:var(--muted);padding:0 .2rem;}
-.chat-input-row{display:flex;gap:.5rem;padding-top:.7rem;border-top:1px solid var(--border);margin-top:.4rem;}
-.chat-input{flex:1;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.55rem .85rem;color:var(--text);outline:none;resize:none;height:42px;transition:border-color .2s;}
+.chat-time{font-size:.56rem;color:var(--muted);padding:0 .15rem;}
+.chat-input-row{display:flex;gap:.45rem;padding-top:.6rem;border-top:1px solid var(--border);}
+.chat-input{flex:1;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.5rem .75rem;color:var(--text);outline:none;resize:none;height:40px;transition:border-color .2s;}
 .chat-input:focus{border-color:var(--accent);}
-.chat-send-btn{background:var(--accent);color:var(--bg);border:none;border-radius:14px;width:42px;height:42px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
-.chat-send-btn:disabled{opacity:.4;cursor:default;}
-.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:150px;gap:.5rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;}
-.dm-list{display:flex;flex-direction:column;gap:.5rem;}
-.dm-row{display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;transition:border-color .15s;}
-.dm-row:hover{border-color:var(--accent);}
+.chat-send-btn{background:var(--accent);color:var(--bg);border:none;border-radius:12px;width:40px;height:40px;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;gap:.5rem;color:var(--muted);font-size:.75rem;font-family:'Galmuri11',monospace;}
+/* DM 목록 */
+.dm-list{display:flex;flex-direction:column;gap:.45rem;}
+.dm-row{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;transition:border-color .15s;min-height:60px;}
+.dm-row:hover,.dm-row:active{border-color:var(--accent);}
 .dm-row.unread{border-color:rgba(255,203,5,.4);}
 .dm-avatar{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
 .dm-info{flex:1;min-width:0;}
 .dm-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);}
-.dm-preview{font-size:.7rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.15rem;}
-.dm-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0;}
-.dm-time{font-size:.62rem;color:var(--muted);}
-.dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.6rem;border-radius:20px;padding:.05rem .4rem;}
-/* 친구 추가 서브탭 */
-.add-friend-subtabs{display:flex;gap:0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
-.add-friend-subtab{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);background:transparent;border:none;padding:.55rem .95rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
-.add-friend-subtab.active{color:var(--accent);}
-.add-friend-subtab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);}
+.dm-preview{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.12rem;}
+.dm-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.28rem;flex-shrink:0;}
+.dm-time{font-size:.58rem;color:var(--muted);}
+.dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.58rem;border-radius:20px;padding:.04rem .38rem;}
+/* 친구 목록 터치 타겟 */
+.friend-row{display:flex;align-items:center;gap:.8rem;padding:.75rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s;min-height:60px;}
+.friend-row:hover,.friend-row:active{border-color:var(--accent);}
+.friend-avatar{width:42px;height:42px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.friend-info{flex:1;min-width:0;}
+.friend-name{font-family:'Galmuri11',monospace;font-size:.86rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.friend-id{font-size:.62rem;color:var(--muted);}
+.friend-actions{display:flex;gap:.35rem;flex-shrink:0;}
+.friend-action-btn{font-size:.62rem;font-family:'Galmuri11',monospace;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.3rem .55rem;border-radius:8px;cursor:pointer;transition:all .15s;min-height:30px;}
+.friend-action-btn:hover{border-color:var(--accent);color:var(--accent);}
+.friend-action-btn.danger:hover{border-color:#ff6b6b;color:#ff6b6b;}
+/* 소셜 내부 탭 (프로필/친구/메시지) pill 형태 */
+.social-tab-bar{display:flex;background:var(--surface);border-radius:14px;padding:.25rem;gap:.2rem;margin-bottom:1rem;}
+.social-tab-btn{flex:1;font-family:'Galmuri11',monospace;font-size:.68rem;border:none;background:transparent;color:var(--muted);padding:.5rem .3rem;border-radius:10px;cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.social-tab-btn.active{background:var(--card);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.25);}
+/* 알림 드롭다운 위치 조정 (헤더 바로 아래) */
+.notif-dropdown{position:fixed;top:54px;right:.75rem;width:min(310px,calc(100vw - 1.5rem));background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:500;overflow:hidden;transform:scale(.92) translateY(-8px);opacity:0;pointer-events:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+.notif-dropdown.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+/* 친구 추가 박스 */
+.add-friend-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:.9rem;margin-bottom:.85rem;}
+.add-friend-title{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--text);margin-bottom:.6rem;}
+.add-friend-row{display:flex;gap:.45rem;}
+.add-friend-inp{flex:1;font-family:'Galmuri11',monospace;font-size:.78rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.5rem .75rem;color:var(--text);outline:none;min-width:0;}
+.add-friend-inp:focus{border-color:var(--accent);}
+.add-friend-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.5rem .85rem;cursor:pointer;font-weight:700;white-space:nowrap;min-height:38px;}
+.add-friend-result{margin-top:.55rem;font-size:.73rem;font-family:'Galmuri11',monospace;}
+/* 반응형 media queries */
+@media(min-width:600px){
+  .chat-messages{height:calc(100dvh - 320px);}
+  .tab-label{font-size:.58rem;}
+  .tab-icon{font-size:1.3rem;}
+}
+@media(min-width:768px){
+  .tabs{position:sticky;top:0;bottom:auto;border-top:none;border-bottom:1px solid var(--border);flex-direction:row;height:auto;background:rgba(13,13,26,.92);}
+  body.light-mode .tabs{background:rgba(240,244,255,.92);}
+  .tab-btn{flex-direction:row;gap:.4rem;padding:.75rem 1rem;min-height:48px;font-size:.78rem;}
+  .tab-btn.active::before{display:none;}
+  .tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);box-shadow:0 0 10px var(--glow);}
+  .tab-icon{font-size:1rem;}
+  .tab-label{font-size:.78rem;}
+  main{padding:1.25rem 1rem 1.5rem;}
+  .chat-messages{height:calc(100dvh - 280px);}
+}
+
 /* 친구 코드 표시 박스 */
 .friend-code-display{display:flex;align-items:center;gap:.55rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem .9rem;margin-bottom:.6rem;}
 .friend-code-val{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--accent);flex:1;letter-spacing:.08em;}
@@ -530,86 +585,126 @@ body.light-mode .chat-bubble.them{background:var(--surface);}
 body.light-mode .profile-hero{background:var(--card);}
 body.light-mode .friend-code-display{background:var(--surface);}
 body.light-mode .my-code-setting-box{background:var(--surface);}
-
-/* ===== 알림 ===== */
-.notif-btn{position:relative;background:transparent;border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:border-color .2s;color:var(--text);flex-shrink:0;}
-.notif-btn:hover{border-color:var(--accent);}
+/* ===== 알림 벨 ===== */
+.notif-btn{position:relative;width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:1rem;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.notif-btn:hover{border-color:rgba(255,203,5,.4);color:var(--accent);}
+.notif-btn.has-notif{color:var(--accent);border-color:rgba(255,203,5,.4);}
 .notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--bg);display:none;}
 .notif-dot.show{display:block;}
 /* 알림 드롭다운 */
-.notif-panel{position:fixed;top:62px;right:.8rem;width:320px;max-width:calc(100vw - 1.6rem);background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 16px 50px rgba(0,0,0,.55);z-index:500;overflow:hidden;transform:scale(.92) translateY(-8px);opacity:0;pointer-events:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
-.notif-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.notif-dropdown{position:fixed;top:60px;right:1rem;width:min(320px,calc(100vw - 2rem));background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:500;overflow:hidden;transform:scale(.92) translateY(-8px);opacity:0;pointer-events:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+.notif-dropdown.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
 .notif-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem .55rem;border-bottom:1px solid var(--border);}
-.notif-title{font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--accent);}
-.notif-clear-btn{font-family:'Galmuri11',monospace;font-size:.62rem;color:var(--muted);background:transparent;border:none;cursor:pointer;transition:color .2s;}
-.notif-clear-btn:hover{color:var(--text);}
-.notif-list{max-height:340px;overflow-y:auto;}
-.notif-item{display:flex;align-items:flex-start;gap:.65rem;padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s;}
+.notif-title{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--accent);}
+.notif-close-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:.1rem .3rem;}
+.notif-list{max-height:360px;overflow-y:auto;}
+.notif-item{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s;}
+.notif-item:last-child{border-bottom:none;}
 .notif-item:hover{background:rgba(255,255,255,.03);}
 .notif-item.unread{background:rgba(255,203,5,.04);}
-.notif-item:last-child{border-bottom:none;}
-.notif-icon{font-size:1.25rem;flex-shrink:0;margin-top:.1rem;}
+.notif-icon{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .notif-body{flex:1;min-width:0;}
-.notif-text{font-size:.76rem;color:var(--text);line-height:1.5;}
-.notif-time{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--muted);margin-top:.2rem;}
-.notif-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1rem;gap:.5rem;color:var(--muted);font-family:'Galmuri11',monospace;font-size:.75rem;}
-
-/* ===== 단체 메시지 ===== */
-.group-tag{font-size:.58rem;font-family:'Galmuri11',monospace;background:rgba(59,76,202,.18);border:1px solid rgba(59,76,202,.4);color:#8899ff;padding:.08rem .4rem;border-radius:10px;margin-left:.35rem;vertical-align:middle;}
-.create-group-btn{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--bg);background:var(--accent);border:none;border-radius:10px;padding:.4rem .85rem;cursor:pointer;white-space:nowrap;transition:opacity .15s;}
-.create-group-btn:hover{opacity:.85;}
-/* 단체 채팅 생성 모달 */
-.group-create-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem;margin-bottom:.8rem;display:none;}
+.notif-text{font-size:.75rem;color:var(--text);line-height:1.4;}
+.notif-time{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--muted);margin-top:.15rem;}
+.notif-empty{padding:1.5rem;text-align:center;font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);}
+/* ===== 견학 카드 (채팅 내) ===== */
+.tour-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.75rem .9rem;max-width:200px;cursor:default;}
+.tour-card.me{background:rgba(255,203,5,.12);border-color:rgba(255,203,5,.35);}
+.tour-card-label{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--accent);margin-bottom:.4rem;display:flex;align-items:center;gap:.3rem;}
+.tour-card-body{display:flex;align-items:center;gap:.6rem;}
+.tour-card-img{width:52px;height:52px;image-rendering:pixelated;}
+.tour-card-info{}
+.tour-card-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);}
+.tour-card-num{font-size:.6rem;color:var(--muted);}
+.tour-meet-btn{margin-top:.5rem;width:100%;font-family:'Galmuri11',monospace;font-size:.65rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:.32rem .6rem;cursor:pointer;transition:opacity .15s;}
+.tour-meet-btn:disabled{opacity:.4;cursor:default;}
+/* 견학 보내기 버튼 */
+.tour-send-btn{width:36px;height:36px;background:rgba(255,203,5,.08);border:1px solid rgba(255,203,5,.25);border-radius:10px;color:var(--accent);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.tour-send-btn:hover{background:rgba(255,203,5,.18);}
+/* 견학 선택 패널 */
+.tour-picker{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.75rem .9rem;margin-bottom:.6rem;display:none;}
+.tour-picker.open{display:block;animation:fadeIn .2s ease;}
+.tour-picker-title{font-family:'Galmuri11',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.55rem;}
+.tour-picker-grid{display:flex;flex-wrap:wrap;gap:.4rem;}
+.tour-picker-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .5rem;cursor:pointer;transition:border-color .15s,transform .15s;}
+.tour-picker-item:hover{border-color:var(--accent);transform:scale(1.05);}
+.tour-picker-item img{width:44px;height:44px;image-rendering:pixelated;}
+.tour-picker-item span{font-size:.55rem;color:var(--text);font-family:'Galmuri11',monospace;}
+/* ===== 단체 채팅 ===== */
+.group-create-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.32rem .75rem;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.group-create-btn:hover{border-color:var(--accent);color:var(--accent);}
+.group-badge{display:inline-block;font-size:.52rem;font-family:'Galmuri11',monospace;background:rgba(59,76,202,.2);border:1px solid rgba(59,76,202,.4);color:#7090ff;padding:.08rem .4rem;border-radius:10px;margin-left:.3rem;vertical-align:middle;}
+/* 그룹 생성 모달 */
+.group-create-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem 1.1rem;margin-bottom:.8rem;display:none;}
 .group-create-panel.open{display:block;animation:fadeIn .2s ease;}
-.group-member-list{display:flex;flex-direction:column;gap:.35rem;max-height:200px;overflow-y:auto;margin:.5rem 0;}
-.group-member-row{display:flex;align-items:center;gap:.6rem;padding:.4rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color .15s;}
-.group-member-row.selected{border-color:var(--accent);background:rgba(255,203,5,.06);}
-.group-member-row .g-avatar{font-size:1.1rem;}
-.group-member-row .g-name{font-family:'Galmuri11',monospace;font-size:.76rem;color:var(--text);flex:1;}
-.group-member-row .g-check{font-size:.85rem;}
-/* 단체 채팅방 헤더 */
-.chat-group-members{font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;margin-top:.08rem;}
-/* 채팅창 내 발신자 이름 (단체) */
-.chat-sender-name{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--accent);margin-bottom:.12rem;}
-
-/* ===== 견학 (포켓몬 공유) ===== */
-.share-pokemon-btn{font-family:'Galmuri11',monospace;font-size:.7rem;color:var(--bg);background:linear-gradient(135deg,#6c8cff,#a47cff);border:none;border-radius:10px;padding:.38rem .75rem;cursor:pointer;white-space:nowrap;transition:opacity .15s;}
-.share-pokemon-btn:hover{opacity:.85;}
-.shared-pokemon-bubble{background:rgba(108,140,255,.1);border:1px solid rgba(108,140,255,.35);border-radius:14px;padding:.6rem .85rem;margin-top:.3rem;max-width:220px;}
-.shared-pokemon-bubble .sp-label{font-family:'Galmuri11',monospace;font-size:.58rem;color:#8899ff;margin-bottom:.3rem;}
-.shared-pokemon-bubble .sp-inner{display:flex;align-items:center;gap:.5rem;}
-.shared-pokemon-bubble img{width:42px;height:42px;image-rendering:pixelated;}
-.shared-pokemon-bubble .sp-name{font-family:'Galmuri11',monospace;font-size:.76rem;color:var(--text);}
-.shared-pokemon-bubble .sp-num{font-size:.6rem;color:var(--muted);}
-.shared-pokemon-bubble .sp-accept{font-family:'Galmuri11',monospace;font-size:.62rem;background:rgba(108,140,255,.2);border:1px solid rgba(108,140,255,.5);color:#8899ff;border-radius:8px;padding:.22rem .55rem;cursor:pointer;margin-top:.4rem;transition:all .15s;display:inline-block;}
-.shared-pokemon-bubble .sp-accept:hover{background:rgba(108,140,255,.35);}
-.shared-pokemon-bubble .sp-accepted{font-family:'Galmuri11',monospace;font-size:.62rem;color:#4ade80;margin-top:.4rem;}
-
-/* 견학 선택 모달 */
-.expedition-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:.4rem;max-height:260px;overflow-y:auto;}
-.expedition-card{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:.4rem .3rem;display:flex;flex-direction:column;align-items:center;gap:.18rem;cursor:pointer;transition:border-color .15s,transform .15s;}
-.expedition-card:hover{border-color:rgba(108,140,255,.5);transform:scale(1.04);}
-.expedition-card img{width:46px;height:46px;image-rendering:pixelated;}
-.expedition-card .ec-name{font-size:.58rem;color:var(--text);text-align:center;line-height:1.3;}
-
-/* 타인 프로필 모달 */
-.other-profile-modal{padding:1.5rem 1.25rem;}
-.other-profile-avatar{font-size:3rem;width:72px;height:72px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto .6rem;box-shadow:0 0 20px var(--glow);}
-.other-profile-nick{font-family:'Galmuri11',monospace;font-size:1.15rem;color:var(--accent);text-align:center;}
-.other-profile-uid{font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--muted);text-align:center;margin-bottom:.5rem;}
-.other-profile-bio{font-size:.75rem;color:var(--text);text-align:center;line-height:1.6;margin-bottom:.9rem;max-width:280px;margin-left:auto;margin-right:auto;}
-.other-profile-stats{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;padding:.7rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.other-profile-stat{display:flex;flex-direction:column;align-items:center;gap:.15rem;}
-.other-profile-stat-val{font-family:'Galmuri11',monospace;font-size:1rem;color:var(--accent);}
-.other-profile-stat-label{font-size:.62rem;color:var(--muted);}
-.other-profile-met{margin-top:.8rem;}
-.other-profile-met-title{font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--muted);margin-bottom:.5rem;}
-.other-profile-met-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:.35rem;max-height:180px;overflow-y:auto;}
-.other-profile-met-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.35rem .25rem;display:flex;flex-direction:column;align-items:center;gap:.12rem;}
-.other-profile-met-card img{width:40px;height:40px;image-rendering:pixelated;}
-.other-profile-met-card span{font-size:.55rem;color:var(--text);text-align:center;}
+.group-member-list{display:flex;flex-direction:column;gap:.35rem;max-height:200px;overflow-y:auto;margin:.55rem 0;}
+.group-member-row{display:flex;align-items:center;gap:.6rem;padding:.35rem .5rem;border-radius:10px;background:var(--surface);cursor:pointer;transition:background .15s;}
+.group-member-row:hover{background:rgba(255,255,255,.06);}
+.group-member-check{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:all .15s;}
+.group-member-check.checked{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+body.light-mode .notif-dropdown{background:var(--card);}
+body.light-mode .tour-card{background:var(--surface);}
+/* ===== 채팅 고급 기능 CSS ===== */
+/* 온라인 상태 */
+.online-dot{width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);position:absolute;bottom:1px;right:1px;flex-shrink:0;}
+.online-dot.online{background:#4ade80;}
+.online-dot.away{background:#facc15;}
+.online-dot.offline{background:var(--border);}
+.chat-friend-avatar{position:relative;}
+/* 답장 미리보기 (입력창 위) */
+.reply-preview{display:none;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:.35rem .65rem;margin-bottom:.35rem;font-size:.72rem;color:var(--muted);position:relative;}
+.reply-preview.show{display:flex;align-items:center;gap:.5rem;}
+.reply-preview-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.reply-preview-close{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:0 .2rem;line-height:1;}
+/* 버블 내 답장 인용 */
+.reply-quote{background:rgba(255,255,255,.07);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:.25rem .5rem;margin-bottom:.3rem;font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.chat-bubble.me .reply-quote{background:rgba(0,0,0,.15);border-left-color:rgba(255,255,255,.5);}
+/* 리액션 */
+.reaction-bar{display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.25rem;}
+.reaction-chip{display:inline-flex;align-items:center;gap:.15rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:.1rem .4rem;font-size:.72rem;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.reaction-chip:hover,.reaction-chip.mine{background:rgba(255,203,5,.1);border-color:rgba(255,203,5,.4);}
+.reaction-chip span.count{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--muted);}
+/* 롱프레스/우클릭 컨텍스트 메뉴 */
+.msg-ctx-menu{position:fixed;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.5);z-index:9999;min-width:160px;overflow:hidden;animation:fadeIn .12s ease;}
+.msg-ctx-item{display:flex;align-items:center;gap:.55rem;padding:.6rem .9rem;font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--text);cursor:pointer;transition:background .12s;}
+.msg-ctx-item:hover{background:rgba(255,255,255,.06);}
+.msg-ctx-item.danger{color:#ff6b6b;}
+.msg-ctx-sep{height:1px;background:var(--border);margin:.15rem 0;}
+/* 이모지 반응 피커 */
+.emoji-reaction-picker{position:fixed;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.5);z-index:9999;padding:.45rem .5rem;display:flex;gap:.25rem;animation:fadeIn .12s ease;}
+.emoji-reaction-btn{width:34px;height:34px;border-radius:10px;background:transparent;border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;}
+.emoji-reaction-btn:hover{background:var(--surface);}
+/* 읽음 확인 */
+.read-receipt{font-size:.55rem;color:var(--muted);margin-top:.08rem;text-align:right;}
+.read-receipt.read{color:var(--accent);}
+/* 멘션 */
+.mention{color:var(--accent);font-weight:700;background:rgba(255,203,5,.1);border-radius:4px;padding:0 .2rem;}
+/* 메시지 검색 바 */
+.msg-search-bar{display:none;padding:.5rem .7rem;border-bottom:1px solid var(--border);background:var(--surface);}
+.msg-search-bar.open{display:flex;gap:.4rem;align-items:center;}
+.msg-search-inp{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.38rem .65rem;font-size:.78rem;color:var(--text);outline:none;font-family:'Galmuri11',monospace;}
+.msg-search-inp:focus{border-color:var(--accent);}
+.msg-search-close{background:transparent;border:none;color:var(--muted);font-size:.9rem;cursor:pointer;padding:.1rem .3rem;}
+.msg-highlight{background:rgba(255,203,5,.35);border-radius:3px;}
+/* 채팅방 옵션 시트 */
+.chat-options-btn{background:transparent;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:.2rem .4rem;border-radius:8px;transition:color .15s;margin-left:auto;}
+.chat-options-btn:hover{color:var(--accent);}
+/* 고정 배너 */
+.pinned-msg-banner{display:none;background:rgba(255,203,5,.07);border-bottom:1px solid rgba(255,203,5,.2);padding:.45rem .9rem;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Galmuri11',monospace;}
+.pinned-msg-banner.show{display:flex;align-items:center;gap:.5rem;}
+.pinned-msg-banner span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);}
+/* 단체 채팅 그룹 아이콘 */
+.group-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(59,76,202,.4),rgba(255,203,5,.2));border:2px solid rgba(59,76,202,.4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;}
+/* 채팅 헤더 우측 버튼들 */
+.chat-header-actions{display:flex;align-items:center;gap:.2rem;margin-left:auto;}
+.chat-header-icon-btn{background:transparent;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:.3rem;border-radius:8px;transition:color .15s;-webkit-tap-highlight-color:transparent;}
+.chat-header-icon-btn:hover{color:var(--accent);}
+/* 이미지 버블 */
+.chat-img-bubble{max-width:200px;border-radius:12px;overflow:hidden;cursor:pointer;}
+.chat-img-bubble img{width:100%;display:block;}
+/* 그룹 발신자 이름 */
+.bubble-sender{font-size:.6rem;color:var(--accent);font-family:'Galmuri11',monospace;margin-bottom:.15rem;}
 </style>
-</head>
 <body>
 <!-- 로그인 화면 -->
 <div id="loginScreen">
@@ -633,7 +728,9 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
     <h1>포켓몬 데일리 도감</h1>
   </div>
   <div style="display:flex;align-items:center;gap:.5rem">
-    <button class="notif-btn" id="notifBtn" style="display:none" onclick="toggleNotifPanel()" title="알림">🔔<div class="notif-dot" id="notifDot"></div></button>
+    <button class="notif-btn" id="notifBtn" onclick="toggleNotifDropdown()">
+      🔔<div class="notif-dot" id="notifDot"></div>
+    </button>
     <div class="user-badge" id="userBadge" style="display:none;cursor:pointer" onclick="showTab('social')">
       <span id="headerAvatar" style="font-size:1.2rem;line-height:1">🎒</span>
       <span class="user-name" id="userNameDisplay"></span>
@@ -641,20 +738,33 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
     <div class="date-badge" id="dateDisplay" style="display:none"></div>
   </div>
 </header>
-<!-- 알림 패널 -->
-<div class="notif-panel" id="notifPanel">
+<!-- 알림 드롭다운 -->
+<div class="notif-dropdown" id="notifDropdown">
   <div class="notif-header">
     <span class="notif-title">🔔 알림</span>
-    <button class="notif-clear-btn" onclick="clearAllNotifs()">모두 읽음</button>
+    <button class="notif-close-btn" onclick="toggleNotifDropdown()">✕</button>
   </div>
-  <div class="notif-list" id="notifList"><div class="notif-empty">🍃<br>새 알림이 없어요</div></div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-empty">새 알림이 없어요</div>
+  </div>
 </div>
 <div class="tabs">
-  <button class="tab-btn active" onclick="showTab('dex')">📖 오늘의 도감</button>
-  <button class="tab-btn" onclick="showTab('ndex')">🗺️ 전국도감</button>
-  <button class="tab-btn" onclick="showTab('quiz')">⚡ 퀴즈</button>
-  <button class="tab-btn" onclick="showTab('met')">👾 만난 포켓몬</button>
-  <button class="tab-btn" onclick="showTab('social')" id="tabSocial">👥 소셜<span class="tab-badge" id="friendReqBadge" style="display:none">0</span></button>
+  <button class="tab-btn active" onclick="showTab('dex')" id="tabDex">
+    <span class="tab-icon">📖</span><span class="tab-label">도감</span>
+  </button>
+  <button class="tab-btn" onclick="showTab('ndex')" id="tabNdex">
+    <span class="tab-icon">🗺️</span><span class="tab-label">전국</span>
+  </button>
+  <button class="tab-btn" onclick="showTab('quiz')" id="tabQuiz">
+    <span class="tab-icon">⚡</span><span class="tab-label">퀴즈</span>
+  </button>
+  <button class="tab-btn" onclick="showTab('met')" id="tabMet">
+    <span class="tab-icon">👾</span><span class="tab-label">만남</span>
+  </button>
+  <button class="tab-btn" onclick="showTab('social')" id="tabSocial" style="position:relative;">
+    <span class="tab-icon">👥</span><span class="tab-label">소셜</span>
+    <span class="tab-badge" id="friendReqBadge" style="display:none">0</span>
+  </button>
 </div>
 <main>
   <div id="dex-page" class="page active">
@@ -885,9 +995,9 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
     </div>
 
     <!-- 소셜 서브탭 -->
-    <div class="profile-tabs">
-      <button class="profile-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none">0</span></button>
-      <button class="profile-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none">0</span></button>
+    <div class="social-tab-bar">
+      <button class="social-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
+      <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
     </div>
 
     <!-- 친구 탭 -->
@@ -928,17 +1038,17 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
       <div id="dmListView">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
           <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">💬 대화 목록</div>
-          <button class="create-group-btn" onclick="toggleGroupCreatePanel()">👥 단체 채팅</button>
+          <button class="group-create-btn" onclick="toggleGroupCreatePanel()">➕ 단체 채팅</button>
         </div>
         <!-- 단체 채팅 생성 패널 -->
         <div class="group-create-panel" id="groupCreatePanel">
-          <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--accent);margin-bottom:.6rem;">단체 채팅 만들기</div>
-          <input id="groupNameInp" placeholder="채팅방 이름 (선택)" style="width:100%;font-family:'Galmuri11',monospace;font-size:.78rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .7rem;color:var(--text);outline:none;margin-bottom:.4rem;"/>
-          <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.35rem;">친구 선택 (2명 이상)</div>
+          <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--text);margin-bottom:.4rem;">단체 채팅 만들기</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-bottom:.5rem;">참여할 친구를 선택하세요 (2명 이상)</div>
           <div class="group-member-list" id="groupMemberList"></div>
-          <div style="display:flex;gap:.4rem;margin-top:.55rem;justify-content:flex-end">
-            <button onclick="toggleGroupCreatePanel()" style="font-family:'Galmuri11',monospace;font-size:.7rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.35rem .75rem;cursor:pointer;">취소</button>
-            <button class="create-group-btn" onclick="createGroupChat()" style="font-size:.72rem;padding:.35rem .8rem;">만들기</button>
+          <input class="add-friend-inp" id="groupNameInp" placeholder="채팅방 이름 (선택)" style="width:100%;margin-bottom:.5rem;"/>
+          <div style="display:flex;gap:.4rem;justify-content:flex-end;">
+            <button onclick="toggleGroupCreatePanel()" style="font-family:'Galmuri11',monospace;font-size:.7rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.35rem .7rem;cursor:pointer;">취소</button>
+            <button class="add-friend-btn" style="font-size:.7rem;padding:.35rem .8rem;" onclick="createGroupChat()">만들기</button>
           </div>
         </div>
         <div class="dm-list" id="dmList">
@@ -946,21 +1056,51 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
         </div>
       </div>
       <div id="chatView" style="display:none;">
+        <!-- 메시지 검색 바 -->
+        <div class="msg-search-bar" id="msgSearchBar">
+          <input class="msg-search-inp" id="msgSearchInp" placeholder="메시지 검색..." oninput="searchMessages(this.value)" onkeydown="if(event.key==='Escape')closeMsgSearch()"/>
+          <button class="msg-search-close" onclick="closeMsgSearch()">✕</button>
+          <span id="msgSearchCount" style="font-size:.62rem;color:var(--muted);white-space:nowrap;font-family:'Galmuri11',monospace;"></span>
+        </div>
+        <!-- 고정 메시지 배너 -->
+        <div class="pinned-msg-banner" id="pinnedMsgBanner" onclick="scrollToPinned()">
+          📌 <span id="pinnedMsgText"></span>
+        </div>
         <div class="chat-header">
-          <button class="chat-back-btn" onclick="closeChatView()">← 목록</button>
-          <div class="chat-friend-avatar" id="chatFriendAvatar">🎒</div>
-          <div style="flex:1;min-width:0">
-            <div class="chat-friend-name" id="chatFriendName"></div>
-            <div style="font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;" id="chatFriendId"></div>
-            <div class="chat-group-members" id="chatGroupMembers" style="display:none"></div>
+          <button class="chat-back-btn" onclick="closeChatView()">←</button>
+          <div class="chat-friend-avatar" id="chatFriendAvatar" style="position:relative;">🎒
+            <div class="online-dot offline" id="chatOnlineDot"></div>
           </div>
-          <button id="expeditionBtn" onclick="openExpeditionPicker()" title="견학 - 포켓몬 공유" style="font-size:1.1rem;background:transparent;border:1px solid rgba(108,140,255,.4);border-radius:10px;padding:.28rem .5rem;cursor:pointer;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(108,140,255,.8)'" onmouseout="this.style.borderColor='rgba(108,140,255,.4)'">🔭</button>
+          <div style="flex:1;min-width:0;">
+            <div class="chat-friend-name" id="chatFriendName"></div>
+            <div style="font-size:.58rem;color:var(--muted);font-family:'Galmuri11',monospace;" id="chatFriendStatus">오프라인</div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="chat-header-icon-btn" onclick="toggleMsgSearch()" title="검색">🔍</button>
+            <button class="chat-header-icon-btn" onclick="openChatOptions()" title="더보기">⋯</button>
+          </div>
+        </div>
+        <!-- 견학 포켓몬 선택 패널 -->
+        <div class="tour-picker" id="tourPicker">
+          <div class="tour-picker-title">🎒 오늘의 포켓몬 중 견학 보낼 포켓몬을 선택하세요</div>
+          <div class="tour-picker-grid" id="tourPickerGrid"></div>
+        </div>
+        <!-- 답장 미리보기 -->
+        <div class="reply-preview" id="replyPreview">
+          <div style="font-size:.6rem;color:var(--accent);font-family:'Galmuri11',monospace;">↩ 답장</div>
+          <div class="reply-preview-text" id="replyPreviewText"></div>
+          <button class="reply-preview-close" onclick="cancelReply()">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-row">
-          <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+          <button class="tour-send-btn" id="tourSendBtn" onclick="toggleTourPicker()" title="견학 보내기">🎒</button>
+          <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+            oninput="handleMentionInput(this)"></textarea>
           <button class="chat-send-btn" onclick="sendMessage()" title="전송">➤</button>
         </div>
+        <!-- 멘션 자동완성 -->
+        <div id="mentionSuggest" style="display:none;position:absolute;bottom:60px;left:.9rem;right:.9rem;background:var(--card);border:1px solid var(--border);border-radius:12px;z-index:50;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.4);"></div>
       </div>
     </div>
   </div>
@@ -977,7 +1117,7 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, addDoc, onSnapshot, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, addDoc, onSnapshot, getDocs, serverTimestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Firestore 복합 인덱스 필요:
 // chats 컬렉션: participants (Array) ASC + lastTs (Timestamp) DESC
@@ -1068,6 +1208,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('dateDisplay').style.display = 'block';
     const notifBtn = document.getElementById('notifBtn');
     if (notifBtn) notifBtn.style.display = 'flex';
+    updateMyOnlineStatus(true);
     const btn = document.getElementById('loginActionBtn');
     btn.textContent = '🎮 로그인'; btn.disabled = false;
     await loadSettingsFromServer();
@@ -1075,15 +1216,12 @@ onAuthStateChanged(auth, async (user) => {
     renderMetPage();
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
-    if (window.listenNotifications) window.listenNotifications();
   } else {
     currentUser = null;
     window._currentUser = null;
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('userBadge').style.display = 'none';
     document.getElementById('dateDisplay').style.display = 'none';
-    const nb = document.getElementById('notifBtn'); if(nb) nb.style.display = 'none';
-    if (_notifUnsubscribe2) { _notifUnsubscribe2(); _notifUnsubscribe2 = null; }
     document.getElementById('loginId').value = '';
     document.getElementById('loginPw').value = '';
     document.getElementById('loginPwConfirm').value = '';
@@ -1565,7 +1703,7 @@ async function loadFriends() {
         <button class="friend-action-btn" onclick="openChat('${fuid}','${(fData.nickname||'트레이너').replace(/'/g,"\'")}','${fData.avatar||'🎒'}','${fData.username||'?'}')">💬 DM</button>
         <button class="friend-action-btn danger" onclick="removeFriend('${fuid}')">삭제</button>
       </div>`;
-    row.onclick = (e) => { if(e.target.tagName==='BUTTON') return; openFriendProfile(fuid); };
+    row.onclick = (e) => { if(e.target.tagName==='BUTTON') return; openChat(fuid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?'); };
     list.appendChild(row);
   }
 }
@@ -1662,7 +1800,6 @@ window.sendFriendRequest = async function(targetUid, targetUsername) {
     if (reqs.includes(currentUser.uid)) { showSocialToast('이미 요청을 보냈어요'); return; }
     reqs.push(currentUser.uid);
     await updateDoc(doc(db, 'users', targetUid), { friendRequests: reqs });
-    await addNotification(targetUid, 'friend_request', (_myProfile?.nickname||'누군가') + '(@' + (_myProfile?.uid||'?') + ')님이 친구 요청을 보냈어요', {});
     document.getElementById('addFriendResult').innerHTML = '<span style="color:#4ade80">✓ 친구 요청을 보냈어요!</span>';
     document.getElementById('addFriendInp').value = '';
   } catch(e) { showSocialToast('요청 실패: ' + e.message); }
@@ -1718,185 +1855,768 @@ window.removeFriend = async function(fuid) {
   } catch(e) {}
 };
 
-// ---------- 메시지/DM ----------
-let _currentChatUid = null;
-let _currentChatName = '';
-let _currentChatAvatar = '🎒';
-let _chatUnsubscribe = null;
+// ═══════════════════════════════════════════════
+// 채팅 / DM  (풀 기능)
+// ═══════════════════════════════════════════════
+let _currentChatUid   = null;   // DM 상대 uid (그룹: null)
+let _currentRoomId    = null;   // 현재 채팅방 ID
+let _currentChatName  = '';
+let _currentChatAvatar= '🎒';
+let _currentIsGroup   = false;
+let _chatUnsubscribe  = null;
+let _onlineUnsub      = null;
+let _replyTo          = null;   // { msgId, text, from }
+let _pinnedMsgId      = null;
+let _mutedRooms       = new Set(JSON.parse(localStorage.getItem('mutedRooms')||'[]'));
+let _pinnedRooms      = new Set(JSON.parse(localStorage.getItem('pinnedRooms')||'[]'));
+let _groupMembers     = {};     // uid → {nickname, avatar}
 
-function getChatRoomId(uid1, uid2) {
-  return [uid1, uid2].sort().join('_');
+function getChatRoomId(uid1, uid2) { return [uid1, uid2].sort().join('_'); }
+
+// ── 온라인 상태 ──────────────────────────────
+async function updateMyOnlineStatus(online) {
+  if (!currentUser) return;
+  try { await setDoc(doc(db,'presence',currentUser.uid),{online,lastSeen:serverTimestamp()},{merge:true}); } catch(e){}
 }
+// 페이지 표시/숨김 감지
+document.addEventListener('visibilitychange', () => updateMyOnlineStatus(!document.hidden));
 
+// ── 채팅방 열기 ──────────────────────────────
 window.openChat = async function(friendUid, friendName, friendAvatar, friendUsername) {
   showSocialTab('messages');
-  _currentChatUid = friendUid;
-  _currentChatName = friendName;
+  _currentChatUid    = friendUid;
+  _currentChatName   = friendName;
   _currentChatAvatar = friendAvatar;
-  _currentRoomId = null;
-  _currentRoomIsGroup = false;
+  _currentIsGroup    = false;
+  const roomId = getChatRoomId(currentUser.uid, friendUid);
+  _currentRoomId = roomId;
+  _replyTo = null;
+  document.getElementById('replyPreview').classList.remove('show');
 
-  document.getElementById('chatFriendName').textContent = friendName;
-  document.getElementById('chatFriendId').textContent = '@' + friendUsername;
-  document.getElementById('chatFriendAvatar').textContent = friendAvatar;
-  const gm = document.getElementById('chatGroupMembers');
-  if (gm) gm.style.display = 'none';
+  document.getElementById('chatFriendName').textContent    = friendName;
+  document.getElementById('chatFriendStatus').textContent  = '...';
+  document.getElementById('chatFriendAvatar').innerHTML    = friendAvatar + '<div class="online-dot offline" id="chatOnlineDot"></div>';
   document.getElementById('dmListView').style.display = 'none';
-  document.getElementById('chatView').style.display = 'block';
-  const eb = document.getElementById('expeditionBtn');
-  if (eb) eb.style.display = 'inline-flex';
+  document.getElementById('chatView').style.display   = 'block';
+
+  // 투어 피커 초기화
+  buildTourPickerGrid();
+  cancelReply();
 
   // 이전 리스너 해제
   if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
+  if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
 
-  // 실시간 메시지 구독
-  const roomId = getChatRoomId(currentUser.uid, friendUid);
+  // 온라인 상태 구독
+  _onlineUnsub = onSnapshot(doc(db,'presence',friendUid), snap => {
+    if (!snap.exists()) return;
+    const d = snap.data();
+    const dot = document.getElementById('chatOnlineDot');
+    const statusEl = document.getElementById('chatFriendStatus');
+    if (!dot || !statusEl) return;
+    if (d.online) {
+      dot.className = 'online-dot online';
+      statusEl.textContent = '온라인';
+    } else {
+      dot.className = 'online-dot offline';
+      const last = d.lastSeen?.toDate ? d.lastSeen.toDate() : null;
+      statusEl.textContent = last ? '마지막 접속 ' + formatRelTime(last) : '오프라인';
+    }
+  });
+
+  // 고정 메시지 로드
+  loadPinnedMsg(roomId);
+
+  // 메시지 구독
+  subscribeMessages(roomId, false);
+};
+
+window.openGroupChat = async function(roomId, roomName, members) {
+  showSocialTab('messages');
+  _currentChatUid    = null;
+  _currentRoomId     = roomId;
+  _currentChatName   = roomName;
+  _currentChatAvatar = '👥';
+  _currentIsGroup    = true;
+  _replyTo = null;
+  _groupMembers      = members || {};
+
+  document.getElementById('chatFriendName').textContent   = roomName;
+  document.getElementById('chatFriendStatus').textContent = Object.keys(members||{}).length + '명';
+  document.getElementById('chatFriendAvatar').innerHTML   = '👥<div class="online-dot" style="display:none"></div>';
+  document.getElementById('dmListView').style.display = 'none';
+  document.getElementById('chatView').style.display   = 'block';
+
+  if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
+  if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
+
+  buildTourPickerGrid();
+  cancelReply();
+  loadPinnedMsg(roomId);
+  subscribeMessages(roomId, true);
+};
+
+// ── 메시지 구독 ──────────────────────────────
+function subscribeMessages(roomId, isGroup) {
   const msgsRef = collection(db, 'chats', roomId, 'messages');
-  const q = query(msgsRef, orderBy('ts', 'asc'));
+  const q = query(msgsRef, orderBy('ts','asc'), limit(200));
 
   _chatUnsubscribe = onSnapshot(q, snap => {
     const msgs = document.getElementById('chatMessages');
     if (!msgs) return;
+
+    // 기존 스크롤 위치 (맨 아래였으면 유지)
+    const atBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 60;
+
     msgs.innerHTML = '';
-    if (snap.empty) { msgs.innerHTML = '<div class="chat-empty">💬<br>대화를 시작해보세요!</div>'; return; }
-    snap.docs.forEach(d => {
-      const data = d.data();
-      const isMe = data.from === currentUser.uid;
+    if (snap.empty) {
+      msgs.innerHTML = '<div class="chat-empty">💬<br>대화를 시작해보세요!</div>';
+      markChatRead(roomId); return;
+    }
+
+    snap.docs.forEach(docSnap => {
+      const data  = docSnap.data();
+      const msgId = docSnap.id;
+      const isMe  = data.from === currentUser.uid;
+
       const wrap = document.createElement('div');
       wrap.className = 'chat-bubble-wrap ' + (isMe ? 'me' : 'them');
-      const ts = data.ts && data.ts.toDate ? data.ts.toDate() : new Date();
+      wrap.dataset.msgId = msgId;
+
+      const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
       const timeStr = ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0');
-      if (data.type === 'expedition') {
-        const p = data.pokemon || {};
-        const alreadyAccepted = (data.acceptedBy || []).includes(currentUser.uid);
-        wrap.innerHTML = '<div class="shared-pokemon-bubble"><div class="sp-label">🔭 견학 · ' + (isMe?'나':friendName) + '의 포켓몬</div>'
-          + '<div class="sp-inner"><img src="' + (p.image||'') + '" alt="' + (p.name||'?') + '"/>'
-          + '<div><div class="sp-name">' + (p.name||'?') + '</div><div class="sp-num">No.' + String(p.id||0).padStart(4,'0') + '</div></div></div>'
-          + (!isMe ? (alreadyAccepted
-            ? '<div class="sp-accepted">✅ 만난 포켓몬에 추가됨</div>'
-            : '<button class="sp-accept" onclick="acceptExpedition(\'' + d.id + '\',\'' + roomId + '\',' + JSON.stringify(p).replace(/"/g,"'") + ')">+ 만난 포켓몬에 추가</button>'
-          ) : '')
-          + '</div><div class="chat-time">' + timeStr + '</div>';
-      } else {
-        wrap.innerHTML = '<div class="chat-bubble ' + (isMe?'me':'them') + '">' + escapeHtml(data.text||'') + '</div><div class="chat-time">' + timeStr + '</div>';
+
+      // 그룹: 발신자 이름
+      let senderHtml = '';
+      if (isGroup && !isMe) {
+        const sName = (_groupMembers[data.from]?.nickname) || '트레이너';
+        senderHtml = `<div class="bubble-sender">${escapeHtml(sName)}</div>`;
       }
+
+      // 답장 인용
+      let quoteHtml = '';
+      if (data.replyTo) {
+        quoteHtml = `<div class="reply-quote" onclick="scrollToMsg('${escapeHtml(data.replyTo.msgId||'')}')">${escapeHtml(data.replyTo.text||'')}</div>`;
+      }
+
+      // 내용
+      let bodyHtml = '';
+      if (data.type === 'tour') {
+        bodyHtml = renderTourCard(data, isMe, msgId);
+      } else if (data.type === 'image') {
+        bodyHtml = `<div class="chat-img-bubble" onclick="openImgPreview('${escapeHtml(data.imageUrl||'')}')"><img src="${escapeHtml(data.imageUrl||'')}" alt="이미지" loading="lazy"/></div>`;
+      } else {
+        const txt = formatMentions(escapeHtml(data.text||''));
+        bodyHtml = `<div class="chat-bubble ${isMe?'me':'them'}">${quoteHtml}${txt}</div>`;
+      }
+
+      // 읽음 확인 (DM only)
+      let readHtml = '';
+      if (!isGroup && isMe) {
+        const readBy = data.readBy || [];
+        readHtml = readBy.includes(_currentChatUid)
+          ? `<div class="read-receipt read">읽음</div>`
+          : `<div class="read-receipt">전송됨</div>`;
+      }
+
+      // 리액션
+      const reactions = data.reactions || {};
+      const reactionHtml = buildReactionHtml(reactions, msgId);
+
+      wrap.innerHTML = senderHtml + bodyHtml + `<div style="display:flex;align-items:center;gap:.3rem;">${readHtml}<div class="chat-time">${timeStr}</div></div>` + reactionHtml;
+
+      // 우클릭 / 롱프레스
+      attachMsgContextMenu(wrap, { msgId, data, isMe, roomId });
+
       msgs.appendChild(wrap);
     });
-    msgs.scrollTop = msgs.scrollHeight;
+
+    if (atBottom) msgs.scrollTop = msgs.scrollHeight;
     markChatRead(roomId);
+    updateReadReceipts(roomId);
   });
+}
+
+// ── 메시지 렌더링 헬퍼 ───────────────────────
+function formatRelTime(date) {
+  const diff = Math.floor((Date.now() - date.getTime()) / 60000);
+  if (diff < 1) return '방금';
+  if (diff < 60) return diff + '분 전';
+  if (diff < 1440) return Math.floor(diff/60) + '시간 전';
+  return Math.floor(diff/1440) + '일 전';
+}
+
+function formatMentions(html) {
+  return html.replace(/@([^\s<]+)/g, '<span class="mention">@$1</span>');
+}
+
+function buildReactionHtml(reactions, msgId) {
+  const counts = {};
+  Object.values(reactions).forEach(e => { counts[e] = (counts[e]||0)+1; });
+  if (!Object.keys(counts).length) return '<div class="reaction-bar" data-msg="'+msgId+'"></div>';
+  const chips = Object.entries(counts).map(([e,c]) => {
+    const mine = reactions[currentUser.uid] === e;
+    return `<span class="reaction-chip${mine?' mine':''}" onclick="toggleReaction('${msgId}','${e}')">${e}<span class="count">${c}</span></span>`;
+  }).join('');
+  return `<div class="reaction-bar" data-msg="${msgId}">${chips}</div>`;
+}
+
+function renderTourCard(data, isMe, msgId) {
+  const p = data.pokemon || {};
+  const met = isMetPokemon ? isMetPokemon(p.id) : false;
+  return `<div class="tour-card${isMe?' me':''}">
+    <div class="tour-card-label">🎒 견학 포켓몬</div>
+    <div class="tour-card-body">
+      <img class="tour-card-img" src="${p.image||''}" alt="${p.name||''}" onerror="this.src=''"/>
+      <div class="tour-card-info">
+        <div class="tour-card-name">${escapeHtml(p.name||'')}</div>
+        <div class="tour-card-num">#${String(p.id||0).padStart(3,'0')}</div>
+      </div>
+    </div>
+    ${!isMe ? `<button class="tour-meet-btn" id="tourMeet_${msgId}" ${met?'disabled':''} onclick="registerTourPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')},'${msgId}')">${met?'이미 만남 ✓':'만난 포켓몬에 추가 🤝'}</button>` : ''}
+  </div>`;
+}
+
+// ── 읽음 업데이트 ────────────────────────────
+async function markChatRead(roomId) {
+  try { await setDoc(doc(db,'chats',roomId),{['unread_'+currentUser.uid]:0},{merge:true}); } catch(e){}
+  // 내 uid를 최근 메시지 readBy에 추가
+  try {
+    const msgsRef = collection(db,'chats',roomId,'messages');
+    const recent = await getDocs(query(msgsRef, orderBy('ts','desc'), limit(20)));
+    recent.docs.forEach(async d => {
+      if (d.data().from !== currentUser.uid) {
+        await updateDoc(doc(db,'chats',roomId,'messages',d.id), { readBy: arrayUnion(currentUser.uid) });
+      }
+    });
+  } catch(e){}
+}
+
+async function updateReadReceipts(roomId) {
+  // 상대가 내 메시지를 읽었는지 표시 갱신은 onSnapshot에서 처리
+}
+
+// ── 고정 메시지 ──────────────────────────────
+async function loadPinnedMsg(roomId) {
+  try {
+    const snap = await getDoc(doc(db,'chats',roomId));
+    const pinned = snap.exists() ? (snap.data().pinnedMsg||null) : null;
+    const banner = document.getElementById('pinnedMsgBanner');
+    const textEl = document.getElementById('pinnedMsgText');
+    if (pinned && banner && textEl) {
+      _pinnedMsgId = pinned.msgId;
+      textEl.textContent = pinned.text || '';
+      banner.classList.add('show');
+    } else if (banner) {
+      banner.classList.remove('show');
+      _pinnedMsgId = null;
+    }
+  } catch(e){}
+}
+
+window.scrollToPinned = function() {
+  if (!_pinnedMsgId) return;
+  scrollToMsg(_pinnedMsgId);
 };
 
-function escapeHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+function scrollToMsg(msgId) {
+  const el = document.querySelector(`[data-msg-id="${msgId}"]`) || document.querySelector(`[data-msg="${msgId}"]`);
+  if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.style.background='rgba(255,203,5,.15)'; setTimeout(()=>el.style.background='',1500); }
 }
 
-async function markChatRead(roomId) {
-  try { await updateDoc(doc(db, 'chats', roomId), { ['unread_' + currentUser.uid]: 0 }); } catch(e) {}
+// ── 컨텍스트 메뉴 ────────────────────────────
+function attachMsgContextMenu(wrap, { msgId, data, isMe, roomId }) {
+  let pressTimer;
+  const open = (x, y) => showMsgContextMenu(x, y, { msgId, data, isMe, roomId });
+  wrap.addEventListener('contextmenu', e => { e.preventDefault(); open(e.clientX, e.clientY); });
+  wrap.addEventListener('touchstart', e => { pressTimer = setTimeout(() => open(e.touches[0].clientX, e.touches[0].clientY), 500); }, {passive:true});
+  wrap.addEventListener('touchend', () => clearTimeout(pressTimer));
+  wrap.addEventListener('touchmove', () => clearTimeout(pressTimer));
 }
 
+function showMsgContextMenu(x, y, { msgId, data, isMe, roomId }) {
+  closeContextMenus();
+  const menu = document.createElement('div');
+  menu.className = 'msg-ctx-menu';
+  menu.id = 'msgCtxMenu';
+
+  const EMOJIS = ['👍','❤️','😂','😮','😢','🔥'];
+  const emojiRow = document.createElement('div');
+  emojiRow.className = 'emoji-reaction-picker';
+  emojiRow.style.cssText = 'position:relative;box-shadow:none;border:none;padding:.3rem;border-bottom:1px solid var(--border);border-radius:0;';
+  EMOJIS.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-reaction-btn'; btn.textContent = e;
+    btn.onclick = () => { toggleReaction(msgId, e); closeContextMenus(); };
+    emojiRow.appendChild(btn);
+  });
+  menu.appendChild(emojiRow);
+
+  const items = [
+    { icon:'↩️', label:'답장', action: () => setReplyTo(msgId, data.text||'', data.from) },
+    { icon:'🔍', label:'검색에서 보기', action: () => { toggleMsgSearch(); document.getElementById('msgSearchInp').value = data.text?.slice(0,20)||''; searchMessages(data.text?.slice(0,20)||''); } },
+  ];
+  if (isMe) {
+    items.push({ icon:'🗑️', label:'삭제', danger:true, action: () => deleteMsg(roomId, msgId) });
+  }
+  // 관리자(isMe = 방 생성자)라면 고정
+  items.push({ icon:'📌', label: data.pinned ? '고정 해제' : '고정', action: () => pinMsg(roomId, msgId, data.text||'', !data.pinned) });
+
+  items.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'msg-ctx-item' + (item.danger?' danger':'');
+    el.innerHTML = `<span>${item.icon}</span><span>${item.label}</span>`;
+    el.onclick = () => { item.action(); closeContextMenus(); };
+    menu.appendChild(el);
+  });
+
+  // 화면 밖으로 안 나가게 위치 조정
+  document.body.appendChild(menu);
+  const mw = 180, mh = 280;
+  menu.style.left = Math.min(x, window.innerWidth - mw - 8) + 'px';
+  menu.style.top  = Math.min(y, window.innerHeight - mh - 8) + 'px';
+
+  setTimeout(() => document.addEventListener('click', closeContextMenus, {once:true}), 50);
+}
+
+function closeContextMenus() {
+  document.getElementById('msgCtxMenu')?.remove();
+}
+
+// ── 리액션 ───────────────────────────────────
+window.toggleReaction = async function(msgId, emoji) {
+  if (!_currentRoomId) return;
+  const msgRef = doc(db,'chats',_currentRoomId,'messages',msgId);
+  try {
+    const snap = await getDoc(msgRef);
+    const reactions = snap.exists() ? (snap.data().reactions||{}) : {};
+    if (reactions[currentUser.uid] === emoji) {
+      delete reactions[currentUser.uid];
+    } else {
+      reactions[currentUser.uid] = emoji;
+    }
+    await updateDoc(msgRef, { reactions });
+  } catch(e){}
+};
+
+// ── 답장 ─────────────────────────────────────
+function setReplyTo(msgId, text, from) {
+  _replyTo = { msgId, text, from };
+  const preview = document.getElementById('replyPreview');
+  const previewText = document.getElementById('replyPreviewText');
+  if (!preview || !previewText) return;
+  previewText.textContent = text.slice(0, 60) + (text.length > 60 ? '…' : '');
+  preview.classList.add('show');
+  document.getElementById('chatInput')?.focus();
+}
+
+window.cancelReply = function() {
+  _replyTo = null;
+  document.getElementById('replyPreview')?.classList.remove('show');
+};
+
+// ── 고정 ─────────────────────────────────────
+async function pinMsg(roomId, msgId, text, pin) {
+  try {
+    await setDoc(doc(db,'chats',roomId), { pinnedMsg: pin ? {msgId, text} : null }, {merge:true});
+    loadPinnedMsg(roomId);
+    showSocialToast(pin ? '메시지를 고정했어요 📌' : '고정을 해제했어요');
+  } catch(e){ showSocialToast('오류: '+e.message); }
+}
+
+// ── 삭제 ─────────────────────────────────────
+async function deleteMsg(roomId, msgId) {
+  if (!confirm('메시지를 삭제할까요?')) return;
+  try { await deleteDoc(doc(db,'chats',roomId,'messages',msgId)); } catch(e){ showSocialToast('삭제 실패'); }
+}
+
+// ── 메시지 보내기 ─────────────────────────────
 window.sendMessage = async function() {
-  if (!currentUser) return;
+  if (!currentUser || !_currentRoomId) return;
   const inp = document.getElementById('chatInput');
   const text = inp.value.trim();
   if (!text) return;
   inp.value = '';
+  inp.style.height = '';
+
+  const msgData = {
+    from: currentUser.uid,
+    text,
+    ts: serverTimestamp(),
+    readBy: [currentUser.uid],
+    ...((_replyTo) ? { replyTo: { msgId:_replyTo.msgId, text:_replyTo.text.slice(0,80), from:_replyTo.from } } : {})
+  };
+  cancelReply();
 
   try {
-    const roomId = _currentRoomId || (_currentChatUid ? getChatRoomId(currentUser.uid, _currentChatUid) : null);
-    if (!roomId) return;
-    const msgsRef = collection(db, 'chats', roomId, 'messages');
-    await addDoc(msgsRef, { from: currentUser.uid, text, ts: serverTimestamp() });
-    const roomMeta = doc(db, 'chats', roomId);
-    if (_currentRoomIsGroup) {
-      await setDoc(roomMeta, { lastMsg: text, lastTs: serverTimestamp(), lastFrom: currentUser.uid }, { merge: true });
-    } else {
-      const metaSnap = await getDoc(roomMeta);
-      const unread = metaSnap.exists() ? (metaSnap.data()['unread_' + _currentChatUid] || 0) : 0;
-      await setDoc(roomMeta, {
-        participants: [currentUser.uid, _currentChatUid],
-        lastMsg: text, lastTs: serverTimestamp(), lastFrom: currentUser.uid,
-        ['unread_' + _currentChatUid]: unread + 1,
-        ['unread_' + currentUser.uid]: 0,
-      }, { merge: true });
-      await addNotification(_currentChatUid, 'message', (_myProfile?.nickname||'?') + '님이 메시지를 보냈어요: ' + text.slice(0,30), {});
-    }
-  } catch(e) { showSocialToast('전송 실패: ' + e.message); }
+    const msgsRef = collection(db,'chats',_currentRoomId,'messages');
+    await addDoc(msgsRef, msgData);
+    await updateRoomMeta(_currentRoomId, text);
+  } catch(e) { showSocialToast('전송 실패: '+e.message); }
 };
 
+async function updateRoomMeta(roomId, lastMsg) {
+  const roomRef = doc(db,'chats',roomId);
+  const metaSnap = await getDoc(roomRef);
+  const meta = metaSnap.exists() ? metaSnap.data() : {};
+  const participants = meta.participants || [currentUser.uid, _currentChatUid].filter(Boolean);
+  const updates = { lastMsg, lastTs: serverTimestamp(), lastFrom: currentUser.uid };
+  participants.forEach(uid => {
+    if (uid !== currentUser.uid) updates['unread_'+uid] = (meta['unread_'+uid]||0) + 1;
+  });
+  updates['unread_'+currentUser.uid] = 0;
+  await setDoc(roomRef, { participants, ...updates }, {merge:true});
+}
+
+// ── 견학 보내기 ───────────────────────────────
+window.toggleTourPicker = function() {
+  const p = document.getElementById('tourPicker');
+  if (!p) return;
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) buildTourPickerGrid();
+};
+
+function buildTourPickerGrid() {
+  const grid = document.getElementById('tourPickerGrid');
+  if (!grid || !window.pokemonData?.length) return;
+  grid.innerHTML = '';
+  pokemonData.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'tour-picker-item';
+    item.innerHTML = `<img src="${p.image||''}" alt="${p.name}"/><span>${p.name}</span>`;
+    item.onclick = () => sendTourPokemon(p);
+    grid.appendChild(item);
+  });
+}
+
+window.sendTourPokemon = async function(p) {
+  if (!currentUser || !_currentRoomId) return;
+  document.getElementById('tourPicker')?.classList.remove('open');
+  try {
+    const msgsRef = collection(db,'chats',_currentRoomId,'messages');
+    await addDoc(msgsRef, {
+      from: currentUser.uid,
+      type: 'tour',
+      pokemon: { id:p.id, name:p.name, image:p.image||'' },
+      ts: serverTimestamp(),
+      readBy: [currentUser.uid]
+    });
+    await updateRoomMeta(_currentRoomId, `🎒 ${p.name} 견학`);
+  } catch(e){ showSocialToast('견학 전송 실패: '+e.message); }
+};
+
+window.registerTourPokemon = function(p, msgId) {
+  if (!p?.id) return;
+  // 만난 포켓몬 등록 (기존 함수 활용)
+  if (window.addMetPokemon) {
+    window.addMetPokemon(p);
+  } else {
+    const met = JSON.parse(localStorage.getItem('metPokemon')||'[]');
+    if (!met.find(m=>m.id===p.id)) {
+      met.push({ id:p.id, name:p.name, image:p.image, date:new Date().toISOString().slice(0,10) });
+      localStorage.setItem('metPokemon', JSON.stringify(met));
+    }
+  }
+  const btn = document.getElementById('tourMeet_'+msgId);
+  if (btn) { btn.disabled = true; btn.textContent = '만난 포켓몬에 추가됨 ✓'; }
+  showSocialToast(`${p.name}을(를) 만난 포켓몬에 추가했어요! 🎉`);
+};
+
+// ── 메시지 검색 ───────────────────────────────
+window.toggleMsgSearch = function() {
+  const bar = document.getElementById('msgSearchBar');
+  if (!bar) return;
+  bar.classList.toggle('open');
+  if (bar.classList.contains('open')) setTimeout(() => document.getElementById('msgSearchInp')?.focus(), 80);
+  else closeMsgSearch();
+};
+
+window.closeMsgSearch = function() {
+  const bar = document.getElementById('msgSearchBar');
+  if (bar) bar.classList.remove('open');
+  const inp = document.getElementById('msgSearchInp');
+  if (inp) inp.value = '';
+  // 하이라이트 제거
+  document.querySelectorAll('.msg-highlight').forEach(el => {
+    el.outerHTML = el.textContent;
+  });
+  document.getElementById('msgSearchCount').textContent = '';
+};
+
+window.searchMessages = function(keyword) {
+  const countEl = document.getElementById('msgSearchCount');
+  // 기존 하이라이트 제거
+  document.querySelectorAll('#chatMessages .chat-bubble').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/<mark class="msg-highlight">([^<]*)<\/mark>/g,'$1');
+  });
+  if (!keyword.trim()) { if(countEl) countEl.textContent=''; return; }
+  let count = 0;
+  let firstEl = null;
+  document.querySelectorAll('#chatMessages .chat-bubble').forEach(el => {
+    const text = el.textContent;
+    if (text.toLowerCase().includes(keyword.toLowerCase())) {
+      count++;
+      el.innerHTML = el.innerHTML.replace(new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'), m => `<mark class="msg-highlight">${m}</mark>`);
+      if (!firstEl) firstEl = el;
+    }
+  });
+  if (countEl) countEl.textContent = count ? `${count}건` : '없음';
+  if (firstEl) firstEl.scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+// ── 멘션 자동완성 ─────────────────────────────
+window.handleMentionInput = function(inp) {
+  // 입력창 높이 자동 조정
+  inp.style.height = 'auto';
+  inp.style.height = Math.min(inp.scrollHeight, 100) + 'px';
+
+  if (!_currentIsGroup) return;
+  const val = inp.value;
+  const cursor = inp.selectionStart;
+  const before = val.slice(0, cursor);
+  const match = before.match(/@(\w*)$/);
+  const suggest = document.getElementById('mentionSuggest');
+  if (!suggest) return;
+  if (!match) { suggest.style.display='none'; return; }
+  const q2 = match[1].toLowerCase();
+  const members = Object.entries(_groupMembers).filter(([uid, m]) => uid !== currentUser.uid && m.nickname?.toLowerCase().startsWith(q2));
+  if (!members.length) { suggest.style.display='none'; return; }
+  suggest.style.display='block';
+  suggest.innerHTML = members.map(([uid, m]) =>
+    `<div style="display:flex;align-items:center;gap:.55rem;padding:.5rem .8rem;cursor:pointer;font-size:.78rem;color:var(--text);" onclick="insertMention('${escapeHtml(m.nickname||'')}')">
+      <span style="font-size:1rem">${m.avatar||'🎒'}</span><span style="font-family:'Galmuri11',monospace">${escapeHtml(m.nickname||'')}</span>
+    </div>`).join('');
+};
+
+window.insertMention = function(nickname) {
+  const inp = document.getElementById('chatInput');
+  if (!inp) return;
+  const val = inp.value;
+  const cursor = inp.selectionStart;
+  const before = val.slice(0, cursor).replace(/@\w*$/, '@' + nickname + ' ');
+  inp.value = before + val.slice(cursor);
+  inp.focus();
+  document.getElementById('mentionSuggest').style.display='none';
+};
+
+// ── 채팅방 옵션 ───────────────────────────────
+window.openChatOptions = function() {
+  const roomId = _currentRoomId;
+  if (!roomId) return;
+  const isMuted  = _mutedRooms.has(roomId);
+  const isPinned = _pinnedRooms.has(roomId);
+  closeContextMenus();
+  const menu = document.createElement('div');
+  menu.className = 'msg-ctx-menu';
+  menu.id = 'msgCtxMenu';
+  menu.style.cssText = `top:60px;right:.75rem;left:auto;min-width:180px;`;
+  const items = [
+    { icon: isMuted  ? '🔔':'🔕', label: isMuted  ? '알림 켜기':'알림 끄기',  action: () => toggleMuteRoom(roomId) },
+    { icon: isPinned ? '📌':'📍', label: isPinned ? '고정 해제':'대화 고정',  action: () => togglePinRoom(roomId) },
+    { icon: '🔍', label: '메시지 검색', action: toggleMsgSearch },
+  ];
+  items.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'msg-ctx-item';
+    el.innerHTML = `<span>${item.icon}</span><span>${item.label}</span>`;
+    el.onclick = () => { item.action(); closeContextMenus(); };
+    menu.appendChild(el);
+  });
+  document.body.appendChild(menu);
+  setTimeout(() => document.addEventListener('click', closeContextMenus, {once:true}), 50);
+};
+
+function toggleMuteRoom(roomId) {
+  if (_mutedRooms.has(roomId)) _mutedRooms.delete(roomId); else _mutedRooms.add(roomId);
+  localStorage.setItem('mutedRooms', JSON.stringify([..._mutedRooms]));
+  showSocialToast(_mutedRooms.has(roomId) ? '알림을 껐어요 🔕' : '알림을 켰어요 🔔');
+}
+
+function togglePinRoom(roomId) {
+  if (_pinnedRooms.has(roomId)) _pinnedRooms.delete(roomId); else _pinnedRooms.add(roomId);
+  localStorage.setItem('pinnedRooms', JSON.stringify([..._pinnedRooms]));
+  showSocialToast(_pinnedRooms.has(roomId) ? '대화를 고정했어요 📌' : '고정을 해제했어요');
+  loadDmList();
+}
+
+// ── 이미지 전송 ───────────────────────────────
+window.openImgPreview = function(url) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+  overlay.innerHTML = `<img src="${escapeHtml(url)}" style="max-width:95vw;max-height:90vh;border-radius:12px;"/>`;
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+};
+
+// ── 닫기 ─────────────────────────────────────
 window.closeChatView = function() {
   if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
-  _currentChatUid = null;
-  _currentRoomId = null;
-  _currentRoomIsGroup = false;
-  document.getElementById('chatView').style.display = 'none';
+  if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
+  _currentChatUid = null; _currentRoomId = null; _replyTo = null;
+  document.getElementById('chatView').style.display  = 'none';
   document.getElementById('dmListView').style.display = 'block';
-  const gm = document.getElementById('chatGroupMembers');
-  if (gm) gm.style.display = 'none';
+  cancelReply();
+  closeMsgSearch();
   loadDmList();
 };
 
+// ── DM 목록 ───────────────────────────────────
 async function loadDmList() {
   if (!currentUser) return;
   const dmList = document.getElementById('dmList');
   if (!dmList) return;
-
   try {
-    const chatsRef = collection(db, 'chats');
+    const chatsRef = collection(db,'chats');
     let snap;
     try {
-      const q = query(chatsRef, where('participants', 'array-contains', currentUser.uid), orderBy('lastTs', 'desc'));
-      snap = await getDocs(q);
-    } catch(indexErr) {
-      // 복합 인덱스 없을 때 fallback: orderBy 없이 조회 후 JS 정렬
-      const q2 = query(chatsRef, where('participants', 'array-contains', currentUser.uid));
-      snap = await getDocs(q2);
+      snap = await getDocs(query(chatsRef, where('participants','array-contains',currentUser.uid), orderBy('lastTs','desc')));
+    } catch(e) {
+      snap = await getDocs(query(chatsRef, where('participants','array-contains',currentUser.uid)));
     }
-    if (snap.empty) { dmList.innerHTML = '<div class="chat-empty">👥<br>친구와 대화를 시작해보세요!</div>'; updateMsgBadge(0); return; }
+    if (snap.empty) { dmList.innerHTML='<div class="chat-empty">👥<br>친구와 대화를 시작해보세요!</div>'; updateMsgBadge(0); return; }
 
-    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
-    const friendsData = mySnap.exists() ? (mySnap.data().friendsData || {}) : {};
+    const mySnap = await getDoc(doc(db,'users',currentUser.uid));
+    const friendsData = mySnap.exists() ? (mySnap.data().friendsData||{}) : {};
+
+    // 고정된 방 먼저
+    let rows = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    rows.sort((a,b) => {
+      const ap = _pinnedRooms.has(a.id) ? 1 : 0;
+      const bp = _pinnedRooms.has(b.id) ? 1 : 0;
+      if (ap !== bp) return bp - ap;
+      const at = a.lastTs?.toDate ? a.lastTs.toDate().getTime() : 0;
+      const bt = b.lastTs?.toDate ? b.lastTs.toDate().getTime() : 0;
+      return bt - at;
+    });
 
     let totalUnread = 0;
     dmList.innerHTML = '';
-    snap.docs.forEach(d => {
-      const data = d.data();
-      const isGroup = !!data.isGroup;
-      const unread = data['unread_' + currentUser.uid] || 0;
+    rows.forEach(data => {
+      const roomId = data.id;
+      const isGroup = data.isGroup || false;
+      const unread = data['unread_'+currentUser.uid] || 0;
       totalUnread += unread;
-      const ts = data.lastTs && data.lastTs.toDate ? data.lastTs.toDate() : null;
-      const timeStr = ts ? (ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0')) : '';
-      const row = document.createElement('div');
-      row.className = 'dm-row' + (unread > 0 ? ' unread' : '');
+      const ts = data.lastTs?.toDate ? data.lastTs.toDate() : null;
+      const timeStr = ts ? formatSmartTime(ts) : '';
+      const isPinned = _pinnedRooms.has(roomId);
+      const isMuted  = _mutedRooms.has(roomId);
 
+      let avatar, name, sub;
       if (isGroup) {
-        const roomName = data.groupName || '단체 채팅';
-        const memberCount = (data.participants || []).length;
-        row.innerHTML = '<div class="dm-avatar">👥</div>'
-          + '<div class="dm-info"><div class="dm-name">' + roomName + '<span class="group-tag">단체</span></div>'
-          + '<div class="dm-preview">' + escapeHtml(data.lastMsg||'') + '</div></div>'
-          + '<div class="dm-meta"><div class="dm-time">' + timeStr + '</div>'
-          + (unread>0?'<div class="dm-unread-count">'+unread+'</div>':'') + '</div>';
-        row.onclick = () => openGroupChat(d.id, roomName, data.participants, friendsData);
+        avatar = `<div class="group-avatar">👥</div>`;
+        name = data.groupName || '단체 채팅';
+        sub = (data.participants||[]).length + '명';
       } else {
-        const friendUid = data.participants.find(p => p !== currentUser.uid);
+        const friendUid = (data.participants||[]).find(p => p !== currentUser.uid);
         const fData = friendsData[friendUid] || {};
-        row.innerHTML = '<div class="dm-avatar">' + (fData.avatar||'🎒') + '</div>'
-          + '<div class="dm-info"><div class="dm-name">' + (fData.nickname||'트레이너') + '</div>'
-          + '<div class="dm-preview">' + escapeHtml(data.lastMsg||'') + '</div></div>'
-          + '<div class="dm-meta"><div class="dm-time">' + timeStr + '</div>'
-          + (unread>0?'<div class="dm-unread-count">'+unread+'</div>':'') + '</div>';
-        row.onclick = () => openChat(friendUid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?');
+        avatar = `<div class="dm-avatar">${fData.avatar||'🎒'}</div>`;
+        name = fData.nickname || '트레이너';
+        sub = '';
       }
+
+      const lastMsgText = isMuted ? '' : escapeHtml(data.lastMsg||'');
+
+      const row = document.createElement('div');
+      row.className = 'dm-row' + (unread>0?' unread':'');
+      row.innerHTML = `
+        ${avatar}
+        <div class="dm-info">
+          <div class="dm-name">${escapeHtml(name)}${isPinned?'<span style="font-size:.6rem;margin-left:.3rem">📌</span>':''}${isMuted?'<span style="font-size:.6rem;margin-left:.2rem;color:var(--muted)">🔕</span>':''}</div>
+          <div class="dm-preview">${lastMsgText}</div>
+        </div>
+        <div class="dm-meta">
+          <div class="dm-time">${timeStr}</div>
+          ${unread>0&&!isMuted?`<div class="dm-unread-count">${unread}</div>`:''}
+        </div>`;
+      row.onclick = () => {
+        if (isGroup) {
+          const members = data.groupMembers || {};
+          openGroupChat(roomId, data.groupName||'단체 채팅', members);
+        } else {
+          const friendUid = (data.participants||[]).find(p=>p!==currentUser.uid);
+          const fData = friendsData[friendUid]||{};
+          openChat(friendUid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?');
+        }
+      };
       dmList.appendChild(row);
     });
     updateMsgBadge(totalUnread);
-  } catch(e) { dmList.innerHTML = '<div class="chat-empty">대화 목록을 불러오는 중...</div>'; }
+  } catch(e) { dmList.innerHTML='<div class="chat-empty">불러오는 중...</div>'; }
+}
+
+function formatSmartTime(date) {
+  const now = new Date();
+  const diff = now - date;
+  if (diff < 86400000 && now.getDate() === date.getDate())
+    return date.getHours().toString().padStart(2,'0')+':'+date.getMinutes().toString().padStart(2,'0');
+  if (diff < 604800000)
+    return ['일','월','화','수','목','금','토'][date.getDay()]+'요일';
+  return (date.getMonth()+1)+'/'+date.getDate();
 }
 
 function updateMsgBadge(count) {
   const el = document.getElementById('msgUnreadBadge');
-  if (el) { el.textContent = count; el.style.display = count > 0 ? 'inline-block' : 'none'; }
+  if (el) { el.textContent=count; el.style.display=count>0?'inline-block':'none'; }
+}
+
+// ── 단체 채팅 생성 ────────────────────────────
+window.toggleGroupCreatePanel = function() {
+  const panel = document.getElementById('groupCreatePanel');
+  if (!panel) return;
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) loadGroupMemberList();
+};
+
+async function loadGroupMemberList() {
+  const list = document.getElementById('groupMemberList');
+  if (!list) return;
+  list.innerHTML = '';
+  _friends.forEach(uid => {
+    const fData = (_myProfile?.friendsData||{})[uid] || {};
+    const row = document.createElement('div');
+    row.className = 'group-member-row';
+    row.dataset.uid = uid;
+    row.innerHTML = `
+      <div class="group-member-check" id="gcheck_${uid}"></div>
+      <div style="font-size:1.1rem">${fData.avatar||'🎒'}</div>
+      <div style="font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text)">${escapeHtml(fData.nickname||'트레이너')}</div>`;
+    row.onclick = () => {
+      const check = document.getElementById('gcheck_'+uid);
+      check.classList.toggle('checked');
+      check.textContent = check.classList.contains('checked') ? '✓' : '';
+    };
+    list.appendChild(row);
+  });
+}
+
+window.createGroupChat = async function() {
+  const selected = [...document.querySelectorAll('.group-member-check.checked')].map(el => el.id.replace('gcheck_',''));
+  if (selected.length < 1) { showSocialToast('친구를 1명 이상 선택하세요'); return; }
+  const groupName = document.getElementById('groupNameInp')?.value.trim() || '단체 채팅';
+  const participants = [currentUser.uid, ...selected];
+  const roomId = 'group_' + currentUser.uid + '_' + Date.now();
+  const mySnap = await getDoc(doc(db,'users',currentUser.uid));
+  const myData = mySnap.exists() ? mySnap.data() : {};
+  const friendsData = myData.friendsData || {};
+  const members = {};
+  members[currentUser.uid] = { nickname: myData.nickname||'트레이너', avatar: myData.avatar||'🎒' };
+  selected.forEach(uid => {
+    members[uid] = friendsData[uid] || { nickname:'트레이너', avatar:'🎒' };
+  });
+  try {
+    await setDoc(doc(db,'chats',roomId), {
+      isGroup: true, groupName, participants, groupMembers: members,
+      createdBy: currentUser.uid, lastMsg:'채팅방이 생성됐어요', lastTs: serverTimestamp(),
+      ['unread_'+currentUser.uid]: 0
+    });
+    document.getElementById('groupCreatePanel')?.classList.remove('open');
+    showSocialToast(`"${groupName}" 채팅방을 만들었어요 🎉`);
+    openGroupChat(roomId, groupName, members);
+  } catch(e){ showSocialToast('생성 실패: '+e.message); }
+};
+
+function escapeHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
 }
 
 // ---------- 친구 코드 ----------
@@ -2082,284 +2802,6 @@ function showSocialToast(msg) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2200);
 }
-
-
-/* ===== 알림 시스템 ===== */
-let _notifUnsubscribe2 = null;
-
-function listenNotifications() {
-  if (!currentUser || _notifUnsubscribe2) return;
-  const notifsRef = collection(db, 'users', currentUser.uid, 'notifications');
-  const q = query(notifsRef, orderBy('ts', 'desc'));
-  _notifUnsubscribe2 = onSnapshot(q, snap => {
-    renderNotifPanel(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-  });
-}
-
-function renderNotifPanel(notifs) {
-  const list = document.getElementById('notifList');
-  const dot = document.getElementById('notifDot');
-  if (!list) return;
-  const unread = notifs.filter(n => !n.read).length;
-  if (dot) dot.classList.toggle('show', unread > 0);
-  if (!notifs.length) { list.innerHTML = '<div class="notif-empty">🍃<br>새 알림이 없어요</div>'; return; }
-  list.innerHTML = notifs.slice(0, 30).map(n => {
-    const icons = { friend_request:'👋', message:'💬', system:'📢', group:'👥', expedition:'🔭' };
-    const icon = icons[n.type] || '🔔';
-    const ts = n.ts && n.ts.toDate ? n.ts.toDate() : new Date();
-    const now = new Date(); const diff = (now - ts) / 1000;
-    const timeStr = diff < 60 ? '방금' : diff < 3600 ? Math.floor(diff/60) + '분 전' : diff < 86400 ? Math.floor(diff/3600) + '시간 전' : (ts.getMonth()+1) + '/' + ts.getDate();
-    return '<div class="notif-item' + (n.read ? '' : ' unread') + '" onclick="handleNotifClick(\'' + n.id + '\',\'' + (n.type||'') + '\')">'
-      + '<div class="notif-icon">' + icon + '</div>'
-      + '<div class="notif-body"><div class="notif-text">' + (n.text||'') + '</div><div class="notif-time">' + timeStr + '</div></div>'
-      + '</div>';
-  }).join('');
-}
-
-window.handleNotifClick = async function(notifId, type) {
-  try { await updateDoc(doc(db, 'users', currentUser.uid, 'notifications', notifId), { read: true }); } catch(e) {}
-  if (type === 'friend_request') { showTab('social'); showSocialTab('friends'); }
-  else if (type === 'message' || type === 'group' || type === 'expedition') { showTab('social'); showSocialTab('messages'); }
-  document.getElementById('notifPanel').classList.remove('open');
-};
-
-window.clearAllNotifs = async function() {
-  if (!currentUser) return;
-  try {
-    const snap = await getDocs(collection(db, 'users', currentUser.uid, 'notifications'));
-    for (const d of snap.docs) {
-      await updateDoc(doc(db, 'users', currentUser.uid, 'notifications', d.id), { read: true });
-    }
-  } catch(e) {}
-};
-
-async function addNotification(uid, type, text, data) {
-  try {
-    await addDoc(collection(db, 'users', uid, 'notifications'), { type, text, data: data||{}, read: false, ts: serverTimestamp() });
-  } catch(e) {}
-}
-window.addNotification = addNotification;
-window.listenNotifications = listenNotifications;
-
-window.toggleNotifPanel = function() {
-  const panel = document.getElementById('notifPanel');
-  if (panel) panel.classList.toggle('open');
-};
-
-/* ===== 단체 채팅 ===== */
-let _selectedGroupMembers = new Set();
-let _currentRoomId = null;
-let _currentRoomIsGroup = false;
-
-window.toggleGroupCreatePanel = async function() {
-  const panel = document.getElementById('groupCreatePanel');
-  if (!panel) return;
-  const isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  if (!isOpen) { _selectedGroupMembers = new Set(); await renderGroupMemberPicker(); }
-};
-
-async function renderGroupMemberPicker() {
-  const list = document.getElementById('groupMemberList');
-  if (!list || !currentUser) return;
-  const snap = await getDoc(doc(db, 'users', currentUser.uid));
-  const d = snap.exists() ? snap.data() : {};
-  const friends = d.friends || [];
-  const fd = d.friendsData || {};
-  if (!friends.length) { list.innerHTML = '<div style="font-family:\'Galmuri11\',monospace;font-size:.72rem;color:var(--muted);padding:.5rem">친구를 먼저 추가해보세요!</div>'; return; }
-  list.innerHTML = friends.map(fuid => {
-    const f = fd[fuid] || {};
-    return '<div class="group-member-row" id="gmr-' + fuid + '" onclick="toggleGroupMember(\'' + fuid + '\')">'
-      + '<div class="g-avatar">' + (f.avatar||'🎒') + '</div>'
-      + '<div class="g-name">' + (f.nickname||'트레이너') + ' <span style="color:var(--muted);font-size:.62rem">@' + (f.username||'?') + '</span></div>'
-      + '<div class="g-check" id="gmc-' + fuid + '">⬜</div></div>';
-  }).join('');
-}
-
-window.toggleGroupMember = function(uid) {
-  if (_selectedGroupMembers.has(uid)) {
-    _selectedGroupMembers.delete(uid);
-    const chk = document.getElementById('gmc-'+uid); if(chk) chk.textContent = '⬜';
-    const row = document.getElementById('gmr-'+uid); if(row) row.classList.remove('selected');
-  } else {
-    _selectedGroupMembers.add(uid);
-    const chk = document.getElementById('gmc-'+uid); if(chk) chk.textContent = '✅';
-    const row = document.getElementById('gmr-'+uid); if(row) row.classList.add('selected');
-  }
-};
-
-window.createGroupChat = async function() {
-  if (_selectedGroupMembers.size < 1) { showSocialToast('1명 이상 선택해주세요'); return; }
-  if (!currentUser) return;
-  const name = (document.getElementById('groupNameInp')?.value || '').trim();
-  const members = [currentUser.uid, ..._selectedGroupMembers];
-  const roomId = 'group_' + Date.now() + '_' + currentUser.uid.slice(0,6);
-  const snap = await getDoc(doc(db, 'users', currentUser.uid));
-  const fd = (snap.exists() ? snap.data() : {}).friendsData || {};
-  const memberNames = members.map(uid => uid === currentUser.uid ? (_myProfile?.nickname||'나') : (fd[uid]?.nickname||'?'));
-  const roomName = name || memberNames.join(', ');
-  try {
-    await setDoc(doc(db, 'chats', roomId), {
-      participants: members, isGroup: true, groupName: roomName,
-      groupCreator: currentUser.uid, lastMsg: '', lastTs: serverTimestamp(), lastFrom: ''
-    });
-    for (const uid of _selectedGroupMembers) {
-      await addNotification(uid, 'group', (_myProfile?.nickname||'누군가') + '님이 "' + roomName + '" 단체 채팅에 초대했어요', { roomId });
-    }
-    showSocialToast('단체 채팅방이 만들어졌어요! 🎉');
-    toggleGroupCreatePanel();
-    loadDmList();
-    openGroupChat(roomId, roomName, members, fd);
-  } catch(e) { showSocialToast('생성 실패: ' + e.message); }
-};
-
-window.openGroupChat = function(roomId, roomName, members, fd) {
-  showSocialTab('messages');
-  _currentChatUid = null;
-  _currentRoomId = roomId;
-  _currentRoomIsGroup = true;
-  (async () => {
-    const s = await getDoc(doc(db, 'users', currentUser.uid));
-    const friendsData = s.exists() ? (s.data().friendsData || {}) : {};
-    const memberNames = members.filter(u => u !== currentUser.uid).map(u => (friendsData[u]?.nickname || '?')).join(', ');
-    document.getElementById('chatFriendName').textContent = roomName;
-    document.getElementById('chatFriendId').textContent = '';
-    document.getElementById('chatFriendAvatar').textContent = '👥';
-    const gm = document.getElementById('chatGroupMembers');
-    if (gm) { gm.style.display = 'block'; gm.textContent = memberNames; }
-    document.getElementById('dmListView').style.display = 'none';
-    document.getElementById('chatView').style.display = 'block';
-    const eb = document.getElementById('expeditionBtn');
-    if (eb) eb.style.display = 'inline-flex';
-    if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
-    const msgsRef = collection(db, 'chats', roomId, 'messages');
-    const q = query(msgsRef, orderBy('ts', 'asc'));
-    _chatUnsubscribe = onSnapshot(q, snap => {
-      renderChatMessagesGroup(snap, members, friendsData, roomId);
-      markChatRead(roomId);
-    });
-  })();
-};
-
-function renderChatMessagesGroup(snap, members, fd, roomId) {
-  const msgs = document.getElementById('chatMessages');
-  if (!msgs) return;
-  msgs.innerHTML = '';
-  if (snap.empty) { msgs.innerHTML = '<div class="chat-empty">💬<br>대화를 시작해보세요!</div>'; return; }
-  snap.docs.forEach(d => {
-    const data = d.data();
-    const isMe = data.from === currentUser.uid;
-    const wrap = document.createElement('div');
-    wrap.className = 'chat-bubble-wrap ' + (isMe ? 'me' : 'them');
-    const ts = data.ts && data.ts.toDate ? data.ts.toDate() : new Date();
-    const timeStr = ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0');
-    const senderName = isMe ? '나' : (fd[data.from]?.nickname || '?');
-    if (data.type === 'expedition') {
-      const p = data.pokemon || {};
-      const alreadyAccepted = (data.acceptedBy || []).includes(currentUser.uid);
-      wrap.innerHTML = (!isMe ? '<div class="chat-sender-name">' + senderName + '</div>' : '')
-        + '<div class="shared-pokemon-bubble"><div class="sp-label">🔭 견학 · ' + senderName + '의 포켓몬</div>'
-        + '<div class="sp-inner"><img src="' + (p.image||'') + '" alt="' + (p.name||'?') + '"/>'
-        + '<div><div class="sp-name">' + (p.name||'?') + '</div><div class="sp-num">No.' + String(p.id||0).padStart(4,'0') + '</div></div></div>'
-        + (!isMe ? (alreadyAccepted
-          ? '<div class="sp-accepted">✅ 만난 포켓몬에 추가됨</div>'
-          : '<button class="sp-accept" onclick="acceptExpedition(\'' + d.id + '\',\'' + roomId + '\',' + JSON.stringify(p).replace(/"/g,"'") + ')">+ 만난 포켓몬에 추가</button>'
-        ) : '')
-        + '</div><div class="chat-time">' + timeStr + '</div>';
-    } else {
-      wrap.innerHTML = (!isMe ? '<div class="chat-sender-name">' + senderName + '</div>' : '')
-        + '<div class="chat-bubble ' + (isMe?'me':'them') + '">' + escapeHtml(data.text||'') + '</div>'
-        + '<div class="chat-time">' + timeStr + '</div>';
-    }
-    msgs.appendChild(wrap);
-  });
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-window.acceptExpedition = async function(msgId, roomId, pokemon) {
-  if (!currentUser || !pokemon) return;
-  try {
-    await markMet(pokemon);
-    const msgRef = doc(db, 'chats', roomId, 'messages', msgId);
-    const msgSnap = await getDoc(msgRef);
-    const accepted = msgSnap.exists() ? (msgSnap.data().acceptedBy || []) : [];
-    if (!accepted.includes(currentUser.uid)) { accepted.push(currentUser.uid); await updateDoc(msgRef, { acceptedBy: accepted }); }
-    showSocialToast('만난 포켓몬에 추가됐어요! 👾');
-  } catch(e) { showSocialToast('오류: ' + e.message); }
-};
-
-/* ===== 견학 - 포켓몬 공유 ===== */
-window.openExpeditionPicker = async function() {
-  if (!currentUser) return;
-  const metList = await getMetList();
-  if (!metList.length) { showSocialToast('만난 포켓몬이 없어요!'); return; }
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  content.innerHTML = '<div style="padding:1.5rem 1.25rem">'
-    + '<div style="font-family:\'Galmuri11\',monospace;font-size:.95rem;color:var(--accent);margin-bottom:.3rem">🔭 견학 - 포켓몬 공유</div>'
-    + '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.9rem">공유할 포켓몬을 선택하면 상대방 만난 포켓몬에 추가돼요</div>'
-    + '<div class="expedition-grid">'
-    + metList.map(m => '<div class="expedition-card" onclick="sendExpeditionPokemon(\'' + JSON.stringify(m).replace(/'/g,'\\\'').replace(/"/g,'&quot;') + '\')">'
-      + '<img src="' + m.image + '" alt="' + m.name + '" loading="lazy"/>'
-      + '<div class="ec-name">' + m.name + '</div></div>').join('')
-    + '</div></div>';
-  overlay.classList.add('open');
-};
-
-window.sendExpeditionPokemon = async function(pokemonJson) {
-  let pokemon;
-  try { pokemon = JSON.parse(pokemonJson.replace(/&quot;/g,'"')); } catch(e) { return; }
-  closeModal();
-  if (!currentUser) return;
-  const roomId = _currentRoomId || (_currentChatUid ? getChatRoomId(currentUser.uid, _currentChatUid) : null);
-  if (!roomId) return;
-  try {
-    const msgsRef = collection(db, 'chats', roomId, 'messages');
-    await addDoc(msgsRef, { from: currentUser.uid, type: 'expedition', pokemon, acceptedBy: [currentUser.uid], text: '[견학] ' + pokemon.name, ts: serverTimestamp() });
-    await setDoc(doc(db, 'chats', roomId), { lastMsg: '🔭 ' + pokemon.name + ' 견학', lastTs: serverTimestamp(), lastFrom: currentUser.uid }, { merge: true });
-    if (_currentChatUid) {
-      await addNotification(_currentChatUid, 'expedition', (_myProfile?.nickname||'?') + '님이 ' + pokemon.name + '을(를) 견학 보냈어요 🔭', {});
-    }
-    showSocialToast('견학을 보냈어요! 🔭');
-  } catch(e) { showSocialToast('전송 실패: ' + e.message); }
-};
-
-/* ===== 타인 프로필 모달 ===== */
-window.openFriendProfile = async function(fuid) {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  content.innerHTML = '<div style="padding:2rem;text-align:center;font-family:\'Galmuri11\',monospace;color:var(--muted)">불러오는 중...</div>';
-  overlay.classList.add('open');
-  try {
-    const snap = await getDoc(doc(db, 'users', fuid));
-    const d = snap.exists() ? snap.data() : {};
-    const idSnap = await getDoc(doc(db, 'usernames', fuid));
-    const username = idSnap.exists() ? idSnap.data().username : (d.username || '?');
-    const met = d.met || [];
-    const quizCount = (d.quizHistory || []).length;
-    const friendCount = (d.friends || []).length;
-    const isFriend = _friends.includes(fuid);
-    content.innerHTML = '<div class="other-profile-modal">'
-      + '<div class="other-profile-avatar">' + (d.avatar||'🎒') + '</div>'
-      + '<div class="other-profile-nick">' + (d.nickname||username) + '</div>'
-      + '<div class="other-profile-uid">@' + username + '</div>'
-      + '<div class="other-profile-bio">' + (d.bio||'자기소개 없음') + '</div>'
-      + '<div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.8rem">'
-      + (isFriend ? '<button onclick="openChat(\'' + fuid + '\',\'' + (d.nickname||username) + '\',\'' + (d.avatar||'🎒') + '\',\'' + username + '\');closeModal();" style="font-family:\'Galmuri11\',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .85rem;cursor:pointer;">💬 DM 보내기</button>' : '')
-      + '</div>'
-      + '<div class="other-profile-stats">'
-      + '<div class="other-profile-stat"><div class="other-profile-stat-val">' + met.length + '</div><div class="other-profile-stat-label">만난 포켓몬</div></div>'
-      + '<div class="other-profile-stat"><div class="other-profile-stat-val">' + friendCount + '</div><div class="other-profile-stat-label">친구</div></div>'
-      + '<div class="other-profile-stat"><div class="other-profile-stat-val">' + quizCount + '</div><div class="other-profile-stat-label">퀴즈 기록</div></div>'
-      + '</div>'
-      + (met.length ? '<div class="other-profile-met"><div class="other-profile-met-title">만난 포켓몬 (최근 12마리)</div><div class="other-profile-met-grid">'
-        + met.slice(0,12).map(m => '<div class="other-profile-met-card"><img src="' + m.image + '" alt="' + m.name + '" loading="lazy"/><span>' + m.name + '</span></div>').join('')
-        + '</div></div>' : '')
-      + '</div>';
-  } catch(e) {
-    content.innerHTML = '<div style="padding:2rem;text-align:center;font-family:\'Galmuri11\',monospace;color:#ff6b6b">불러오기 실패</div>';
-  }
-};
 
 </script>
 <script>
