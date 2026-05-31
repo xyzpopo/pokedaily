@@ -36,8 +36,8 @@ header{position:relative;z-index:10;padding:1rem 1.5rem;display:flex;align-items
 @keyframes spin-slow{to{transform:rotate(360deg);}}
 .logo h1{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
 .date-badge{font-size:.72rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:.28rem .75rem;border-radius:20px;}
-.tabs{position:sticky;top:0;z-index:20;display:flex;padding:0 1rem;border-bottom:1px solid var(--border);background:rgba(13,13,26,.92);backdrop-filter:blur(12px);}
-.tab-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--muted);background:transparent;border:none;padding:.9rem 1rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
+.tabs{position:sticky;top:0;z-index:20;display:flex;padding:0 .5rem;border-bottom:1px solid var(--border);background:rgba(13,13,26,.92);backdrop-filter:blur(12px);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--muted);background:transparent;border:none;padding:.9rem .85rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .tab-btn.active{color:var(--accent);}
 .tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);box-shadow:0 0 10px var(--glow);}
 .tab-btn:hover:not(.active){color:var(--text);}
@@ -57,9 +57,9 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .section-title{font-size:.95rem;font-weight:900;color:var(--text);}
 .pokemon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
 @media(max-width:800px){.pokemon-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:500px){.pokemon-grid{grid-template-columns:1fr;}}
-.ball-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;animation:slideUp .45s ease both;position:relative;overflow:hidden;}
-.ball-card:nth-child(1){animation-delay:0s;}.ball-card:nth-child(2){animation-delay:.1s;}.ball-card:nth-child(3){animation-delay:.2s;}
+@media(max-width:500px){.pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.65rem;}}
+.ball-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;animation:slideUp .45s ease both;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.ball-card{animation-delay:var(--card-delay,0s)!important;}
 @keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 .ball-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .ball-card-hint{font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);text-align:center;}
@@ -122,9 +122,9 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .load-more-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--bg);background:var(--accent);border:none;padding:.6rem 1.6rem;border-radius:30px;cursor:pointer;transition:transform .2s;box-shadow:0 4px 16px var(--glow);}
 .load-more-btn:hover{transform:scale(1.04);}
 .ndex-spinner{text-align:center;padding:2rem;font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--muted);animation:blink 1.2s step-end infinite;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:.5rem .5rem env(safe-area-inset-bottom,.5rem);opacity:0;pointer-events:none;transition:opacity .25s;}@media(min-width:560px){.modal-overlay{align-items:center;padding:1rem;}}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:24px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.92) translateY(20px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:24px;width:100%;max-width:680px;max-height:92dvh;max-height:92vh;overflow-y:auto;position:relative;transform:scale(.92) translateY(20px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .modal-overlay.open .modal{transform:scale(1) translateY(0);}
 .modal-close{position:absolute;top:.9rem;right:.9rem;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--muted);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;}
 .modal-close:hover{background:rgba(255,255,255,.12);color:var(--text);}
@@ -295,7 +295,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .login-err{font-size:.72rem;color:#ff6b6b;text-align:center;margin-top:.6rem;min-height:1.1em;font-family:'Galmuri11',monospace;}
 /* ===== 유저 배지 (헤더) ===== */
 .user-badge{display:flex;align-items:center;gap:.5rem;}
-.user-name{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--accent);}
+.user-name{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--accent);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .logout-btn{font-size:.62rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:.22rem .6rem;border-radius:20px;cursor:pointer;transition:all .2s;font-family:'Galmuri11',monospace;}
 .logout-btn:hover{color:var(--text);border-color:rgba(255,203,5,.3);}
 /* ===== 만난 포켓몬 탭 ===== */
@@ -363,7 +363,7 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   header{padding:.85rem 1rem;}main{padding:1rem .8rem;}
   .options-grid{grid-template-columns:1fr;}
   .quiz-card{padding:1.35rem 1rem;}
-  .modal{border-radius:18px;}
+  .modal{border-radius:20px 20px 0 0;width:100%;max-width:100%;}
   .modal-header{padding:1.35rem 1.1rem .9rem;}
   .modal-header-inner{gap:.9rem;}
   .modal-image{width:95px;height:95px;}
@@ -376,6 +376,10 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   .modal-types{justify-content:center;}
   .modal-info-grid{grid-template-columns:repeat(2,1fr);}
   .tab-btn{font-size:.7rem;padding:.85rem .65rem;}
+}
+/* 모달 드래그 핸들 (모바일 바텀시트) */
+@media(max-width:560px){
+  .modal::before{content:'';display:block;width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
 }
 /* ===== 반응형 ===== */
 @media(min-width:768px){
@@ -408,6 +412,100 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   main{padding:.5rem .8rem 4rem;}
   .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;}
 }
+
+/* ===== 프로필/친구/메시지 CSS ===== */
+/* 프로필 페이지 */
+.profile-hero{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.8rem 1rem 1.2rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:22px;position:relative;overflow:hidden;}
+.profile-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,var(--glow),transparent 60%);pointer-events:none;}
+.profile-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2.2rem;position:relative;box-shadow:0 0 24px var(--glow);cursor:pointer;transition:transform .2s;}
+.profile-avatar:hover{transform:scale(1.06);}
+.profile-avatar-edit{position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:.7rem;}
+.profile-nickname{font-family:'Galmuri11',monospace;font-size:1.3rem;color:var(--accent);text-align:center;}
+.profile-uid{font-size:.72rem;color:var(--muted);font-family:'Galmuri11',monospace;}
+.profile-stats-row{display:flex;gap:1.5rem;margin-top:.5rem;}
+.profile-stat{display:flex;flex-direction:column;align-items:center;gap:.2rem;}
+.profile-stat-val{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--accent);}
+.profile-stat-label{font-size:.65rem;color:var(--muted);}
+.profile-edit-row{display:flex;gap:.5rem;margin-top:.5rem;}
+.profile-edit-inp{font-family:'Galmuri11',monospace;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.45rem .8rem;color:var(--text);outline:none;width:180px;}
+.profile-edit-inp:focus{border-color:var(--accent);}
+.profile-save-btn{font-family:'Galmuri11',monospace;font-size:.75rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.45rem .9rem;cursor:pointer;font-weight:700;}
+.profile-bio-area{width:100%;max-width:320px;font-size:.78rem;font-family:'Noto Sans KR',sans-serif;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.55rem .8rem;color:var(--text);outline:none;resize:none;height:62px;}
+.profile-bio-area:focus{border-color:var(--accent);}
+.profile-bio-display{font-size:.78rem;color:var(--muted);text-align:center;max-width:280px;line-height:1.6;cursor:pointer;}
+
+/* 프로필 – 섹션 탭 */
+.profile-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;gap:0;}
+.profile-tab-btn{font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);background:transparent;border:none;padding:.7rem 1.1rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
+.profile-tab-btn.active{color:var(--accent);}
+.profile-tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);}
+
+/* 친구 목록 */
+.friend-list{display:flex;flex-direction:column;gap:.6rem;}
+.friend-row{display:flex;align-items:center;gap:.85rem;padding:.75rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s,transform .15s;}
+.friend-row:hover{border-color:var(--accent);transform:translateX(3px);}
+.friend-avatar{width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.friend-info{flex:1;min-width:0;}
+.friend-name{font-family:'Galmuri11',monospace;font-size:.88rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.friend-id{font-size:.65rem;color:var(--muted);}
+.friend-actions{display:flex;gap:.4rem;flex-shrink:0;}
+.friend-action-btn{font-size:.65rem;font-family:'Galmuri11',monospace;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.28rem .6rem;border-radius:8px;cursor:pointer;transition:all .15s;}
+.friend-action-btn:hover{border-color:var(--accent);color:var(--accent);}
+.friend-action-btn.danger:hover{border-color:#ff6b6b;color:#ff6b6b;}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+
+/* 친구 추가 */
+.add-friend-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.add-friend-title{font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text);margin-bottom:.65rem;}
+.add-friend-row{display:flex;gap:.5rem;}
+.add-friend-inp{flex:1;font-family:'Galmuri11',monospace;font-size:.8rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.48rem .8rem;color:var(--text);outline:none;}
+.add-friend-inp:focus{border-color:var(--accent);}
+.add-friend-btn{font-family:'Galmuri11',monospace;font-size:.75rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.48rem 1rem;cursor:pointer;font-weight:700;white-space:nowrap;}
+.add-friend-btn:disabled{opacity:.5;cursor:default;}
+.add-friend-result{margin-top:.6rem;font-size:.75rem;font-family:'Galmuri11',monospace;}
+
+/* 친구 요청 뱃지 */
+.tab-badge{display:inline-block;background:var(--red);color:white;font-size:.55rem;font-family:'Galmuri11',monospace;padding:.05rem .35rem;border-radius:20px;margin-left:.3rem;vertical-align:middle;line-height:1.4;}
+
+/* 채팅/메시지 */
+.chat-header{display:flex;align-items:center;gap:.75rem;padding:.7rem 0 .9rem;border-bottom:1px solid var(--border);margin-bottom:.8rem;}
+.chat-back-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.3rem .65rem;font-size:.75rem;cursor:pointer;font-family:'Galmuri11',monospace;}
+.chat-back-btn:hover{border-color:var(--accent);color:var(--accent);}
+.chat-friend-avatar{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.chat-friend-name{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);}
+.chat-messages{display:flex;flex-direction:column;gap:.55rem;min-height:220px;max-height:52vh;overflow-y:auto;padding:.25rem 0 .5rem;scroll-behavior:smooth;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.chat-bubble-wrap{display:flex;flex-direction:column;gap:.08rem;}
+.chat-bubble-wrap.me{align-items:flex-end;}
+.chat-bubble-wrap.them{align-items:flex-start;}
+.chat-bubble{max-width:72%;padding:.5rem .85rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
+.chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
+.chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.chat-time{font-size:.58rem;color:var(--muted);padding:0 .2rem;}
+.chat-input-row{display:flex;gap:.5rem;padding-top:.7rem;border-top:1px solid var(--border);margin-top:.4rem;}
+.chat-input{flex:1;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.55rem .85rem;color:var(--text);outline:none;resize:none;height:42px;transition:border-color .2s;}
+.chat-input:focus{border-color:var(--accent);}
+.chat-send-btn{background:var(--accent);color:var(--bg);border:none;border-radius:14px;width:42px;height:42px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
+.chat-send-btn:disabled{opacity:.4;cursor:default;}
+.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:150px;gap:.5rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;}
+.dm-list{display:flex;flex-direction:column;gap:.5rem;}
+.dm-row{display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;transition:border-color .15s;}
+.dm-row:hover{border-color:var(--accent);}
+.dm-row.unread{border-color:rgba(255,203,5,.4);}
+.dm-avatar{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.dm-info{flex:1;min-width:0;}
+.dm-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);}
+.dm-preview{font-size:.7rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.15rem;}
+.dm-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0;}
+.dm-time{font-size:.62rem;color:var(--muted);}
+.dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.6rem;border-radius:20px;padding:.05rem .4rem;}
+/* light mode */
+body.light-mode .friend-row{background:var(--card);}
+body.light-mode .add-friend-box{background:var(--card);}
+body.light-mode .dm-row{background:var(--card);}
+body.light-mode .chat-bubble.them{background:var(--surface);}
+body.light-mode .profile-hero{background:var(--card);}
 </style>
 </head>
 <body>
@@ -420,9 +518,9 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
       <button class="login-tab active" id="tabLoginBtn" onclick="switchLoginMode('login')">로그인</button>
       <button class="login-tab" id="tabSignupBtn" onclick="switchLoginMode('signup')">회원가입</button>
     </div>
-    <div class="login-field"><label>트레이너 아이디</label><input type="text" id="loginId" placeholder="아이디 입력" autocomplete="username"/></div>
+    <div class="login-field"><label>트레이너 아이디</label><input type="text" id="loginId" placeholder="아이디 입력" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"/></div>
     <div class="login-field"><label>비밀번호</label><input type="password" id="loginPw" placeholder="비밀번호 입력" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-    <div class="login-field" id="loginPwConfirmWrap" style="display:none"><label>비밀번호 확인</label><input type="password" id="loginPwConfirm" placeholder="비밀번호 재입력" autocomplete="new-password"/></div>
+    <div class="login-field" id="loginPwConfirmWrap" style="display:none"><label>비밀번호 확인</label><input type="password" id="loginPwConfirm" placeholder="비밀번호 재입력" autocomplete="new-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
     <button class="login-btn" id="loginActionBtn" onclick="doLogin()">🎮 로그인</button>
     <div class="login-err" id="loginErr"></div>
   </div>
@@ -444,12 +542,14 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
   <button class="tab-btn" onclick="showTab('ndex')">🗺️ 전국도감</button>
   <button class="tab-btn" onclick="showTab('quiz')">⚡ 퀴즈</button>
   <button class="tab-btn" onclick="showTab('met')">👾 만난 포켓몬</button>
+  <button class="tab-btn" onclick="showTab('social')" id="tabSocial">👥 소셜<span class="tab-badge" id="friendReqBadge" style="display:none">0</span></button>
+  <button class="tab-btn" onclick="showTab('settings')">⚙️ 설정</button>
 </div>
 <main>
   <div id="dex-page" class="page active">
     <div id="dex-loading" class="loading"><div class="pokeball-loader"></div><p>포켓몬을 불러오는 중...</p></div>
     <div id="dex-content" style="display:none">
-      <div class="section-header"><span class="section-tag">TODAY</span><span class="section-title">오늘의 포켓몬 3마리 — 몬스터볼을 클릭해보세요!</span></div>
+      <div class="section-header"><span class="section-tag">TODAY</span><span class="section-title" id="dexSectionTitle">오늘의 포켓몬 — 몬스터볼을 클릭해보세요!</span></div>
       <div class="pokemon-grid" id="pokemonGrid"></div>
     </div>
   </div>
@@ -473,11 +573,11 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
     <div id="quiz-difficulty" style="display:none">
       <div class="quiz-difficulty-screen">
         <div class="diff-title">난이도를 선택하세요</div>
-        <div class="diff-subtitle">오늘의 포켓몬 3마리로 퀴즈를 풀어요.<br>난이도에 따라 문제 유형과 수가 달라져요.</div>
+        <div class="diff-subtitle" id="diffSubtitle">오늘의 포켓몬으로 퀴즈를 풀어요.<br>난이도에 따라 문제 유형과 수가 달라져요.</div>
         <div class="diff-cards">
-          <div class="diff-card easy" onclick="selectDiff('easy',this)"><div class="diff-icon">🌱</div><div class="diff-name">이지</div><div class="diff-desc">이름·타입 위주<br>선택지 넉넉<br>6문제</div></div>
-          <div class="diff-card normal" onclick="selectDiff('normal',this)"><div class="diff-icon">⚡</div><div class="diff-name">노말</div><div class="diff-desc">이름·타입·세대·키<br>균형잡힌 선택지<br>9문제</div></div>
-          <div class="diff-card hard" onclick="selectDiff('hard',this)"><div class="diff-icon">🔥</div><div class="diff-name">하드</div><div class="diff-desc">모든 유형+무게·스탯<br>선택지 까다로움<br>12문제</div></div>
+          <div class="diff-card easy" onclick="selectDiff('easy',this)"><div class="diff-icon">🌱</div><div class="diff-name">이지</div><div class="diff-desc">이름·타입 위주<br>선택지 넉넉<br>포켓몬당 2문제</div></div>
+          <div class="diff-card normal" onclick="selectDiff('normal',this)"><div class="diff-icon">⚡</div><div class="diff-name">노말</div><div class="diff-desc">이름·타입·세대·키<br>균형잡힌 선택지<br>포켓몬당 3문제</div></div>
+          <div class="diff-card hard" onclick="selectDiff('hard',this)"><div class="diff-icon">🔥</div><div class="diff-name">하드</div><div class="diff-desc">모든 유형+무게·스탯<br>선택지 까다로움<br>포켓몬당 4문제</div></div>
         </div>
         <button class="diff-start-btn" id="diffStartBtn" onclick="startQuiz()">퀴즈 시작!</button>
       </div>
@@ -520,10 +620,13 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
       <div class="settings-group-title">📖 오늘의 도감</div>
       <div class="settings-row">
         <div><div class="settings-label">일일 포켓몬 수</div><div class="settings-desc">하루에 몇 마리를 뽑을지 설정해요 (1~10)</div></div>
-        <div class="s-stepper">
-          <button onclick="stepSetting('dailyCount',-1,1,10)">−</button>
-          <span id="s-dailyCount">3</span>
-          <button onclick="stepSetting('dailyCount',1,1,10)">+</button>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div class="s-stepper">
+            <button onclick="stepSetting('dailyCount',-1,1,10)">−</button>
+            <span id="s-dailyCount">3</span>
+            <button onclick="stepSetting('dailyCount',1,1,10)">+</button>
+          </div>
+          <button id="dexReinitBtn" style="display:none;font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--bg);background:var(--accent);border:none;padding:.3rem .7rem;border-radius:20px;cursor:pointer" onclick="document.getElementById('dexReinitBtn').style.display='none';showTab('dex');document.getElementById('dex-loading').style.display='flex';document.getElementById('dex-content').style.display='none';init()">적용 →</button>
         </div>
       </div>
       <div class="settings-row">
@@ -584,6 +687,105 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
       </div>
     </div>
   </div>
+
+  <!-- 소셜 페이지 (프로필 / 친구 / 메시지) -->
+  <div id="social-page" class="page">
+    <!-- 프로필 헤더 -->
+    <div class="profile-hero" id="profileHero">
+      <div class="profile-avatar" id="profileAvatar" onclick="openAvatarPicker()">
+        <span id="profileAvatarEmoji">🎒</span>
+        <div class="profile-avatar-edit">✏️</div>
+      </div>
+      <div class="profile-nickname" id="profileNicknameDisplay">트레이너</div>
+      <div class="profile-uid" id="profileUidDisplay">@id</div>
+      <div class="profile-bio-display" id="profileBioDisplay" onclick="startEditBio()">+ 자기소개 추가</div>
+      <div class="profile-stats-row">
+        <div class="profile-stat"><div class="profile-stat-val" id="ps-met">0</div><div class="profile-stat-label">만난 포켓몬</div></div>
+        <div class="profile-stat"><div class="profile-stat-val" id="ps-friends">0</div><div class="profile-stat-label">친구</div></div>
+        <div class="profile-stat"><div class="profile-stat-val" id="ps-quiz">0</div><div class="profile-stat-label">퀴즈 기록</div></div>
+      </div>
+      <button class="profile-save-btn" id="profileEditToggle" onclick="startEditProfile()" style="margin-top:.2rem;font-size:.72rem;padding:.38rem .85rem;">✏️ 프로필 편집</button>
+    </div>
+    <!-- 편집 패널 (숨김) -->
+    <div id="profileEditPanel" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.1rem;margin-bottom:1rem;">
+      <div style="font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--muted);margin-bottom:.8rem;">프로필 편집</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;">
+        <div>
+          <label style="font-size:.68rem;color:var(--muted);display:block;margin-bottom:.25rem;">닉네임</label>
+          <input class="profile-edit-inp" id="editNicknameInp" placeholder="닉네임 입력" style="width:100%"/>
+        </div>
+        <div>
+          <label style="font-size:.68rem;color:var(--muted);display:block;margin-bottom:.25rem;">자기소개</label>
+          <textarea class="profile-bio-area" id="editBioInp" placeholder="자기소개를 입력하세요 (선택)"></textarea>
+        </div>
+        <div>
+          <label style="font-size:.68rem;color:var(--muted);display:block;margin-bottom:.25rem;">아바타 이모지</label>
+          <div id="avatarPickerInline" style="display:flex;flex-wrap:wrap;gap:.4rem;">
+            <!-- JS로 채워짐 -->
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.3rem;">
+          <button onclick="cancelEditProfile()" style="font-family:'Galmuri11',monospace;font-size:.73rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.4rem .8rem;cursor:pointer;">취소</button>
+          <button class="profile-save-btn" onclick="saveProfile()">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 소셜 서브탭 -->
+    <div class="profile-tabs">
+      <button class="profile-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none">0</span></button>
+      <button class="profile-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none">0</span></button>
+    </div>
+
+    <!-- 친구 탭 -->
+    <div id="socialFriendsPanel">
+      <!-- 친구 추가 -->
+      <div class="add-friend-box">
+        <div class="add-friend-title">👥 친구 추가 (아이디로 검색)</div>
+        <div class="add-friend-row">
+          <input class="add-friend-inp" id="addFriendInp" placeholder="상대방 아이디 입력" onkeydown="if(event.key==='Enter')searchFriend()"/>
+          <button class="add-friend-btn" id="addFriendBtn" onclick="searchFriend()">검색</button>
+        </div>
+        <div class="add-friend-result" id="addFriendResult"></div>
+      </div>
+      <!-- 친구 요청 받은 것 -->
+      <div id="friendRequestsWrap" style="display:none;margin-bottom:.8rem;">
+        <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--accent);margin-bottom:.5rem;">📨 받은 친구 요청</div>
+        <div class="friend-list" id="friendRequestsList"></div>
+      </div>
+      <!-- 친구 목록 -->
+      <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);margin-bottom:.5rem;" id="friendListTitle">친구 목록 (0명)</div>
+      <div class="friend-list" id="friendList">
+        <div style="text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;">친구를 추가해보세요!</div>
+      </div>
+    </div>
+
+    <!-- 메시지 탭 -->
+    <div id="socialMessagesPanel" style="display:none;">
+      <div id="dmListView">
+        <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);margin-bottom:.5rem;">💬 대화 목록</div>
+        <div class="dm-list" id="dmList">
+          <div class="chat-empty">👥<br>친구와 대화를 시작해보세요!</div>
+        </div>
+      </div>
+      <div id="chatView" style="display:none;">
+        <div class="chat-header">
+          <button class="chat-back-btn" onclick="closeChatView()">← 목록</button>
+          <div class="chat-friend-avatar" id="chatFriendAvatar">🎒</div>
+          <div>
+            <div class="chat-friend-name" id="chatFriendName"></div>
+            <div style="font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;" id="chatFriendId"></div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+          <button class="chat-send-btn" onclick="sendMessage()" title="전송">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 <div class="settings-toast" id="settingsToast">설정이 저장됐어요 ✓</div>
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
@@ -596,8 +798,12 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, addDoc, onSnapshot, getDocs, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// Firestore 복합 인덱스 필요:
+// chats 컬렉션: participants (Array) ASC + lastTs (Timestamp) DESC
+// Firebase Console → Firestore → 인덱스 탭에서 생성하거나
+// 첫 실행 시 콘솔 오류 링크를 클릭하면 자동 생성됩니다.
 const firebaseConfig = {
   apiKey: "AIzaSyA7U76tBd49620GgDqXqn3U4TM-lHcIiLA",
   authDomain: "pokedaily-217fc.firebaseapp.com",
@@ -628,6 +834,7 @@ window.doLogin = async function() {
   const id = document.getElementById('loginId').value.trim();
   const pw = document.getElementById('loginPw').value;
   const err = document.getElementById('loginErr');
+  err.style.color = '';  // reset color
   if (!id || !pw) { err.textContent = '아이디와 비밀번호를 입력해주세요.'; return; }
 
   // Firebase Auth는 이메일 형식 필요 → 내부적으로 @pkdex.com 붙임
@@ -643,8 +850,10 @@ window.doLogin = async function() {
       if (pw.length < 6) { err.textContent = '비밀번호는 6자 이상이어야 해요.'; btn.textContent='✨ 회원가입'; btn.disabled=false; return; }
       const cred = await createUserWithEmailAndPassword(auth, email, pw);
       // Firestore에 유저 닉네임 + 만난 포켓몬 초기화
-      await setDoc(doc(db, 'users', cred.user.uid), { nickname: id, met: [] });
-      err.style.color = '#4ade80'; err.textContent = '가입 완료! 로그인할게요.';
+      await setDoc(doc(db, 'users', cred.user.uid), { nickname: id, met: [], avatar: '🎒', bio: '', friends: [], friendRequests: [], friendsData: {} });
+      // username → uid 역인덱스 (친구 검색용)
+      await setDoc(doc(db, 'usernames', cred.user.uid), { username: id.toLowerCase() });
+      err.style.color = '#4ade80'; err.textContent = '가입 완료! 로그인할게요.'; setTimeout(()=>switchLoginMode('login'), 1200);
     } else {
       await signInWithEmailAndPassword(auth, email, pw);
     }
@@ -683,6 +892,8 @@ onAuthStateChanged(auth, async (user) => {
     btn.textContent = '🎮 로그인'; btn.disabled = false;
     await loadSettingsFromServer();
     renderMetPage();
+    // 소셜: uid 로드 및 친구 요청 뱃지 체크
+    if (window.initSocialBadges) window.initSocialBadges();
   } else {
     currentUser = null;
     window._currentUser = null;
@@ -825,7 +1036,7 @@ window.openNicknameEdit = function(id, currentNick, btn) {
   inp.className = 'nickname-input';
   inp.value = currentNick;
   inp.placeholder = '별명 입력';
-  // 길이 제한 없음
+  // 닉네임 길이 제한 없음
 
   const saveBtn = document.createElement('button');
   saveBtn.className = 'nick-btn save';
@@ -961,8 +1172,489 @@ async function saveNickname(pokemonId, nickname) {
   renderMetPage();
 }
 
+
+window.initSocialBadges = async function() {
+  if (!currentUser) return;
+  // 유저네임 캐시
+  const idSnap = await getDoc(doc(db, 'usernames', currentUser.uid));
+  // _myProfile is module-scoped; uid update happens in loadMyProfile()
+  // 친구 요청 뱃지
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  const reqs = snap.exists() ? (snap.data().friendRequests||[]) : [];
+  const cnt = reqs.length;
+  ['friendReqBadge','friendReqBadge2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = cnt; el.style.display = cnt > 0 ? 'inline-block' : 'none'; }
+  });
+};
 window.saveNickname = saveNickname;
 window.getNicknames = getNicknames;
+
+/* ===== 소셜 기능 (프로필/친구/메시지) ===== */
+const AVATARS = ['🎒','🎮','🌟','🔥','💧','🌿','⚡','❄️','🌸','👑','🦋','🐉','🌙','☀️','🎯','🏆','💎','🎪','🦊','🐢'];
+
+// ---------- 프로필 ----------
+let _myProfile = null;
+
+async function loadMyProfile() {
+  if (!currentUser) return;
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  const d = snap.exists() ? snap.data() : {};
+  _myProfile = {
+    nickname: d.nickname || currentUser.nickname || '트레이너',
+    uid: document.getElementById('loginId')?.value || currentUser.nickname || '',
+    bio: d.bio || '',
+    avatar: d.avatar || '🎒',
+    met: (d.met||[]).length,
+    quizHistory: (d.quizHistory||[]).length,
+  };
+  // uid = 아이디로 저장된 값
+  const idSnap = await getDoc(doc(db, 'usernames', currentUser.uid));
+  if (idSnap.exists()) _myProfile.uid = idSnap.data().username || _myProfile.uid;
+  renderMyProfile();
+}
+
+function renderMyProfile() {
+  if (!_myProfile) return;
+  const el = n => document.getElementById(n);
+  if (el('profileNicknameDisplay')) el('profileNicknameDisplay').textContent = _myProfile.nickname;
+  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + _myProfile.uid;
+  if (el('profileAvatarEmoji')) el('profileAvatarEmoji').textContent = _myProfile.avatar;
+  if (el('profileBioDisplay')) el('profileBioDisplay').textContent = _myProfile.bio || '+ 자기소개 추가';
+  if (el('ps-met')) el('ps-met').textContent = _myProfile.met;
+  if (el('ps-quiz')) el('ps-quiz').textContent = _myProfile.quizHistory;
+}
+
+window.startEditProfile = function() {
+  const panel = document.getElementById('profileEditPanel');
+  if (!panel) return;
+  panel.style.display = 'block';
+  document.getElementById('editNicknameInp').value = _myProfile?.nickname || '';
+  document.getElementById('editBioInp').value = _myProfile?.bio || '';
+  // 아바타 피커
+  const picker = document.getElementById('avatarPickerInline');
+  if (picker) {
+    picker.innerHTML = AVATARS.map(a =>
+      `<button onclick="selectAvatarInline('${a}')" style="font-size:1.4rem;background:${a===(_myProfile?.avatar||'🎒')?'rgba(255,203,5,.2)':'var(--surface)'};border:2px solid ${a===(_myProfile?.avatar||'🎒')?'var(--accent)':'var(--border)'};border-radius:10px;width:40px;height:40px;cursor:pointer;transition:all .15s;" id="av-${a.codePointAt(0)}">${a}</button>`
+    ).join('');
+  }
+};
+window.selectAvatarInline = function(av) {
+  if (_myProfile) _myProfile._pendingAvatar = av;
+  document.querySelectorAll('#avatarPickerInline button').forEach(b => {
+    const isMe = b.textContent === av;
+    b.style.background = isMe ? 'rgba(255,203,5,.2)' : 'var(--surface)';
+    b.style.borderColor = isMe ? 'var(--accent)' : 'var(--border)';
+  });
+};
+window.cancelEditProfile = function() {
+  document.getElementById('profileEditPanel').style.display = 'none';
+  if (_myProfile) delete _myProfile._pendingAvatar;
+};
+window.startEditBio = function() { window.startEditProfile(); };
+window.openAvatarPicker = function() { window.startEditProfile(); };
+
+window.saveProfile = async function() {
+  if (!currentUser) return;
+  const nn = document.getElementById('editNicknameInp').value.trim() || _myProfile?.nickname || '트레이너';
+  const bio = document.getElementById('editBioInp').value.trim();
+  const avatar = (_myProfile?._pendingAvatar) || _myProfile?.avatar || '🎒';
+  try {
+    await updateDoc(doc(db, 'users', currentUser.uid), { nickname: nn, bio, avatar });
+    if (_myProfile) { _myProfile.nickname = nn; _myProfile.bio = bio; _myProfile.avatar = avatar; delete _myProfile._pendingAvatar; }
+    currentUser.nickname = nn;
+    window._currentUser = currentUser;
+    document.getElementById('userNameDisplay').textContent = '🎒 ' + nn + ' 트레이너';
+    renderMyProfile();
+    window.cancelEditProfile();
+    // 닉네임 변경을 친구들에게도 반영 (denormalized cache 업데이트)
+    await updateFriendNicknameCache(nn, avatar);
+    showSocialToast('프로필이 저장됐어요 ✓');
+  } catch(e) { showSocialToast('저장 실패: ' + e.message); }
+};
+
+async function updateFriendNicknameCache(nn, avatar) {
+  // 내가 보낸 메시지가 있는 채팅방의 캐시 업데이트는 생략 (복잡도 대비 효과 낮음)
+  // 친구들의 friendList 내 내 정보를 갱신
+  try {
+    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const friends = mySnap.exists() ? (mySnap.data().friends || []) : [];
+    for (const fid of friends) {
+      const fSnap = await getDoc(doc(db, 'users', fid));
+      if (!fSnap.exists()) continue;
+      const fFriends = fSnap.data().friendsData || {};
+      if (fFriends[currentUser.uid]) {
+        fFriends[currentUser.uid].nickname = nn;
+        fFriends[currentUser.uid].avatar = avatar;
+        await updateDoc(doc(db, 'users', fid), { friendsData: fFriends });
+      }
+    }
+  } catch(e) {}
+}
+
+// ---------- 친구 ----------
+let _pendingRequests = []; // 받은 친구 요청
+let _friends = [];
+
+async function loadFriends() {
+  if (!currentUser) return;
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  const d = snap.exists() ? snap.data() : {};
+  _friends = d.friends || [];
+  _pendingRequests = d.friendRequests || [];
+  const friendsData = d.friendsData || {};
+
+  // 요청 뱃지
+  const cnt = _pendingRequests.length;
+  ['friendReqBadge','friendReqBadge2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = cnt; el.style.display = cnt > 0 ? 'inline-block' : 'none'; }
+  });
+
+  // 친구 요청 섹션
+  const reqWrap = document.getElementById('friendRequestsWrap');
+  const reqList = document.getElementById('friendRequestsList');
+  if (reqWrap && reqList) {
+    if (_pendingRequests.length) {
+      reqWrap.style.display = 'block';
+      reqList.innerHTML = '';
+      for (const uid of _pendingRequests) {
+        const uSnap = await getDoc(doc(db, 'users', uid));
+        const uData = uSnap.exists() ? uSnap.data() : {};
+        const idSnap = await getDoc(doc(db, 'usernames', uid));
+        const username = idSnap.exists() ? idSnap.data().username : '?';
+        const row = document.createElement('div');
+        row.className = 'friend-row';
+        row.innerHTML = `
+          <div class="friend-avatar">${uData.avatar||'🎒'}</div>
+          <div class="friend-info">
+            <div class="friend-name">${uData.nickname||username}</div>
+            <div class="friend-id">@${username}</div>
+          </div>
+          <div class="friend-actions">
+            <button class="friend-action-btn" onclick="acceptFriend('${uid}','${uData.nickname||username}','${uData.avatar||'🎒'}','${username}')">수락</button>
+            <button class="friend-action-btn danger" onclick="rejectFriend('${uid}')">거절</button>
+          </div>`;
+        reqList.appendChild(row);
+      }
+    } else {
+      reqWrap.style.display = 'none';
+    }
+  }
+
+  // 친구 목록
+  const list = document.getElementById('friendList');
+  const titleEl = document.getElementById('friendListTitle');
+  if (titleEl) titleEl.textContent = '친구 목록 (' + _friends.length + '명)';
+  if (_myProfile) { _myProfile.friends = _friends.length; const el = document.getElementById('ps-friends'); if(el) el.textContent = _friends.length; }
+
+  if (!list) return;
+  list.innerHTML = '';
+  if (!_friends.length) {
+    list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;">친구를 추가해보세요!</div>';
+    return;
+  }
+  for (const fuid of _friends) {
+    const fData = friendsData[fuid] || {};
+    const row = document.createElement('div');
+    row.className = 'friend-row';
+    row.innerHTML = `
+      <div class="friend-avatar">${fData.avatar||'🎒'}</div>
+      <div class="friend-info">
+        <div class="friend-name">${fData.nickname||'트레이너'}</div>
+        <div class="friend-id">@${fData.username||'?'}</div>
+      </div>
+      <div class="friend-actions">
+        <button class="friend-action-btn" onclick="openChat('${fuid}','${(fData.nickname||'트레이너').replace(/'/g,"\'")}','${fData.avatar||'🎒'}','${fData.username||'?'}')">💬 DM</button>
+        <button class="friend-action-btn danger" onclick="removeFriend('${fuid}')">삭제</button>
+      </div>`;
+    row.onclick = (e) => { if(e.target.tagName==='BUTTON') return; openChat(fuid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?'); };
+    list.appendChild(row);
+  }
+}
+
+window.searchFriend = async function() {
+  const inp = document.getElementById('addFriendInp');
+  const resultEl = document.getElementById('addFriendResult');
+  const btn = document.getElementById('addFriendBtn');
+  const query = inp.value.trim().toLowerCase();
+  if (!query) return;
+  if (query === (_myProfile?.uid||'').toLowerCase()) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; return; }
+
+  btn.disabled = true; btn.textContent = '검색 중...';
+  resultEl.textContent = '';
+
+  try {
+    // username → uid 매핑 (usernames 컬렉션)
+    const snap = await getDocs(query(collection(db, 'usernames'), where('username', '==', query)));
+    if (snap.empty) { resultEl.style.color='#ff6b6b'; resultEl.textContent='해당 아이디의 트레이너를 찾을 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
+    const targetUid = snap.docs[0].id;
+    if (targetUid === currentUser.uid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
+    if (_friends.includes(targetUid)) { resultEl.style.color='#ff6b6b'; resultEl.textContent='이미 친구예요!'; btn.disabled=false; btn.textContent='검색'; return; }
+
+    const tSnap = await getDoc(doc(db, 'users', targetUid));
+    const tData = tSnap.exists() ? tSnap.data() : {};
+
+    // 이미 요청을 보냈는지 확인
+    const sentReqs = tData.friendRequests || [];
+    if (sentReqs.includes(currentUser.uid)) { resultEl.style.color='var(--muted)'; resultEl.textContent='이미 친구 요청을 보냈어요.'; btn.disabled=false; btn.textContent='검색'; return; }
+
+    resultEl.innerHTML = `<div style="display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.6rem .85rem;margin-top:.3rem">
+      <div style="font-size:1.4rem">${tData.avatar||'🎒'}</div>
+      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||query}</div><div style="font-size:.65rem;color:var(--muted)">@${query}</div></div>
+      <button onclick="sendFriendRequest('${targetUid}','${query}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;">친구 추가</button>
+    </div>`;
+    resultEl.style.color = '';
+  } catch(e) { resultEl.style.color='#ff6b6b'; resultEl.textContent='오류: '+e.message; }
+  btn.disabled = false; btn.textContent = '검색';
+};
+
+window.sendFriendRequest = async function(targetUid, targetUsername) {
+  try {
+    const tSnap = await getDoc(doc(db, 'users', targetUid));
+    const tData = tSnap.exists() ? tSnap.data() : {};
+    const reqs = tData.friendRequests || [];
+    if (reqs.includes(currentUser.uid)) { showSocialToast('이미 요청을 보냈어요'); return; }
+    reqs.push(currentUser.uid);
+    await updateDoc(doc(db, 'users', targetUid), { friendRequests: reqs });
+    document.getElementById('addFriendResult').innerHTML = '<span style="color:#4ade80">✓ 친구 요청을 보냈어요!</span>';
+    document.getElementById('addFriendInp').value = '';
+  } catch(e) { showSocialToast('요청 실패: ' + e.message); }
+};
+
+window.acceptFriend = async function(fromUid, fromNick, fromAvatar, fromUsername) {
+  try {
+    // 내 쪽
+    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const myData = mySnap.exists() ? mySnap.data() : {};
+    const myFriends = myData.friends || [];
+    const myFriendsData = myData.friendsData || {};
+    const myReqs = (myData.friendRequests || []).filter(id => id !== fromUid);
+    if (!myFriends.includes(fromUid)) myFriends.push(fromUid);
+    myFriendsData[fromUid] = { nickname: fromNick, avatar: fromAvatar, username: fromUsername };
+    await updateDoc(doc(db, 'users', currentUser.uid), { friends: myFriends, friendsData: myFriendsData, friendRequests: myReqs });
+
+    // 상대방 쪽
+    const theirSnap = await getDoc(doc(db, 'users', fromUid));
+    const theirData = theirSnap.exists() ? theirSnap.data() : {};
+    const theirFriends = theirData.friends || [];
+    const theirFriendsData = theirData.friendsData || {};
+    if (!theirFriends.includes(currentUser.uid)) theirFriends.push(currentUser.uid);
+    theirFriendsData[currentUser.uid] = { nickname: _myProfile?.nickname || currentUser.nickname || '트레이너', avatar: _myProfile?.avatar || '🎒', username: _myProfile?.uid || '' };
+    await updateDoc(doc(db, 'users', fromUid), { friends: theirFriends, friendsData: theirFriendsData });
+
+    showSocialToast('친구가 됐어요! 🎉');
+    await loadFriends();
+  } catch(e) { showSocialToast('오류: ' + e.message); }
+};
+
+window.rejectFriend = async function(fromUid) {
+  try {
+    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const reqs = (mySnap.exists() ? (mySnap.data().friendRequests || []) : []).filter(id => id !== fromUid);
+    await updateDoc(doc(db, 'users', currentUser.uid), { friendRequests: reqs });
+    showSocialToast('요청을 거절했어요');
+    await loadFriends();
+  } catch(e) {}
+};
+
+window.removeFriend = async function(fuid) {
+  if (!confirm('친구를 삭제할까요?')) return;
+  try {
+    const snap = await getDoc(doc(db, 'users', currentUser.uid));
+    const d = snap.exists() ? snap.data() : {};
+    const friends = (d.friends || []).filter(id => id !== fuid);
+    const fd = d.friendsData || {};
+    delete fd[fuid];
+    await updateDoc(doc(db, 'users', currentUser.uid), { friends, friendsData: fd });
+    showSocialToast('친구를 삭제했어요');
+    await loadFriends();
+  } catch(e) {}
+};
+
+// ---------- 메시지/DM ----------
+let _currentChatUid = null;
+let _currentChatName = '';
+let _currentChatAvatar = '🎒';
+let _chatUnsubscribe = null;
+
+function getChatRoomId(uid1, uid2) {
+  return [uid1, uid2].sort().join('_');
+}
+
+window.openChat = async function(friendUid, friendName, friendAvatar, friendUsername) {
+  showSocialTab('messages');
+  _currentChatUid = friendUid;
+  _currentChatName = friendName;
+  _currentChatAvatar = friendAvatar;
+
+  document.getElementById('chatFriendName').textContent = friendName;
+  document.getElementById('chatFriendId').textContent = '@' + friendUsername;
+  document.getElementById('chatFriendAvatar').textContent = friendAvatar;
+  document.getElementById('dmListView').style.display = 'none';
+  document.getElementById('chatView').style.display = 'block';
+
+  // 이전 리스너 해제
+  if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
+
+  // 실시간 메시지 구독
+  const roomId = getChatRoomId(currentUser.uid, friendUid);
+  const msgsRef = collection(db, 'chats', roomId, 'messages');
+  const q = query(msgsRef, orderBy('ts', 'asc'));
+
+  _chatUnsubscribe = onSnapshot(q, snap => {
+    const msgs = document.getElementById('chatMessages');
+    if (!msgs) return;
+    msgs.innerHTML = '';
+    if (snap.empty) {
+      msgs.innerHTML = '<div class="chat-empty">💬<br>대화를 시작해보세요!</div>';
+      return;
+    }
+    snap.docs.forEach(d => {
+      const data = d.data();
+      const isMe = data.from === currentUser.uid;
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-bubble-wrap ' + (isMe ? 'me' : 'them');
+      const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
+      const timeStr = ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0');
+      wrap.innerHTML = `<div class="chat-bubble ${isMe?'me':'them'}">${escapeHtml(data.text)}</div><div class="chat-time">${timeStr}</div>`;
+      msgs.appendChild(wrap);
+    });
+    msgs.scrollTop = msgs.scrollHeight;
+    // 읽음 처리
+    markChatRead(roomId);
+  });
+};
+
+function escapeHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/
+/g,'<br>');
+}
+
+async function markChatRead(roomId) {
+  try {
+      // 읽지 않은 메시지 카운트를 0으로
+    await updateDoc(doc(db, 'chats', roomId), { ['unread_' + currentUser.uid]: 0 }).catch(()=>{});
+  } catch(e) {}
+}
+
+window.sendMessage = async function() {
+  if (!currentUser || !_currentChatUid) return;
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+
+  try {
+    const roomId = getChatRoomId(currentUser.uid, _currentChatUid);
+    const msgsRef = collection(db, 'chats', roomId, 'messages');
+    await addDoc(msgsRef, { from: currentUser.uid, text, ts: serverTimestamp() });
+    // 채팅방 메타 (마지막 메시지, 읽지 않은 카운트)
+    const roomMeta = doc(db, 'chats', roomId);
+    const metaSnap = await getDoc(roomMeta);
+    const unread = metaSnap.exists() ? (metaSnap.data()['unread_' + _currentChatUid] || 0) : 0;
+    await setDoc(roomMeta, {
+      participants: [currentUser.uid, _currentChatUid],
+      lastMsg: text,
+      lastTs: serverTimestamp(),
+      lastFrom: currentUser.uid,
+      ['unread_' + _currentChatUid]: unread + 1,
+      ['unread_' + currentUser.uid]: 0,
+    }, { merge: true });
+  } catch(e) { showSocialToast('전송 실패: ' + e.message); }
+};
+
+window.closeChatView = function() {
+  if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
+  _currentChatUid = null;
+  document.getElementById('chatView').style.display = 'none';
+  document.getElementById('dmListView').style.display = 'block';
+  loadDmList();
+};
+
+async function loadDmList() {
+  if (!currentUser) return;
+  const dmList = document.getElementById('dmList');
+  if (!dmList) return;
+
+  try {
+    const chatsRef = collection(db, 'chats');
+    const q = query(chatsRef, where('participants', 'array-contains', currentUser.uid), orderBy('lastTs', 'desc'));
+    const snap = await getDocs(q);
+    if (snap.empty) { dmList.innerHTML = '<div class="chat-empty">👥<br>친구와 대화를 시작해보세요!</div>'; updateMsgBadge(0); return; }
+
+    const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const friendsData = mySnap.exists() ? (mySnap.data().friendsData || {}) : {};
+
+    let totalUnread = 0;
+    dmList.innerHTML = '';
+    snap.docs.forEach(d => {
+      const data = d.data();
+      const friendUid = data.participants.find(p => p !== currentUser.uid);
+      const fData = friendsData[friendUid] || {};
+      const unread = data['unread_' + currentUser.uid] || 0;
+      totalUnread += unread;
+      const ts = data.lastTs?.toDate ? data.lastTs.toDate() : null;
+      const timeStr = ts ? (ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0')) : '';
+      const row = document.createElement('div');
+      row.className = 'dm-row' + (unread > 0 ? ' unread' : '');
+      row.innerHTML = `
+        <div class="dm-avatar">${fData.avatar||'🎒'}</div>
+        <div class="dm-info">
+          <div class="dm-name">${fData.nickname||'트레이너'}</div>
+          <div class="dm-preview">${escapeHtml(data.lastMsg||'')}</div>
+        </div>
+        <div class="dm-meta">
+          <div class="dm-time">${timeStr}</div>
+          ${unread>0?`<div class="dm-unread-count">${unread}</div>`:''}
+        </div>`;
+      row.onclick = () => openChat(friendUid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?');
+      dmList.appendChild(row);
+    });
+    updateMsgBadge(totalUnread);
+  } catch(e) { dmList.innerHTML = '<div class="chat-empty">대화 목록을 불러오는 중...</div>'; }
+}
+
+function updateMsgBadge(count) {
+  const el = document.getElementById('msgUnreadBadge');
+  if (el) { el.textContent = count; el.style.display = count > 0 ? 'inline-block' : 'none'; }
+}
+
+// ---------- 소셜 페이지 탭 ----------
+let _socialTab = 'friends';
+window.showSocialTab = function(tab) {
+  _socialTab = tab;
+  document.getElementById('socialFriendsPanel').style.display = tab === 'friends' ? 'block' : 'none';
+  document.getElementById('socialMessagesPanel').style.display = tab === 'messages' ? 'block' : 'none';
+  ['friends','messages'].forEach(t => {
+    const el = document.getElementById('ptab-' + t);
+    if (el) el.classList.toggle('active', t === tab);
+  });
+  if (tab === 'messages') loadDmList();
+  if (tab === 'friends') loadFriends();
+};
+
+window._loadMyProfile = loadMyProfile;
+window.initSocialPage = async function() {
+  await loadMyProfile();
+  if (_socialTab === 'friends') await loadFriends();
+  else await loadDmList();
+};
+
+// ---------- 유틸 ----------
+function showSocialToast(msg) {
+  let t = document.getElementById('socialToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'socialToast';
+    t.style.cssText = 'position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);color:var(--text);font-family:Galmuri11,monospace;font-size:.75rem;padding:.55rem 1.2rem;border-radius:30px;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2200);
+}
 </script>
 <script>
 // Firebase 모듈에서 전역 노출된 함수 사용
@@ -988,6 +1680,7 @@ function stepSetting(key,delta,min,max){
   const next=Math.min(max,Math.max(min,cur+delta));
   saveSetting(key,next);
   document.getElementById('s-'+key).textContent=next;
+  if(key==='dailyCount'){const reinitBtn=document.getElementById('dexReinitBtn');if(reinitBtn)reinitBtn.style.display='inline-flex';}
 }
 
 function showSettingsToast(){
@@ -1041,30 +1734,63 @@ const STAT_KO={hp:'HP',attack:'공격',defense:'방어','special-attack':'특공
 const TYPE_COLOR={normal:'#A8A878',fire:'#F08030',water:'#6890F0',electric:'#F8D030',grass:'#78C850',ice:'#98D8D8',fighting:'#C03028',poison:'#A040A0',ground:'#E0C068',flying:'#A890F0',psychic:'#F85888',bug:'#A8B820',rock:'#B8A038',ghost:'#705898',dragon:'#7038F8',dark:'#705848',steel:'#B8B8D0',fairy:'#EE99AC'};
 const GEN_INFO={'generation-i':{name:'1세대',games:['레드·그린','블루','피카츄']},'generation-ii':{name:'2세대',games:['골드·실버','크리스탈']},'generation-iii':{name:'3세대',games:['루비·사파이어','에메랄드','FR·LG']},'generation-iv':{name:'4세대',games:['다이아몬드·펄','플라티나','HG·SS']},'generation-v':{name:'5세대',games:['블랙·화이트','B2·W2']},'generation-vi':{name:'6세대',games:['X·Y','오메가루비·알파사파이어']},'generation-vii':{name:'7세대',games:['썬·문','울트라썬·울트라문','렛츠고']},'generation-viii':{name:'8세대',games:['소드·실드','브릴다이아·샤이닝펄','레전드 아르세우스']},'generation-ix':{name:'9세대',games:['스칼렛·바이올렛']}};
 const VERSION_GEN={'red':'1세대','blue':'1세대','yellow':'1세대','gold':'2세대','silver':'2세대','crystal':'2세대','ruby':'3세대','sapphire':'3세대','emerald':'3세대','firered':'3세대','leafgreen':'3세대','diamond':'4세대','pearl':'4세대','platinum':'4세대','heartgold':'4세대','soulsilver':'4세대','black':'5세대','white':'5세대','black-2':'5세대','white-2':'5세대','x':'6세대','y':'6세대','omega-ruby':'6세대','alpha-sapphire':'6세대','sun':'7세대','moon':'7세대','ultra-sun':'7세대','ultra-moon':'7세대','lets-go-pikachu':'7세대','lets-go-eevee':'7세대','sword':'8세대','shield':'8세대','brilliant-diamond':'8세대','shining-pearl':'8세대','legends-arceus':'8세대','scarlet':'9세대','violet':'9세대'};
-const FORM_SUFFIX_KO={'alola':'알로라 폼','galar':'가라르 폼','hisui':'히스이 폼','paldea':'팔데아 폼','mega':'메가 진화','mega-x':'메가 진화 X','mega-y':'메가 진화 Y','gmax':'거다이맥스','alolan':'알로라 폼','galarian':'가라르 폼','hisuian':'히스이 폼','paldean':'팔데아 폼','origin':'오리진 폼','sky':'스카이 폼','therian':'영물 폼'};
+const FORM_SUFFIX_KO={'alola':'알로라 폼','galar':'가라르 폼','hisui':'히스이 폼','paldea':'팔데아 폼','mega-x':'메가 진화 X','mega-y':'메가 진화 Y','mega':'메가 진화','gmax':'거다이맥스','alolan':'알로라 폼','galarian':'가라르 폼','hisuian':'히스이 폼','paldean':'팔데아 폼','origin':'오리진 폼','sky':'스카이 폼','therian':'영물 폼','apex':'에이펙스 폼','rapid-strike':'연격 스타일','single-strike':'일격 스타일','rider':'라이더 폼','crowned':'왕관 폼','eternamax':'이터나맥스','primal':'원시회귀','ultra':'울트라 폼','low-key':'낮은 키 폼','amped':'어레인지 폼','white-striped':'흰 줄 폼','noice-face':'얼음 얼굴 폼','ice-face':'얼음 얼굴 폼','hangry':'굶주린 폼','full-belly':'배부른 폼'};
 const LEGENDARY_IDS=new Set([144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1017,1020,1021,1022,1023,1024,1025]);
-function getFormLabel(formName,baseName){if(!formName||formName===baseName)return '';const suffix=formName.replace(baseName+'-','');for(const[k,v]of Object.entries(FORM_SUFFIX_KO))if(suffix.includes(k))return v;return suffix.replace(/-/g,' ');}
-function evoMethodKo(d){if(!d)return '';const p=[];if(d.min_level)p.push(`Lv.${d.min_level}`);if(d.time_of_day==='day')p.push('낮');if(d.time_of_day==='night')p.push('밤');if(d.min_happiness)p.push('친밀도↑');if(d.item)p.push(d.item.name);if(d.held_item)p.push('소지:'+d.held_item.name);if(d.known_move)p.push('기술습득');if(d.location)p.push('특정장소');if(d.needs_overworld_rain)p.push('비속');if(d.trade_species||d.trigger?.name==='trade')p.push('통신교환');if(!p.length&&d.trigger?.name==='use-item')p.push('아이템사용');if(!p.length)p.push('레벨업');return p.join(' ');}
+function getFormLabel(formName,baseName){
+  if(!formName)return '';
+  // 기본 폼이면 빈 라벨 (단, 기본 폼 이름과 정확히 같거나 접미사 없으면)
+  if(formName===baseName)return '';
+  // baseName 뒤에 '-'로 연결된 접미사 추출
+  const suffix=formName.startsWith(baseName+'-')?formName.slice(baseName.length+1):formName;
+  // suffix가 없거나 전체 이름 그대로면 기본 폼
+  if(!suffix||suffix===formName&&formName===baseName)return '';
+  // 알려진 접미사 매핑
+  for(const[k,v]of Object.entries(FORM_SUFFIX_KO))if(suffix===k||suffix.includes(k))return v;
+  // 알 수 없는 접미사는 그대로 표시
+  return suffix.replace(/-/g,' ');
+}
+function evoMethodKo(d){if(!d)return '';
+  const ITEM_KO={'thunder-stone':'천둥의돌','fire-stone':'불꽃의돌','water-stone':'물의돌','leaf-stone':'잎의돌','moon-stone':'달의돌','sun-stone':'태양의돌','shiny-stone':'빛의돌','dusk-stone':'어둠의돌','dawn-stone':'각성의돌','ice-stone':'얼음의돌','kings-rock':'왕의증표','metal-coat':'금속코트','dragon-scale':'용의비늘','up-grade':'업그레이드','dubious-disc':'수상한패치','oval-stone':'둥근돌','protector':'방어조끼','electirizer':'에레키부스터','magmarizer':'마그마부스터','reaper-cloth':'사신의낫','prism-scale':'무지갯빛비늘','deep-sea-tooth':'심해의이빨','deep-sea-scale':'심해의비늘','razor-claw':'예리한발톱','razor-fang':'예리한이빨','linking-cord':'연결의끈','peat-block':'이탄덩어리','black-augurite':'흑요석','malicious-armor':'사악한갑옷','auspicious-armor':'상서로운갑옷','scroll-of-darkness':'어둠의서','scroll-of-waters':'물의서'};
+  const p=[];
+  if(d.min_level)p.push('Lv.'+d.min_level);
+  if(d.time_of_day==='day')p.push('낮');
+  if(d.time_of_day==='night')p.push('밤');
+  if(d.min_happiness)p.push('친밀도↑');
+  if(d.item){const n=d.item.name;p.push(ITEM_KO[n]||n);}
+  if(d.held_item){const n=d.held_item.name;p.push('소지:'+(ITEM_KO[n]||n));}
+  if(d.known_move)p.push('기술습득');
+  if(d.known_move_type)p.push(d.known_move_type.name+'타입기술');
+  if(d.location)p.push('특정장소');
+  if(d.needs_overworld_rain)p.push('비속');
+  if(d.min_beauty)p.push('아름다움↑');
+  if(d.min_affection)p.push('친밀도↑↑');
+  if(d.gender===1)p.push('암컷만');
+  if(d.gender===2)p.push('수컷만');
+  if(d.trade_species)p.push('통신교환('+d.trade_species.name+')');
+  else if(d.trigger?.name==='trade')p.push('통신교환');
+  if(!p.length&&d.trigger?.name==='use-item')p.push('아이템사용');
+  if(!p.length)p.push('레벨업');
+  return p.join(' ');
+}
 function seededRand(seed){let s=seed>>>0;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/0x100000000;};}
 function getDailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
 const MAX_ID=1025;
 function pickDailyIds(){
-  const count=getUserSetting('dailyCount',3);
+  const count=Math.min(Math.max(1,getUserSetting('dailyCount',3)),10);
   const rand=seededRand(getDailySeed());
-  const ids=new Set();
-  // 오늘 날짜 시드 기반으로 중복 없이 추출
-  let attempt=0;
-  while(ids.size<count&&attempt<count*20){
-    attempt++;
-    ids.add(Math.floor(rand()*MAX_ID)+1);
+  // Fisher-Yates partial shuffle on a seeded pool → 항상 정확히 count개 보장
+  const pool=Array.from({length:MAX_ID},(_,i)=>i+1);
+  for(let i=0;i<count;i++){
+    const j=i+Math.floor(rand()*(MAX_ID-i));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
   }
-  return[...ids].sort((a,b)=>a-b);
+  return pool.slice(0,count).sort((a,b)=>a-b);
 }
 async function fetchPokemon(id,_depth=0){
-  if(_depth>5)return null;
+  if(_depth>3)return null;
   let poke,spec;
   try{[poke,spec]=await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r=>{if(!r.ok)throw 0;return r.json();}),fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>{if(!r.ok)throw 0;return r.json();})]);}
-  catch(e){return fetchPokemon(Math.floor(Math.random()*898)+1,_depth+1);}
+  catch(e){if(_depth>2)return null;await new Promise(r=>setTimeout(r,500));return fetchPokemon(id,_depth+1);}
   const nameKo=spec.names.find(n=>n.language.name==='ko')?.name||spec.names.find(n=>n.language.name==='ja-Hrkt')?.name||poke.name;
   const koDesc=spec.flavor_text_entries.find(e=>e.language.name==='ko')?.flavor_text;
   const enDesc=spec.flavor_text_entries.find(e=>e.language.name==='en')?.flavor_text;
@@ -1085,13 +1811,15 @@ let ndexLoading=false,activeTypeFilter=null,searchQuery='';
 const d0=new Date();
 document.getElementById('dateDisplay').textContent=`${d0.getFullYear()}.${String(d0.getMonth()+1).padStart(2,'0')}.${String(d0.getDate()).padStart(2,'0')}`;
 
-async function init(){const ids=pickDailyIds();const results=await Promise.all(ids.map(fetchPokemon));pokemonData=results.filter(Boolean);renderDex();}
+async function init(){dexViewed=false;quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];const ids=pickDailyIds();const results=await Promise.all(ids.map(id=>fetchPokemon(id)));pokemonData=results.filter(Boolean);if(pokemonData.length===0){document.getElementById('dex-loading').innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">포켓몬을 불러오지 못했어요. 새로고침 해보세요.</p>';return;}renderDex();}
 function makeBallSVG(isLegendary){
   if(isLegendary){return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="mbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="mbTopGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#b060e8"/><stop offset="100%" stop-color="#5a00aa"/></radialGradient><radialGradient id="mbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#1a0030" stroke="#1a0030" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#mbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#mbTopGrad)" clip-path="url(#mbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#1a0030" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><text x="60" y="44" font-size="20" fill="white" font-family="Arial Black,Impact,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">M</text><circle cx="36" cy="50" r="4" fill="#ff80cc"/><circle cx="84" cy="50" r="4" fill="#ff80cc"/><circle cx="60" cy="60" r="11" fill="url(#mbBtnGrad)" stroke="#1a0030" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#8800cc"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.6)"/><ellipse cx="44" cy="22" rx="14" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20 44 22)" clip-path="url(#mbClip)"/></svg>`;}
   return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="pbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="pbRedGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#ff5555"/><stop offset="100%" stop-color="#cc0000"/></radialGradient><radialGradient id="pbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#111111" stroke="#111111" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#pbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#pbRedGrad)" clip-path="url(#pbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#111111" clip-path="url(#pbClip)"/><circle cx="60" cy="60" r="11" fill="url(#pbBtnGrad)" stroke="#111111" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#dd0000"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.65)"/><ellipse cx="42" cy="24" rx="14" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-20 42 24)" clip-path="url(#pbClip)"/></svg>`;}
-function renderDex(){document.getElementById('dex-loading').style.display='none';document.getElementById('dex-content').style.display='block';const grid=document.getElementById('pokemonGrid');grid.innerHTML='';pokemonData.forEach((p,i)=>{const wrapper=document.createElement('div');wrapper.dataset.idx=i;wrapper.dataset.opened='false';grid.appendChild(wrapper);renderBallCard(wrapper,p);});}
-function renderBallCard(wrapper,p){wrapper.innerHTML='';const ball=document.createElement('div');ball.className='ball-card'+(p.isLegendary?' legendary':'');ball.innerHTML=`<div class="ball-svg-wrap">${makeBallSVG(p.isLegendary)}</div><div class="ball-card-hint">No.${String(p.id).padStart(4,'0')}<br>${p.isLegendary?'✨ 마스터볼':'🔴 몬스터볼'}<br><br>탭해서 열기!</div>`;ball.onclick=()=>{ball.classList.add('shaking');setTimeout(()=>{renderPokemonCard(wrapper,p);if(window.markMet)window.markMet(p);},520);};wrapper.appendChild(ball);}
-function renderPokemonCard(wrapper,p){const color=TYPE_COLOR[p.types[0]]||'#ffcb05';wrapper.innerHTML='';wrapper.dataset.opened='true';dexViewed=true;const card=document.createElement('div');card.className='pokemon-card';card.style.setProperty('--card-color',color);card.style.setProperty('--card-glow',color+'44');card.style.animation='slideUp .4s ease both';let isShiny=false;const updateImg=()=>{const img=card.querySelector('.card-image');const toggle=card.querySelector('.shiny-toggle');if(img){img.src=isShiny&&p.shinyImage?p.shinyImage:p.image;img.className='card-image'+(isShiny?' shiny-img':'');}if(toggle)toggle.className='shiny-toggle'+(isShiny?' active':'');};card.innerHTML=`<div class="card-bg"></div><span class="card-hint">자세히 ▶</span><div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div><div class="card-image-wrap"><img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/></div><div class="card-name">${p.name}</div><div class="type-badges">${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}</div><div class="card-desc">${p.desc}</div><div class="card-stats">${p.stats.map(s=>`<div class="stat-row"><span class="stat-label">${STAT_KO[s.name]||s.name}</span><div class="stat-bar-wrap"><div class="stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div></div><span class="stat-value">${s.value}</span></div>`).join('')}</div><div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div><div style="text-align:center"><span class="shiny-toggle"><span class="sw-track"><span class="sw-thumb"></span></span>✨ 이로치</span></div>`;card.querySelector('.shiny-toggle').onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};card.onclick=e=>{if(e.target.classList.contains('shiny-toggle'))return;openModal(p,isShiny);};wrapper.appendChild(card);setTimeout(()=>{card.querySelectorAll('.stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});},400);}
+function renderDex(){document.getElementById('dex-loading').style.display='none';document.getElementById('dex-content').style.display='block';const titleEl=document.getElementById('dexSectionTitle');if(titleEl)titleEl.textContent='오늘의 포켓몬 '+pokemonData.length+'마리 — 몬스터볼을 클릭해보세요!';const grid=document.getElementById('pokemonGrid');grid.innerHTML='';pokemonData.forEach((p,i)=>{const wrapper=document.createElement('div');wrapper.dataset.idx=i;wrapper.dataset.opened='false';wrapper.style.setProperty('--card-delay',i*0.1+'s');grid.appendChild(wrapper);renderBallCard(wrapper,p);});}
+function renderBallCard(wrapper,p){wrapper.innerHTML='';const autoOpen=getUserSetting('autoOpen',false);if(autoOpen){wrapper.dataset.opened='true';dexViewed=true;renderPokemonCard(wrapper,p);return;}const ball=document.createElement('div');ball.className='ball-card'+(p.isLegendary?' legendary':'');ball.innerHTML=`<div class="ball-svg-wrap">${makeBallSVG(p.isLegendary)}</div><div class="ball-card-hint">No.${String(p.id).padStart(4,'0')}<br>${p.isLegendary?'✨ 마스터볼':'🔴 몬스터볼'}<br><br>탭해서 열기!</div>`;ball.onclick=()=>{ball.classList.add('shaking');setTimeout(()=>{renderPokemonCard(wrapper,p);if(window.markMet)window.markMet(p);},520);};wrapper.appendChild(ball);}
+function renderPokemonCard(wrapper,p){const color=TYPE_COLOR[p.types[0]]||'#ffcb05';wrapper.innerHTML='';wrapper.dataset.opened='true';dexViewed=true;const card=document.createElement('div');card.className='pokemon-card';card.style.setProperty('--card-color',color);card.style.setProperty('--card-glow',color+'44');card.style.animation='slideUp .4s ease both';let isShiny=false;const updateImg=()=>{const img=card.querySelector('.card-image');const toggle=card.querySelector('.shiny-toggle');if(img){img.src=isShiny&&p.shinyImage?p.shinyImage:p.image;img.className='card-image'+(isShiny?' shiny-img':'');}if(toggle)toggle.className='shiny-toggle'+(isShiny?' active':'');};card.innerHTML=`<div class="card-bg"></div><span class="card-hint">자세히 ▶</span><div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div><div class="card-image-wrap"><img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/></div><div class="card-name">${p.name}</div><div class="type-badges">${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}</div><div class="card-desc">${p.desc}</div><div class="card-stats">${p.stats.map(s=>`<div class="stat-row"><span class="stat-label">${STAT_KO[s.name]||s.name}</span><div class="stat-bar-wrap"><div class="stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div></div><span class="stat-value">${s.value}</span></div>`).join('')}</div><div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div><div style="text-align:center"><span class="shiny-toggle"><span class="sw-track"><span class="sw-thumb"></span></span>✨ 이로치</span></div>`;const shinyToggleEl=card.querySelector('.shiny-toggle');
+if(!p.shinyImage){shinyToggleEl.style.opacity='.35';shinyToggleEl.style.cursor='default';shinyToggleEl.title='이로치 미구현';}
+shinyToggleEl.onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};card.onclick=e=>{if(e.target.classList.contains('shiny-toggle'))return;openModal(p,isShiny);};wrapper.appendChild(card);requestAnimationFrame(()=>requestAnimationFrame(()=>{card.querySelectorAll('.stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});}));}
 function initNdex(){
   if(ndexAllIds.length)return;
   ndexAllIds=Array.from({length:MAX_ID},(_,i)=>i+1);
@@ -1104,7 +1832,14 @@ function initNdex(){
 }
 function buildTypeFilterUI(){const wrap=document.getElementById('typeFilter');wrap.innerHTML='';Object.entries(TYPE_KO).forEach(([en,ko])=>{const btn=document.createElement('button');btn.className='type-filter-btn type-'+en;btn.textContent=ko;btn.onclick=()=>toggleTypeFilter(en,btn);wrap.appendChild(btn);});}
 function toggleTypeFilter(type,btn){if(activeTypeFilter===type){activeTypeFilter=null;document.querySelectorAll('.type-filter-btn').forEach(b=>b.classList.remove('active'));}else{activeTypeFilter=type;document.querySelectorAll('.type-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}applyNdexFilter();}
-function onSearch(){searchQuery=document.getElementById('ndexSearch').value.trim().toLowerCase();applyNdexFilter();}
+let _searchTimer=null;
+function onSearch(){
+  clearTimeout(_searchTimer);
+  _searchTimer=setTimeout(()=>{
+    searchQuery=document.getElementById('ndexSearch').value.trim().toLowerCase();
+    applyNdexFilter();
+  },300);
+}
 
 async function applyNdexFilter(){
   const q=searchQuery, t=activeTypeFilter;
@@ -1142,6 +1877,7 @@ async function applyNdexFilter(){
   if(q && !isNumOnly){
     const uncached = ndexAllIds.filter(id => !ndexCache[id] && !ndexNameCache[id]);
     if(uncached.length > 0){
+      document.getElementById('ndexCount').textContent='검색 중...';
       // 배치로 이름 캐시 채우기 (최대 200개씩)
       const todo = uncached.slice(0,200);
       await Promise.all(todo.map(async id=>{
@@ -1161,11 +1897,14 @@ async function applyNdexFilter(){
   ndexFiltered = result.sort((a,b)=>a-b);
   renderNdexPage();
 }
-async function renderNdexPage(){if(ndexLoading)return;ndexLoading=true;const grid=document.getElementById('ndexGrid');const ids=ndexFiltered.slice(ndexShown,ndexShown+NDEX_PAGE);if(!ids.length){ndexLoading=false;updateNdexCount();return;}let spinner=document.getElementById('ndexSpinner');if(!spinner){spinner=document.createElement('div');spinner.id='ndexSpinner';spinner.className='ndex-spinner';spinner.textContent='불러오는 중...';document.getElementById('ndexGridWrap').appendChild(spinner);}const batch=await Promise.all(ids.map(async id=>{if(ndexCache[id])return ndexCache[id];const d=await fetchPokemonLight(id);if(d)ndexCache[id]=d;return d;}));spinner.remove();batch.forEach((p,i)=>{if(!p)return;const id=ids[i];if(activeTypeFilter&&!p.types.includes(activeTypeFilter))return;const ko=ndexNameCache[id]||'';if(searchQuery&&!(ko.includes(searchQuery)||p.nameEn.includes(searchQuery)||String(id).includes(searchQuery)))return;const color=TYPE_COLOR[p.types[0]]||'#ffcb05';const card=document.createElement('div');card.className='ndex-card';card.style.setProperty('--nc',color);card.onclick=()=>openModalById(id);card.innerHTML=`<img class="ndex-img" src="${p.image||''}" alt="" loading="lazy"/><div class="ndex-num">No.${String(id).padStart(4,'0')}</div><div class="ndex-name" id="ndex-name-${id}">${ko||p.nameEn}</div><div class="ndex-type-dots">${p.types.map(t=>`<div class="ndex-type-dot" style="background:${TYPE_COLOR[t]||'#888'}" title="${TYPE_KO[t]||t}"></div>`).join('')}</div>`;grid.appendChild(card);if(!ndexNameCache[id]){fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>r.json()).then(sp=>{const k=sp.names.find(n=>n.language.name==='ko')?.name||sp.names.find(n=>n.language.name==='ja-Hrkt')?.name||p.nameEn;ndexNameCache[id]=k;const el=document.getElementById(`ndex-name-${id}`);if(el)el.textContent=k;}).catch(()=>{});}});ndexShown+=NDEX_PAGE;ndexLoading=false;updateNdexCount();document.getElementById('loadMoreWrap').style.display=ndexShown<ndexFiltered.length?'flex':'none';}
-function updateNdexCount(){document.getElementById('ndexCount').textContent=`${document.getElementById('ndexGrid').children.length} / ${MAX_ID}`;}
+async function renderNdexPage(){if(ndexLoading)return;ndexLoading=true;try{const grid=document.getElementById('ndexGrid');const ids=ndexFiltered.slice(ndexShown,ndexShown+NDEX_PAGE);if(!ids.length){ndexLoading=false;updateNdexCount();return;}let spinner=document.getElementById('ndexSpinner');if(!spinner){spinner=document.createElement('div');spinner.id='ndexSpinner';spinner.className='ndex-spinner';spinner.textContent='불러오는 중...';document.getElementById('ndexGridWrap').appendChild(spinner);}const batch=await Promise.all(ids.map(async id=>{if(ndexCache[id])return ndexCache[id];const d=await fetchPokemonLight(id);if(d)ndexCache[id]=d;return d;}));spinner.remove();batch.forEach((p,i)=>{if(!p)return;const id=ids[i];if(activeTypeFilter&&!p.types.includes(activeTypeFilter))return;const ko=ndexNameCache[id]||'';if(searchQuery&&!(ko.includes(searchQuery)||p.nameEn.includes(searchQuery)||String(id).includes(searchQuery)))return;const color=TYPE_COLOR[p.types[0]]||'#ffcb05';const card=document.createElement('div');card.className='ndex-card';card.style.setProperty('--nc',color);card.onclick=()=>openModalById(id);card.innerHTML=`<img class="ndex-img" src="${p.image||''}" alt="" loading="lazy"/><div class="ndex-num">No.${String(id).padStart(4,'0')}</div><div class="ndex-name" id="ndex-name-${id}">${ko||p.nameEn}</div><div class="ndex-type-dots">${p.types.map(t=>`<div class="ndex-type-dot" style="background:${TYPE_COLOR[t]||'#888'}" title="${TYPE_KO[t]||t}"></div>`).join('')}</div>`;grid.appendChild(card);if(!ndexNameCache[id]){fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r=>r.json()).then(sp=>{const k=sp.names.find(n=>n.language.name==='ko')?.name||sp.names.find(n=>n.language.name==='ja-Hrkt')?.name||p.nameEn;ndexNameCache[id]=k;const el=document.getElementById(`ndex-name-${id}`);if(el)el.textContent=k;}).catch(()=>{});}});ndexShown+=NDEX_PAGE;ndexLoading=false;updateNdexCount();document.getElementById('loadMoreWrap').style.display=ndexShown<ndexFiltered.length?'flex':'none';}catch(e){ndexLoading=false;console.error('ndex render error',e);}}
+function updateNdexCount(){const shown=document.getElementById('ndexGrid').children.length;const total=ndexFiltered.length;document.getElementById('ndexCount').textContent=total===MAX_ID?`${shown} / ${MAX_ID}`:`${shown} / ${total}건 (전체 ${MAX_ID})`;}
 function loadMoreNdex(){renderNdexPage();}
-async function openModalById(id){const p=await fetchPokemon(id);if(p)openModal(p);}
+async function openModalById(id){let p=pokemonData.find(x=>x.id===id);if(!p){const cached=window._modalCache||(window._modalCache={});if(cached[id])p=cached[id];else{p=await fetchPokemon(id);if(p)cached[id]=p;}}if(p)openModal(p);}
+let _modalOpen=false;
 async function openModal(p,startShiny=false){
+  if(_modalOpen)return;
+  _modalOpen=true;
   const color=TYPE_COLOR[p.types[0]]||'#ffcb05';
   const overlay=document.getElementById('modalOverlay');
   document.getElementById('modal').style.setProperty('--modal-color',color);
@@ -1187,13 +1926,14 @@ async function openModal(p,startShiny=false){
     if(img){img.src=window._modalShiny?window._currentFormShiny:window._currentFormNormal;img.style.animation=window._modalShiny?'shiny-sparkle 1.5s ease-in-out infinite':'';}
     if(btn)btn.className='modal-shiny-btn'+(window._modalShiny?' active':'');
   };
-  overlay.classList.add('open');document.body.style.overflow='hidden';
+  const modalEl=document.getElementById('modal');if(modalEl)modalEl.scrollTop=0;overlay.classList.add('open');document.body.style.overflow='hidden';
   setTimeout(()=>{document.querySelectorAll('.modal-stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});if(window.injectMetButton)window.injectMetButton(p);},120);
   if(hasMultiForms)loadForms(p);
   if(p.evoChainUrl){const chain=await fetchEvoChain(p.evoChainUrl);if(chain){const steps=await parseEvoChain(chain);renderEvoChain(steps,p.id);}else document.getElementById('evoChainArea').innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">단일 진화</div>';}
   else document.getElementById('evoChainArea').innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">진화 정보 없음</div>';
+  _modalOpen=false;
 }
-async function loadForms(p){const grid=document.getElementById('formsGrid');if(!grid)return;const results=await Promise.all(p.forms.map(async f=>{try{const pk=await fetch(f.url).then(r=>r.json());const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;const shinyImg=pk.sprites.other['official-artwork']?.front_shiny||pk.sprites.front_shiny||null;const label=getFormLabel(f.name,p.forms.find(x=>x.isDefault)?.name||p.nameEn)||'기본 폼';return{name:f.name,label,img,shinyImg,isDefault:f.isDefault};}catch(e){return null;}}));grid.innerHTML='';results.filter(Boolean).forEach(f=>{const card=document.createElement('div');card.className='form-card'+(f.isDefault?' active-form':'');card.innerHTML=`<img src="${f.img||''}" alt="${f.label}"/><div class="form-card-name">${f.label}</div>`;card.onclick=()=>{
+async function loadForms(p){const grid=document.getElementById('formsGrid');if(!grid)return;const results=await Promise.all(p.forms.map(async f=>{try{const pk=await fetch(f.url).then(r=>r.json());const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;const shinyImg=pk.sprites.other['official-artwork']?.front_shiny||pk.sprites.front_shiny||null;const defaultFormName=p.forms.find(x=>x.isDefault)?.name||p.nameEn;const label=f.isDefault?p.name:(getFormLabel(f.name,defaultFormName)||f.name.replace(defaultFormName+'-','').replace(/-/g,' '));return{name:f.name,label,img,shinyImg,isDefault:f.isDefault};}catch(e){return null;}}));grid.innerHTML='';results.filter(Boolean).forEach(f=>{const card=document.createElement('div');card.className='form-card'+(f.isDefault?' active-form':'');card.innerHTML=`${f.img?`<img src="${f.img}" alt="${f.label}" style="width:58px;height:58px;image-rendering:pixelated"/>`:`<div style="width:58px;height:58px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.5rem">?</div>`}<div class="form-card-name">${f.label}</div>`;card.onclick=()=>{
     // window 공유 변수 사용 → 스코프 문제 해결
     window._currentFormNormal=f.img||p.image;
     window._currentFormShiny=f.shinyImg||null;
@@ -1204,16 +1944,44 @@ async function loadForms(p){const grid=document.getElementById('formsGrid');if(!
     grid.querySelectorAll('.form-card').forEach(c=>c.classList.remove('active-form'));
     card.classList.add('active-form');
   };grid.appendChild(card);});}
-function renderEvoChain(steps,currentId){const area=document.getElementById('evoChainArea');if(!area)return;if(steps.length<=1){area.innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">단일 진화</div>';return;}let html='<div class="evo-chain">';steps.forEach((s,i)=>{if(i>0)html+=`<div class="evo-arrow"><span>→</span><span class="evo-method">${s.methods?.[0]||''}</span></div>`;const isCurrent=s.id===currentId;html+=`<div class="evo-step${isCurrent?' current':''}" onclick="openModalById(${s.id})"><div class="evo-img-wrap">${s.img?`<img class="evo-img" src="${s.img}" loading="lazy"/>`:'<div style="width:42px;height:42px"></div>'}</div><div class="evo-name">${s.name}</div><div class="evo-num">No.${String(s.id).padStart(4,'0')}</div></div>`;});html+='</div>';area.innerHTML=html;}
-function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function renderEvoChain(steps,currentId){
+  const area=document.getElementById('evoChainArea');if(!area)return;
+  if(steps.length<=1){area.innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">단일 진화</div>';return;}
+  // steps는 walk()로 쌓인 배열 - depth 정보 없음
+  // 첫 번째가 기본종, 이후는 진화형들
+  // 선형 표시: 단순 체인처럼 렌더 (분기는 여러 줄로)
+  let html='<div class="evo-chain" style="flex-wrap:wrap;justify-content:center;gap:.5rem;">';
+  steps.forEach((s,i)=>{
+    if(i>0)html+=`<div class="evo-arrow"><span>→</span><span class="evo-method">${s.methods?.[0]||''}</span></div>`;
+    const isCurrent=s.id===currentId;
+    html+=`<div class="evo-step${isCurrent?' current':''}" onclick="openModalById(${s.id})" style="cursor:pointer">
+      <div class="evo-img-wrap">${s.img?`<img class="evo-img" src="${s.img}" loading="lazy" alt="${s.name}"/>`:'<div style="width:42px;height:42px"></div>'}</div>
+      <div class="evo-name">${s.name}</div>
+      <div class="evo-num">No.${String(s.id).padStart(4,'0')}</div>
+    </div>`;
+  });
+  html+='</div>';
+  area.innerHTML=html;
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';document.body.style.top='';_modalOpen=false;}
 function closeModalOnBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+// 모바일 뒤로가기 버튼으로 모달 닫기
+window.addEventListener('popstate',()=>{
+  if(document.getElementById('modalOverlay').classList.contains('open')){closeModal();}
+});
+const _pushState=history.pushState.bind(history);
+document.getElementById('modalOverlay').addEventListener('transitionend',e=>{
+  if(e.propertyName==='opacity'&&document.getElementById('modalOverlay').classList.contains('open')){
+    history.pushState({modal:true},'');
+  }
+});
 let selectedDiff=null;
 function selectDiff(diff,el){selectedDiff=diff;document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');document.getElementById('diffStartBtn').classList.add('show');}
 function startQuiz(){if(!selectedDiff)return;currentDiff=selectedDiff;buildQuiz(currentDiff);}
 const EXTRA_NAMES=['이상해씨','리자몽','거북왕','피카츄','파이리','꼬부기','잠만보','뮤츠','마자용','한카리아스','루카리오','가브리아스','레쿠쟈','다크라이','아르세우스','조로아크','게노세크트','제르네아스','이벨타르','지가르데','솔가레오','루나아라','네크로즈마','마기아나','마샤도','자시안','자마젠타','코라이돈','미라이돈'];
-function buildQuiz(diff){quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];const allNames=pokemonData.map(p=>p.name);const pool=EXTRA_NAMES.filter(n=>!allNames.includes(n));pokemonData.forEach((p,i)=>{const others=pokemonData.filter((_,j)=>j!==i).map(o=>o.name);const fill=shuffle([...pool]).slice(0,Math.max(0,3-others.length));const namePool=shuffle([...others,...fill]);const wrongTypes=shuffle(Object.keys(TYPE_KO).filter(t=>!p.types.includes(t))).slice(0,3);const genInfo=GEN_INFO[p.generation]||{name:'알 수 없음'};if(diff==='easy'){quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`${p.genus} 포켓몬이에요.\n${p.desc.slice(0,60)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`키 ${p.height}m, 무게 ${p.weight}kg`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});}else if(diff==='normal'){quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`힌트: ${p.desc.slice(0,50)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${p.genus} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);if(wrongGens.length>=3)quizQuestions.push({type:'gen',pokemon:p,question:`${p.name}가 처음 등장한 세대는?`,hint:`타입: ${p.types.map(t=>TYPE_KO[t]).join(' / ')}`,answer:genInfo.name,options:shuffle([genInfo.name,...wrongGens])});const hOpts=[p.height];while(hOpts.length<4){const v=+(Math.random()*3.5+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:`${p.genus} 포켓몬`,answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});}else{quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`포획률: ${p.captureRate??'?'}`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${genInfo.name} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);if(wrongGens.length>=3)quizQuestions.push({type:'gen',pokemon:p,question:`${p.name}가 처음 등장한 세대는?`,hint:`타입: ${p.types.map(t=>TYPE_KO[t]).join(' / ')}`,answer:genInfo.name,options:shuffle([genInfo.name,...wrongGens])});const hOpts=[p.height];while(hOpts.length<4){const v=+(Math.random()*4+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:'신중하게 고르세요!',answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});const wOpts=[p.weight];while(wOpts.length<4){const v=+(Math.random()*200+0.5).toFixed(1);if(!wOpts.includes(v))wOpts.push(v);}quizQuestions.push({type:'weight',pokemon:p,question:`${p.name}의 무게는?`,hint:'소수점까지 정확히!',answer:`${p.weight}kg`,options:shuffle(wOpts.map(v=>`${v}kg`))});const hpVal=p.stats[0].value;const hpOpts=[hpVal];while(hpOpts.length<4){const v=Math.floor(Math.random()*200)+1;if(!hpOpts.includes(v))hpOpts.push(v);}quizQuestions.push({type:'stat',pokemon:p,question:`${p.name}의 기본 HP 수치는?`,hint:'종족값을 맞혀보세요.',answer:String(hpVal),options:shuffle(hpOpts.map(String))});quizQuestions.push({type:'desc',pokemon:p,question:'이 도감 설명의 포켓몬은?',hint:p.desc.slice(0,80)+'…',answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});}});const maxQ={easy:6,normal:9,hard:12}[diff]||9;quizQuestions=shuffle(quizQuestions).slice(0,maxQ);document.getElementById('quiz-difficulty').style.display='none';document.getElementById('quiz-content').style.display='block';renderProgressDots();renderQuestion();}
-function renderProgressDots(){document.getElementById('progressDots').innerHTML=quizQuestions.map((_,i)=>{let c='dot';if(i<quizIdx)c+=quizAnswered[i]?' done':' wrong';else if(i===quizIdx)c+=' active';return`<div class="${c}"></div>`;}).join('');document.getElementById('scoreDisplay').textContent=`${quizScore} / ${quizIdx}`;}
+function buildQuiz(diff){quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];const allNames=pokemonData.map(p=>p.name);const pool=EXTRA_NAMES.filter(n=>!allNames.includes(n));pokemonData.forEach((p,i)=>{const others=pokemonData.filter((_,j)=>j!==i).map(o=>o.name);const fill=shuffle([...pool]);while(fill.length<3)fill.push(fill[fill.length-1]||'???');const fillSlice=fill.slice(0,Math.max(0,3-others.length));const namePool=shuffle([...others,...fillSlice]);const wrongTypes=shuffle(Object.keys(TYPE_KO).filter(t=>!p.types.includes(t))).slice(0,3);const genInfo=GEN_INFO[p.generation]||{name:'알 수 없음'};if(diff==='easy'){quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`${p.genus} 포켓몬이에요.\n${p.desc.slice(0,60)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`키 ${p.height}m, 무게 ${p.weight}kg`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});}else if(diff==='normal'){quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`힌트: ${p.desc.slice(0,50)}…`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${p.genus} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);if(wrongGens.length>=3)quizQuestions.push({type:'gen',pokemon:p,question:`${p.name}가 처음 등장한 세대는?`,hint:`타입: ${p.types.map(t=>TYPE_KO[t]).join(' / ')}`,answer:genInfo.name,options:shuffle([genInfo.name,...wrongGens])});const hOpts=[p.height];while(hOpts.length<4){const v=+(Math.random()*3.5+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:`${p.genus} 포켓몬`,answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});}else{quizQuestions.push({type:'silhouette',pokemon:p,question:'이 포켓몬의 이름은?',hint:`포획률: ${p.captureRate??'?'}`,answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});quizQuestions.push({type:'type',pokemon:p,question:`${p.name}의 주요 타입은?`,hint:`${genInfo.name} 포켓몬`,answer:TYPE_KO[p.types[0]],options:shuffle([TYPE_KO[p.types[0]],...wrongTypes.map(t=>TYPE_KO[t])])});const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==genInfo.name)).slice(0,3);if(wrongGens.length>=3)quizQuestions.push({type:'gen',pokemon:p,question:`${p.name}가 처음 등장한 세대는?`,hint:`타입: ${p.types.map(t=>TYPE_KO[t]).join(' / ')}`,answer:genInfo.name,options:shuffle([genInfo.name,...wrongGens])});const hOpts=[p.height];while(hOpts.length<4){const v=+(Math.random()*4+0.1).toFixed(1);if(!hOpts.includes(v))hOpts.push(v);}quizQuestions.push({type:'height',pokemon:p,question:`${p.name}의 키는?`,hint:'신중하게 고르세요!',answer:`${p.height}m`,options:shuffle(hOpts.map(v=>`${v}m`))});const wOpts=[p.weight];while(wOpts.length<4){const v=+(Math.random()*200+0.5).toFixed(1);if(!wOpts.includes(v))wOpts.push(v);}quizQuestions.push({type:'weight',pokemon:p,question:`${p.name}의 무게는?`,hint:'소수점까지 정확히!',answer:`${p.weight}kg`,options:shuffle(wOpts.map(v=>`${v}kg`))});const hpVal=p.stats[0].value;const hpOpts=[hpVal];while(hpOpts.length<4){const v=Math.floor(Math.random()*200)+1;if(!hpOpts.includes(v))hpOpts.push(v);}quizQuestions.push({type:'stat',pokemon:p,question:`${p.name}의 기본 HP 수치는?`,hint:'종족값을 맞혀보세요.',answer:String(hpVal),options:shuffle(hpOpts.map(String))});quizQuestions.push({type:'desc',pokemon:p,question:'이 도감 설명의 포켓몬은?',hint:p.desc.slice(0,80)+'…',answer:p.name,options:shuffle([p.name,namePool[0],namePool[1],namePool[2]])});}});const perPoke={easy:2,normal:3,hard:4}[diff]||3;const maxQ=pokemonData.length*perPoke;quizQuestions=shuffle(quizQuestions).slice(0,maxQ);document.getElementById('quiz-difficulty').style.display='none';document.getElementById('quiz-content').style.display='block';renderProgressDots();renderQuestion();}
+function renderProgressDots(){document.getElementById('progressDots').innerHTML=quizQuestions.map((_,i)=>{let c='dot';if(i<quizIdx)c+=quizAnswered[i]?' done':' wrong';else if(i===quizIdx)c+=' active';return`<div class="${c}"></div>`;}).join('');document.getElementById('scoreDisplay').textContent=quizIdx===0?`0 / ${quizQuestions.length}`:`${quizScore} / ${quizIdx}`;}
 
 /* ✅ 핵심 수정: innerHTML 내 onclick 문자열 대신 DOM으로 버튼 생성 */
 function renderQuestion(){
@@ -1227,7 +1995,7 @@ function renderQuestion(){
     <div class="quiz-type-label">${labels[q.type]||'퀴즈'}</div>
     <div class="quiz-image-wrap"><img id="quizImg" class="quiz-pokemon-img${hidden?' hidden':''}" src="${q.pokemon.image}" alt="?"/></div>
     <div class="quiz-question">${q.question}</div>
-    <div class="quiz-hint">${q.hint}</div>
+    <div class="quiz-hint">${q.hint.replace(/\n/g,'<br>')}</div>
     <div class="options-grid" id="optionsGrid"></div>
     <div class="quiz-feedback" id="quizFeedback"></div>
     <button class="next-btn" id="nextBtn" onclick="nextQuestion()">${quizIdx<quizQuestions.length-1?'다음 문제 →':'결과 보기 →'}</button>
@@ -1357,7 +2125,7 @@ window.retryWrong = function(wrongList){ buildRetryQuiz(wrongList); showTab('qui
 function backToDiffSelect(){document.getElementById('quiz-content').style.display='none';document.getElementById('quiz-difficulty').style.display='block';document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));document.getElementById('diffStartBtn').classList.remove('show');selectedDiff=null;}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function showTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met'][i]===tab));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['dex','ndex','quiz','met','social','settings'][i]===tab));if(tab==='social'&&window.initSocialPage)window.initSocialPage();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab+'-page').classList.add('active');
   if(tab==='ndex')initNdex();
