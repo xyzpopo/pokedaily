@@ -530,10 +530,9 @@ body.light-mode .profile-hero{background:var(--card);}
     <div class="pokeball-icon"></div>
     <h1>포켓몬 데일리 도감</h1>
   </div>
-  <div class="user-badge" id="userBadge" style="display:none">
+  <div class="user-badge" id="userBadge" style="display:none;cursor:pointer" onclick="showTab('social')">
+    <span id="headerAvatar" style="font-size:1.2rem;line-height:1">🎒</span>
     <span class="user-name" id="userNameDisplay"></span>
-    <button class="logout-btn" onclick="showTab('settings')" style="background:transparent;border-color:rgba(255,203,5,.25)">⚙️</button>
-    <button class="logout-btn" onclick="doLogout()">로그아웃</button>
   </div>
   <div class="date-badge" id="dateDisplay" style="display:none"></div>
 </header>
@@ -543,7 +542,6 @@ body.light-mode .profile-hero{background:var(--card);}
   <button class="tab-btn" onclick="showTab('quiz')">⚡ 퀴즈</button>
   <button class="tab-btn" onclick="showTab('met')">👾 만난 포켓몬</button>
   <button class="tab-btn" onclick="showTab('social')" id="tabSocial">👥 소셜<span class="tab-badge" id="friendReqBadge" style="display:none">0</span></button>
-  <button class="tab-btn" onclick="showTab('settings')">⚙️ 설정</button>
 </div>
 <main>
   <div id="dex-page" class="page active">
@@ -680,6 +678,13 @@ body.light-mode .profile-hero{background:var(--card);}
     </div>
 
     <div class="settings-group">
+      <div class="settings-group-title">👤 계정</div>
+      <div class="settings-row">
+        <div><div class="settings-label">로그아웃</div><div class="settings-desc">현재 계정에서 로그아웃해요</div></div>
+        <button class="met-clear-btn" style="color:#ff6b6b;border-color:#ff6b6b" onclick="doLogout()">로그아웃</button>
+      </div>
+    </div>
+    <div class="settings-group">
       <div class="settings-group-title">🗑️ 데이터</div>
       <div class="settings-row">
         <div><div class="settings-label">만난 포켓몬 초기화</div><div class="settings-desc">기록이 모두 삭제돼요</div></div>
@@ -704,7 +709,10 @@ body.light-mode .profile-hero{background:var(--card);}
         <div class="profile-stat"><div class="profile-stat-val" id="ps-friends">0</div><div class="profile-stat-label">친구</div></div>
         <div class="profile-stat"><div class="profile-stat-val" id="ps-quiz">0</div><div class="profile-stat-label">퀴즈 기록</div></div>
       </div>
-      <button class="profile-save-btn" id="profileEditToggle" onclick="startEditProfile()" style="margin-top:.2rem;font-size:.72rem;padding:.38rem .85rem;">✏️ 프로필 편집</button>
+      <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.2rem">
+        <button class="profile-save-btn" id="profileEditToggle" onclick="startEditProfile()" style="font-size:.72rem;padding:.38rem .85rem;">✏️ 프로필 편집</button>
+        <button class="profile-save-btn" onclick="document.getElementById('settings-page').classList.add('active');document.querySelectorAll('.page').forEach(p=>p!==document.getElementById('settings-page')&&p.classList.remove('active'));initSettingsUI();" style="font-size:.72rem;padding:.38rem .85rem;background:transparent;border:1px solid var(--border);color:var(--muted);">⚙️ 설정</button>
+      </div>
     </div>
     <!-- 편집 패널 (숨김) -->
     <div id="profileEditPanel" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.1rem;margin-bottom:1rem;">
@@ -883,12 +891,14 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = { uid: user.uid, nickname };
     window._currentUser = currentUser;
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('userNameDisplay').textContent = '🎒 ' + nickname + ' 트레이너';
+    document.getElementById('userNameDisplay').textContent = nickname + ' 트레이너';
+    document.getElementById('headerAvatar').textContent = snap.exists() ? (snap.data().avatar || '🎒') : '🎒';
     document.getElementById('userBadge').style.display = 'flex';
     document.getElementById('dateDisplay').style.display = 'block';
     const btn = document.getElementById('loginActionBtn');
     btn.textContent = '🎮 로그인'; btn.disabled = false;
     await loadSettingsFromServer();
+    await getMetList(); // met 캐시 초기화
     renderMetPage();
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
@@ -906,23 +916,28 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 /* ===== 만난 포켓몬 (Firestore) ===== */
+let _metIdSet = new Set(); // 로컬 캐시
+
 async function getMetList() {
   if (!currentUser) return [];
   const snap = await getDoc(doc(db, 'users', currentUser.uid));
-  return snap.exists() ? (snap.data().met || []) : [];
+  const list = snap.exists() ? (snap.data().met || []) : [];
+  _metIdSet = new Set(list.map(m => m.id)); // 캐시 갱신
+  return list;
 }
 
-async function isMetPokemon(id) {
-  const list = await getMetList();
-  return list.some(m => m.id === id);
+function isMetPokemon(id) {
+  return _metIdSet.has(id); // 동기 체크, Firestore 호출 없음
 }
 
 async function markMet(pokemon) {
   if (!currentUser) return;
+  if (_metIdSet.has(pokemon.id)) return; // 이미 있으면 스킵
   const list = await getMetList();
   if (list.some(m => m.id === pokemon.id)) return;
   const d = new Date();
   list.unshift({ id: pokemon.id, name: pokemon.name, image: pokemon.image, types: pokemon.types, date: `${d.getMonth()+1}/${d.getDate()}` });
+  _metIdSet.add(pokemon.id);
   await updateDoc(doc(db, 'users', currentUser.uid), { met: list });
   renderMetPage();
 }
@@ -930,6 +945,7 @@ async function markMet(pokemon) {
 async function unmarkMet(id) {
   if (!currentUser) return;
   const list = await getMetList();
+  _metIdSet.delete(id);
   await updateDoc(doc(db, 'users', currentUser.uid), { met: list.filter(m => m.id !== id) });
   renderMetPage();
 }
@@ -1063,17 +1079,17 @@ window.markMet = markMet;
 async function injectMetButton(p) {
   const existing = document.getElementById('metModalBtn');
   if (existing) existing.remove();
-  const met = await isMetPokemon(p.id);
+  const met = isMetPokemon(p.id);
   const btn = document.createElement('button');
   btn.id = 'metModalBtn';
   btn.className = 'met-modal-btn' + (met ? ' met-active' : '');
   btn.innerHTML = met ? '✅ 만났어요!' : '👋 만났어요!';
   btn.onclick = async (e) => {
     e.stopPropagation();
-    const nowMet = await isMetPokemon(p.id);
+    const nowMet = isMetPokemon(p.id);
     if (nowMet) { await unmarkMet(p.id); }
     else { await markMet(p); }
-    const after = await isMetPokemon(p.id);
+    const after = isMetPokemon(p.id);
     btn.className = 'met-modal-btn' + (after ? ' met-active' : '');
     btn.innerHTML = after ? '✅ 만났어요!' : '👋 만났어요!';
   };
@@ -1263,7 +1279,8 @@ window.saveProfile = async function() {
     if (_myProfile) { _myProfile.nickname = nn; _myProfile.bio = bio; _myProfile.avatar = avatar; delete _myProfile._pendingAvatar; }
     currentUser.nickname = nn;
     window._currentUser = currentUser;
-    document.getElementById('userNameDisplay').textContent = '🎒 ' + nn + ' 트레이너';
+    document.getElementById('userNameDisplay').textContent = nn + ' 트레이너';
+    document.getElementById('headerAvatar').textContent = avatar;
     renderMyProfile();
     window.cancelEditProfile();
     // 닉네임 변경을 친구들에게도 반영 (denormalized cache 업데이트)
@@ -1384,10 +1401,17 @@ window.searchFriend = async function() {
   resultEl.textContent = '';
 
   try {
-    // username → uid 매핑 (usernames 컬렉션)
-    const snap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchInput)));
-    if (snap.empty) { resultEl.style.color='#ff6b6b'; resultEl.textContent='해당 아이디의 트레이너를 찾을 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
-    const targetUid = snap.docs[0].id;
+    // 1차: usernames 컬렉션에서 username 필드로 검색
+    let targetUid = null;
+    const unameSnap = await getDocs(query(collection(db, 'usernames'), where('username', '==', searchInput)));
+    if (!unameSnap.empty) {
+      targetUid = unameSnap.docs[0].id;
+    } else {
+      // 2차: users 컬렉션에서 username 필드로 fallback 검색
+      const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', searchInput)));
+      if (!usersSnap.empty) targetUid = usersSnap.docs[0].id;
+    }
+    if (!targetUid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='해당 아이디의 트레이너를 찾을 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
     if (targetUid === currentUser.uid) { resultEl.style.color='#ff6b6b'; resultEl.textContent='자기 자신에게는 친구 요청을 보낼 수 없어요.'; btn.disabled=false; btn.textContent='검색'; return; }
     if (_friends.includes(targetUid)) { resultEl.style.color='#ff6b6b'; resultEl.textContent='이미 친구예요!'; btn.disabled=false; btn.textContent='검색'; return; }
 
