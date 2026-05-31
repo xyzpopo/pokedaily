@@ -515,13 +515,13 @@ body.light-mode .profile-hero{background:var(--card);}
     <div class="login-logo"><div class="pokeball-icon"></div><h2>포켓몬 데일리 도감</h2></div>
     <p class="login-sub">트레이너 로그인이 필요해요</p>
     <div class="login-tab-row">
-      <button class="login-tab active" id="tabLoginBtn" onclick="switchLoginMode('login')">로그인</button>
-      <button class="login-tab" id="tabSignupBtn" onclick="switchLoginMode('signup')">회원가입</button>
+      <button class="login-tab active" id="tabLoginBtn">로그인</button>
+      <button class="login-tab" id="tabSignupBtn">회원가입</button>
     </div>
-    <div class="login-field"><label>트레이너 아이디</label><input type="text" id="loginId" placeholder="아이디 입력" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-    <div class="login-field"><label>비밀번호</label><input type="password" id="loginPw" placeholder="비밀번호 입력" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-    <div class="login-field" id="loginPwConfirmWrap" style="display:none"><label>비밀번호 확인</label><input type="password" id="loginPwConfirm" placeholder="비밀번호 재입력" autocomplete="new-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-    <button class="login-btn" id="loginActionBtn" onclick="doLogin()">🎮 로그인</button>
+    <div class="login-field"><label>트레이너 아이디</label><input type="text" id="loginId" placeholder="아이디 입력" autocomplete="username"/></div>
+    <div class="login-field"><label>비밀번호</label><input type="password" id="loginPw" placeholder="비밀번호 입력" autocomplete="current-password"/></div>
+    <div class="login-field" id="loginPwConfirmWrap" style="display:none"><label>비밀번호 확인</label><input type="password" id="loginPwConfirm" placeholder="비밀번호 재입력" autocomplete="new-password"/></div>
+    <button class="login-btn" id="loginActionBtn">🎮 로그인</button>
     <div class="login-err" id="loginErr"></div>
   </div>
 </div>
@@ -1663,6 +1663,14 @@ function showSocialToast(msg) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2200);
 }
+
+// 로그인 화면 버튼 이벤트 - 모듈 로드 후 직접 연결
+document.getElementById('tabLoginBtn').addEventListener('click', () => switchLoginMode('login'));
+document.getElementById('tabSignupBtn').addEventListener('click', () => switchLoginMode('signup'));
+document.getElementById('loginActionBtn').addEventListener('click', doLogin);
+document.getElementById('loginId').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('loginPw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('loginPwConfirm').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 </script>
 <script>
 // Firebase 모듈에서 전역 노출된 함수 사용
