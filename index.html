@@ -798,7 +798,7 @@ body.light-mode .profile-hero{background:var(--card);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, addDoc, onSnapshot, getDocs, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, addDoc, onSnapshot, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Firestore 복합 인덱스 필요:
 // chats 컬렉션: participants (Array) ASC + lastTs (Timestamp) DESC
@@ -838,7 +838,7 @@ window.doLogin = async function() {
   if (!id || !pw) { err.textContent = '아이디와 비밀번호를 입력해주세요.'; return; }
 
   // Firebase Auth는 이메일 형식 필요 → 내부적으로 @pkdex.com 붙임
-  const email = id + '@pkdex.com';
+  const email = id.toLowerCase() + '@pkdex.com';
   const btn = document.getElementById('loginActionBtn');
   btn.textContent = '...'; btn.disabled = true;
 
@@ -850,24 +850,27 @@ window.doLogin = async function() {
       if (pw.length < 6) { err.textContent = '비밀번호는 6자 이상이어야 해요.'; btn.textContent='✨ 회원가입'; btn.disabled=false; return; }
       const cred = await createUserWithEmailAndPassword(auth, email, pw);
       // Firestore에 유저 닉네임 + 만난 포켓몬 초기화
-      await setDoc(doc(db, 'users', cred.user.uid), { nickname: id, met: [], avatar: '🎒', bio: '', friends: [], friendRequests: [], friendsData: {} });
-      // username → uid 역인덱스 (친구 검색용)
-      await setDoc(doc(db, 'usernames', cred.user.uid), { username: id.toLowerCase() });
-      err.style.color = '#4ade80'; err.textContent = '가입 완료! 로그인할게요.'; setTimeout(()=>switchLoginMode('login'), 1200);
+      try {
+        await setDoc(doc(db, 'users', cred.user.uid), { nickname: id, username: id.toLowerCase(), met: [], avatar: '🎒', bio: '', friends: [], friendRequests: [], friendsData: {} });
+        await setDoc(doc(db, 'usernames', cred.user.uid), { username: id.toLowerCase() });
+      } catch(dbErr) { console.warn('Firestore init warn:', dbErr); }
+      err.style.color = '#4ade80'; err.textContent = '가입 완료!';
     } else {
       await signInWithEmailAndPassword(auth, email, pw);
     }
   } catch(e) {
     btn.textContent = loginMode==='login' ? '🎮 로그인' : '✨ 회원가입';
     btn.disabled = false;
-    if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
+    if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' || e.code === 'auth/invalid-login-credentials') {
       err.textContent = '아이디 또는 비밀번호가 틀렸어요.';
+    } else if (e.code === 'auth/invalid-email') {
+      err.textContent = '아이디에 사용할 수 없는 문자가 포함돼 있어요. (영문/숫자/._- 사용 권장)';
     } else if (e.code === 'auth/email-already-in-use') {
       err.textContent = '이미 사용 중인 아이디예요.';
     } else if (e.code === 'auth/weak-password') {
       err.textContent = '비밀번호는 6자 이상이어야 해요.';
     } else {
-      err.textContent = '오류가 발생했어요: ' + e.code;
+      err.textContent = '오류: ' + (e.code || e.message || String(e));
     }
   }
 };
@@ -1211,6 +1214,7 @@ async function loadMyProfile() {
   // uid = 아이디로 저장된 값
   const idSnap = await getDoc(doc(db, 'usernames', currentUser.uid));
   if (idSnap.exists()) _myProfile.uid = idSnap.data().username || _myProfile.uid;
+  else if (d.username) _myProfile.uid = d.username; // users doc fallback
   renderMyProfile();
 }
 
@@ -1532,10 +1536,7 @@ function escapeHtml(str) {
 }
 
 async function markChatRead(roomId) {
-  try {
-      // 읽지 않은 메시지 카운트를 0으로
-    await updateDoc(doc(db, 'chats', roomId), { ['unread_' + currentUser.uid]: 0 }).catch(()=>{});
-  } catch(e) {}
+  try { await updateDoc(doc(db, 'chats', roomId), { ['unread_' + currentUser.uid]: 0 }); } catch(e) {}
 }
 
 window.sendMessage = async function() {
@@ -1579,8 +1580,15 @@ async function loadDmList() {
 
   try {
     const chatsRef = collection(db, 'chats');
-    const q = query(chatsRef, where('participants', 'array-contains', currentUser.uid), orderBy('lastTs', 'desc'));
-    const snap = await getDocs(q);
+    let snap;
+    try {
+      const q = query(chatsRef, where('participants', 'array-contains', currentUser.uid), orderBy('lastTs', 'desc'));
+      snap = await getDocs(q);
+    } catch(indexErr) {
+      // 복합 인덱스 없을 때 fallback: orderBy 없이 조회 후 JS 정렬
+      const q2 = query(chatsRef, where('participants', 'array-contains', currentUser.uid));
+      snap = await getDocs(q2);
+    }
     if (snap.empty) { dmList.innerHTML = '<div class="chat-empty">👥<br>친구와 대화를 시작해보세요!</div>'; updateMsgBadge(0); return; }
 
     const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
