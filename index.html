@@ -500,12 +500,36 @@ main{position:relative;z-index:5;padding:1.25rem 1rem;max-width:1200px;margin:0 
 .dm-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0;}
 .dm-time{font-size:.62rem;color:var(--muted);}
 .dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.6rem;border-radius:20px;padding:.05rem .4rem;}
+/* 친구 추가 서브탭 */
+.add-friend-subtabs{display:flex;gap:0;margin-bottom:.75rem;border-bottom:1px solid var(--border);}
+.add-friend-subtab{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);background:transparent;border:none;padding:.55rem .95rem;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
+.add-friend-subtab.active{color:var(--accent);}
+.add-friend-subtab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);}
+/* 친구 코드 표시 박스 */
+.friend-code-display{display:flex;align-items:center;gap:.55rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem .9rem;margin-bottom:.6rem;}
+.friend-code-val{font-family:'Galmuri11',monospace;font-size:1.1rem;color:var(--accent);flex:1;letter-spacing:.08em;}
+.friend-code-copy-btn{font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.25rem .55rem;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.friend-code-copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+.friend-code-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem;}
+.friend-code-action-btn{font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.3rem .65rem;border-radius:8px;cursor:pointer;transition:all .15s;}
+.friend-code-action-btn:hover{border-color:var(--accent);color:var(--accent);}
+.friend-code-action-btn.primary{background:rgba(255,203,5,.1);border-color:rgba(255,203,5,.4);color:var(--accent);}
+.friend-code-issue-msg{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);text-align:center;padding:.5rem 0;}
+/* 커스텀 코드 입력 */
+.custom-code-wrap{display:flex;gap:.4rem;align-items:center;margin-top:.45rem;}
+.custom-code-prefix{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);flex-shrink:0;}
+.custom-code-inp{flex:1;font-family:'Galmuri11',monospace;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .65rem;color:var(--text);outline:none;min-width:0;}
+.custom-code-inp:focus{border-color:var(--accent);}
+/* 설정 - 친구 코드 */
+.my-code-setting-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.75rem 1rem;}
 /* light mode */
 body.light-mode .friend-row{background:var(--card);}
 body.light-mode .add-friend-box{background:var(--card);}
 body.light-mode .dm-row{background:var(--card);}
 body.light-mode .chat-bubble.them{background:var(--surface);}
 body.light-mode .profile-hero{background:var(--card);}
+body.light-mode .friend-code-display{background:var(--surface);}
+body.light-mode .my-code-setting-box{background:var(--surface);}
 </style>
 </head>
 <body>
@@ -678,6 +702,38 @@ body.light-mode .profile-hero{background:var(--card);}
     </div>
 
     <div class="settings-group">
+      <div class="settings-group-title">🔑 친구 코드</div>
+      <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:.65rem;">
+        <div><div class="settings-label">내 친구 코드</div><div class="settings-desc">친구 코드로 나를 찾을 수 있어요. 발급 후 친구에게 알려주세요.</div></div>
+        <div id="myFriendCodeWrap" style="width:100%">
+          <div id="myFriendCodeLoading" class="friend-code-issue-msg">불러오는 중...</div>
+          <div id="myFriendCodeContent" style="display:none">
+            <div class="friend-code-display">
+              <span class="friend-code-val" id="myFriendCodeVal"></span>
+              <button class="friend-code-copy-btn" onclick="copyMyFriendCode()">복사</button>
+            </div>
+            <div class="friend-code-actions">
+              <button class="friend-code-action-btn" onclick="toggleCustomCodeInput()">✏️ 커스텀 코드</button>
+              <button class="friend-code-action-btn" onclick="reissueMyFriendCode()">🔄 재발급</button>
+            </div>
+            <div id="customCodeInputWrap" style="display:none">
+              <div class="custom-code-wrap">
+                <span class="custom-code-prefix">#</span>
+                <input class="custom-code-inp" id="customCodeInp" placeholder="영문·숫자 4~10자" maxlength="10" onkeydown="if(event.key==='Enter')saveCustomCode()"/>
+                <button class="add-friend-btn" style="padding:.4rem .75rem;font-size:.68rem" onclick="saveCustomCode()">저장</button>
+              </div>
+              <div style="font-size:.65rem;color:var(--muted);margin-top:.3rem;font-family:'Galmuri11',monospace">영문 소문자·숫자만 사용 가능 (4~10자)</div>
+            </div>
+          </div>
+          <div id="myFriendCodeNone" style="display:none">
+            <div class="friend-code-issue-msg" style="text-align:left;padding:.3rem 0;margin-bottom:.5rem;">아직 친구 코드가 없어요.</div>
+            <button class="friend-code-action-btn primary" onclick="issueMyFriendCode()">🎟️ 친구 코드 발급</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
       <div class="settings-group-title">👤 계정</div>
       <div class="settings-row">
         <div><div class="settings-label">로그아웃</div><div class="settings-desc">현재 계정에서 로그아웃해요</div></div>
@@ -749,10 +805,24 @@ body.light-mode .profile-hero{background:var(--card);}
     <div id="socialFriendsPanel">
       <!-- 친구 추가 -->
       <div class="add-friend-box">
-        <div class="add-friend-title">👥 친구 추가 (아이디로 검색)</div>
-        <div class="add-friend-row">
-          <input class="add-friend-inp" id="addFriendInp" placeholder="상대방 아이디 입력" onkeydown="if(event.key==='Enter')searchFriend()"/>
-          <button class="add-friend-btn" id="addFriendBtn" onclick="searchFriend()">검색</button>
+        <div class="add-friend-title">👥 친구 추가</div>
+        <div class="add-friend-subtabs">
+          <button class="add-friend-subtab active" id="afTab-id" onclick="switchAddFriendTab('id')">아이디</button>
+          <button class="add-friend-subtab" id="afTab-code" onclick="switchAddFriendTab('code')">친구 코드</button>
+        </div>
+        <!-- 아이디 탭 -->
+        <div id="afPanel-id">
+          <div class="add-friend-row">
+            <input class="add-friend-inp" id="addFriendInp" placeholder="상대방 아이디 입력" onkeydown="if(event.key==='Enter')searchFriend()"/>
+            <button class="add-friend-btn" id="addFriendBtn" onclick="searchFriend()">검색</button>
+          </div>
+        </div>
+        <!-- 친구 코드 탭 -->
+        <div id="afPanel-code" style="display:none">
+          <div class="add-friend-row">
+            <input class="add-friend-inp" id="addFriendCodeInp" placeholder="#123456 형식으로 입력" onkeydown="if(event.key==='Enter')searchFriendByCode()"/>
+            <button class="add-friend-btn" id="addFriendCodeBtn" onclick="searchFriendByCode()">검색</button>
+          </div>
         </div>
         <div class="add-friend-result" id="addFriendResult"></div>
       </div>
@@ -1646,7 +1716,132 @@ function updateMsgBadge(count) {
   if (el) { el.textContent = count; el.style.display = count > 0 ? 'inline-block' : 'none'; }
 }
 
-// ---------- 소셜 페이지 탭 ----------
+// ---------- 친구 코드 ----------
+function generateRandomCode() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+async function getMyFriendCode() {
+  if (!currentUser) return null;
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  return snap.exists() ? (snap.data().friendCode || null) : null;
+}
+
+window.loadMyFriendCodeUI = async function() {
+  const loading = document.getElementById('myFriendCodeLoading');
+  const content = document.getElementById('myFriendCodeContent');
+  const none = document.getElementById('myFriendCodeNone');
+  if (!loading) return;
+  loading.style.display = 'block'; content.style.display = 'none'; none.style.display = 'none';
+  const code = await getMyFriendCode();
+  loading.style.display = 'none';
+  if (code) {
+    document.getElementById('myFriendCodeVal').textContent = '#' + code;
+    content.style.display = 'block';
+  } else {
+    none.style.display = 'block';
+  }
+};
+
+window.issueMyFriendCode = async function() {
+  if (!currentUser) return;
+  const code = generateRandomCode();
+  try {
+    // friendCode 중복 체크 (간단히 재시도)
+    const existing = await getDocs(query(collection(db, 'users'), where('friendCode', '==', code)));
+    const finalCode = existing.empty ? code : generateRandomCode() + Math.floor(Math.random()*10);
+    await updateDoc(doc(db, 'users', currentUser.uid), { friendCode: finalCode });
+    showSocialToast('친구 코드가 발급됐어요! 🎟️');
+    window.loadMyFriendCodeUI();
+  } catch(e) { showSocialToast('발급 실패: ' + e.message); }
+};
+
+window.reissueMyFriendCode = async function() {
+  if (!confirm('친구 코드를 재발급할까요?\n기존 코드로는 더 이상 검색할 수 없어요.')) return;
+  await window.issueMyFriendCode();
+};
+
+window.toggleCustomCodeInput = function() {
+  const wrap = document.getElementById('customCodeInputWrap');
+  if (!wrap) return;
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+  if (wrap.style.display === 'block') setTimeout(() => document.getElementById('customCodeInp')?.focus(), 50);
+};
+
+window.saveCustomCode = async function() {
+  if (!currentUser) return;
+  const inp = document.getElementById('customCodeInp');
+  const raw = (inp?.value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (raw.length < 4 || raw.length > 10) { showSocialToast('4~10자 영문 소문자·숫자만 가능해요'); return; }
+  try {
+    // 중복 체크
+    const existing = await getDocs(query(collection(db, 'users'), where('friendCode', '==', raw)));
+    const alreadyMine = !existing.empty && existing.docs[0].id === currentUser.uid;
+    if (!existing.empty && !alreadyMine) { showSocialToast('이미 사용 중인 코드예요'); return; }
+    await updateDoc(doc(db, 'users', currentUser.uid), { friendCode: raw });
+    showSocialToast('친구 코드가 변경됐어요 ✓');
+    document.getElementById('customCodeInputWrap').style.display = 'none';
+    inp.value = '';
+    window.loadMyFriendCodeUI();
+  } catch(e) { showSocialToast('저장 실패: ' + e.message); }
+};
+
+window.copyMyFriendCode = function() {
+  const val = document.getElementById('myFriendCodeVal')?.textContent || '';
+  if (!val) return;
+  navigator.clipboard?.writeText(val).then(() => showSocialToast('복사됐어요 ✓')).catch(() => showSocialToast('복사 실패'));
+};
+
+// 친구 코드로 검색
+window.searchFriendByCode = async function() {
+  const inp = document.getElementById('addFriendCodeInp');
+  const resultEl = document.getElementById('addFriendResult');
+  const btn = document.getElementById('addFriendCodeBtn');
+  let raw = (inp?.value || '').trim().toLowerCase();
+  if (raw.startsWith('#')) raw = raw.slice(1);
+  if (!raw) return;
+
+  btn.disabled = true; btn.textContent = '검색 중...';
+  resultEl.textContent = '';
+
+  try {
+    const snap = await getDocs(query(collection(db, 'users'), where('friendCode', '==', raw)));
+    if (snap.empty) {
+      resultEl.style.color = '#ff6b6b';
+      resultEl.textContent = '해당 친구 코드의 트레이너를 찾을 수 없어요.';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    const targetDoc = snap.docs[0];
+    const targetUid = targetDoc.id;
+    const tData = targetDoc.data();
+    const username = tData.username || '?';
+    if (targetUid === currentUser.uid) {
+      resultEl.style.color = '#ff6b6b'; resultEl.textContent = '자기 자신이에요!';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    if (_friends.includes(targetUid)) {
+      resultEl.style.color = '#ff6b6b'; resultEl.textContent = '이미 친구예요!';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    const sentReqs = tData.friendRequests || [];
+    if (sentReqs.includes(currentUser.uid)) {
+      resultEl.style.color = 'var(--muted)'; resultEl.textContent = '이미 친구 요청을 보냈어요.';
+      btn.disabled = false; btn.textContent = '검색'; return;
+    }
+    resultEl.innerHTML = `<div style="display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.6rem .85rem;margin-top:.3rem">
+      <div style="font-size:1.4rem">${tData.avatar||'🎒'}</div>
+      <div style="flex:1"><div style="font-family:'Galmuri11',monospace;font-size:.85rem;color:var(--text)">${tData.nickname||username}</div><div style="font-size:.65rem;color:var(--muted)">@${username} · #${raw}</div></div>
+      <button onclick="sendFriendRequest('${targetUid}','${username}')" style="font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .8rem;cursor:pointer;">친구 추가</button>
+    </div>`;
+    resultEl.style.color = '';
+  } catch(e) { resultEl.style.color='#ff6b6b'; resultEl.textContent='오류: '+e.message; }
+  btn.disabled = false; btn.textContent = '검색';
+};
+
+
 let _socialTab = 'friends';
 window.showSocialTab = function(tab) {
   _socialTab = tab;
@@ -1693,6 +1888,14 @@ window.switchLoginMode = function(mode) {
   document.getElementById('loginPwConfirmWrap').style.display = mode==='signup' ? 'block' : 'none';
   document.getElementById('loginActionBtn').textContent = mode==='login' ? '🎮 로그인' : '✨ 회원가입';
   document.getElementById('loginErr').textContent = '';
+};
+
+window.switchAddFriendTab = function(tab) {
+  ['id','code'].forEach(t => {
+    document.getElementById('afTab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('afPanel-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  document.getElementById('addFriendResult').textContent = '';
 };
 
 window.doLogin = async function() {
@@ -1779,6 +1982,7 @@ function initSettingsUI(){
   document.getElementById('s-metView').value=getUserSetting('metView','grid');
   document.getElementById('s-defaultDiff').value=getUserSetting('defaultDiff','');
   document.getElementById('s-showWrong').checked=getUserSetting('showWrong',true);
+  if(window.loadMyFriendCodeUI) window.loadMyFriendCodeUI();
 }
 
 // 앱 시작 시 테마 즉시 적용 (로그인 전에도)
