@@ -1145,6 +1145,11 @@ window.markMet = markMet;
 async function injectMetButton(p) {
   const existing = document.getElementById('metModalBtn');
   if (existing) existing.remove();
+
+  // 오늘의 포켓몬에 포함된 경우에만 버튼 표시
+  const isTodayPokemon = pokemonData.some(x => x.id === p.id);
+  if (!isTodayPokemon) return;
+
   const met = isMetPokemon(p.id);
   const btn = document.createElement('button');
   btn.id = 'metModalBtn';
