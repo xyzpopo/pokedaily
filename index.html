@@ -37,6 +37,11 @@ body.light-mode header{background:rgba(240,244,255,.94);}
 @keyframes spin-slow{to{transform:rotate(360deg);}}
 .logo h1{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
 @media(max-width:360px){.logo h1{display:none;}}
+.refresh-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.refresh-btn:hover{border-color:rgba(255,203,5,.4);color:var(--accent);}
+.refresh-btn:active{transform:scale(.88);}
+@keyframes spin-once{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.refresh-btn.spinning{animation:spin-once .5s ease;pointer-events:none;color:var(--accent);border-color:rgba(255,203,5,.4);}
 .date-badge{font-size:.65rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:.2rem .6rem;border-radius:20px;}
 /* ===== 하단 네비게이션 바 ===== */
 .tabs{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;border-top:1px solid var(--border);background:rgba(13,13,26,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:visible;padding-bottom:env(safe-area-inset-bottom,0px);}
@@ -509,13 +514,14 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .dm-row{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;transition:border-color .15s;min-height:60px;}
 .dm-row:hover,.dm-row:active{border-color:var(--accent);}
 .dm-row.unread{border-color:rgba(255,203,5,.4);}
-.dm-avatar{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
-.dm-info{flex:1;min-width:0;}
-.dm-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);}
-.dm-preview{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.12rem;}
-.dm-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.28rem;flex-shrink:0;}
-.dm-time{font-size:.58rem;color:var(--muted);}
-.dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.58rem;border-radius:20px;padding:.04rem .38rem;}
+.dm-avatar{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;overflow:hidden;}
+.dm-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem;}
+.dm-name-row{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
+.dm-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.dm-preview-row{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
+.dm-preview{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.dm-time{font-size:.58rem;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.dm-unread-count{background:var(--accent);color:var(--bg);font-family:'Galmuri11',monospace;font-size:.58rem;border-radius:20px;padding:.04rem .38rem;flex-shrink:0;min-width:16px;text-align:center;}
 /* 친구 목록 터치 타겟 */
 .friend-row{display:flex;align-items:center;gap:.8rem;padding:.75rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s;min-height:60px;}
 .friend-row:hover,.friend-row:active{border-color:var(--accent);}
@@ -694,6 +700,19 @@ body.light-mode .tour-card{background:var(--surface);}
 .pinned-msg-banner{display:none;background:rgba(255,203,5,.07);border-bottom:1px solid rgba(255,203,5,.2);padding:.45rem .9rem;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Galmuri11',monospace;}
 .pinned-msg-banner.show{display:flex;align-items:center;gap:.5rem;}
 .pinned-msg-banner span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);}
+/* 채팅방 공지 배너 */
+.notice-banner{display:none;background:rgba(59,76,202,.08);border-bottom:1px solid rgba(59,76,202,.25);padding:.45rem .9rem;font-size:.72rem;color:var(--text);font-family:'Galmuri11',monospace;align-items:center;gap:.5rem;}
+.notice-banner.show{display:flex;}
+.notice-banner-icon{font-size:.85rem;flex-shrink:0;}
+.notice-banner-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.notice-banner-edit{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:.1rem .3rem;flex-shrink:0;}
+.notice-banner-edit:hover{color:var(--accent);}
+/* 공지 편집 패널 */
+.notice-edit-panel{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:.55rem .9rem;gap:.4rem;flex-direction:column;}
+.notice-edit-panel.show{display:flex;}
+.notice-edit-inp{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.4rem .7rem;font-size:.78rem;color:var(--text);outline:none;font-family:'Galmuri11',monospace;resize:none;width:100%;}
+.notice-edit-inp:focus{border-color:var(--accent);}
+.notice-edit-btns{display:flex;gap:.4rem;justify-content:flex-end;}
 /* 단체 채팅 그룹 아이콘 */
 .group-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(59,76,202,.4),rgba(255,203,5,.2));border:2px solid rgba(59,76,202,.4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;}
 /* 채팅 헤더 우측 버튼들 */
@@ -811,6 +830,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
   <div class="logo">
     <div class="pokeball-icon"></div>
     <h1>포켓몬 데일리 도감</h1>
+    <button class="refresh-btn" id="refreshBtn" onclick="handleRefresh()" title="새로고침">↻</button>
   </div>
   <div style="display:flex;align-items:center;gap:.5rem">
     <button class="notif-btn" id="notifBtn" onclick="toggleNotifDropdown()">
@@ -1160,7 +1180,6 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
           <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">💬 대화 목록</div>
           <div style="display:flex;gap:.4rem;">
-            <button class="invite-to-chat-btn" onclick="toggleInvitePanel()">📨 채팅 초대</button>
             <button class="group-create-btn" onclick="toggleGroupCreatePanel()">➕ 단체 채팅</button>
           </div>
         </div>
@@ -1208,6 +1227,21 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
         <div class="pinned-msg-banner" id="pinnedMsgBanner" onclick="scrollToPinned()">
           📌 <span id="pinnedMsgText"></span>
         </div>
+        <!-- 채팅방 공지 배너 -->
+        <div class="notice-banner" id="noticeBanner">
+          <span class="notice-banner-icon">📢</span>
+          <span class="notice-banner-text" id="noticeBannerText"></span>
+          <button class="notice-banner-edit" id="noticeEditBtn" onclick="toggleNoticeEdit()" title="공지 수정">✏️</button>
+        </div>
+        <!-- 공지 편집 패널 -->
+        <div class="notice-edit-panel" id="noticeEditPanel">
+          <textarea class="notice-edit-inp" id="noticeEditInp" rows="2" maxlength="200" placeholder="공지 내용을 입력하세요... (최대 200자)"></textarea>
+          <div class="notice-edit-btns">
+            <button onclick="toggleNoticeEdit()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.28rem .65rem;cursor:pointer;">취소</button>
+            <button onclick="clearNotice()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid rgba(255,0,0,.3);color:#ff6b6b;border-radius:8px;padding:.28rem .65rem;cursor:pointer;">공지 삭제</button>
+            <button onclick="saveNotice()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:.28rem .75rem;cursor:pointer;font-weight:700;">저장</button>
+          </div>
+        </div>
         <div class="chat-header">
           <button class="chat-back-btn" onclick="closeChatView()">←</button>
           <div class="chat-friend-avatar" id="chatFriendAvatar" style="position:relative;">🎒
@@ -1220,6 +1254,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           <div class="chat-header-actions">
             <button class="chat-header-icon-btn" onclick="toggleMsgSearch()" title="검색">🔍</button>
             <button class="chat-header-icon-btn" id="groupProfileBtn" onclick="openGroupProfile()" title="채팅방 정보" style="display:none">👥</button>
+            <button class="chat-header-icon-btn" id="groupInviteBtn" onclick="openInviteInChat()" title="친구 초대" style="display:none">📨</button>
             <button class="chat-header-icon-btn" onclick="openChatOptions()" title="더보기">⋯</button>
           </div>
         </div>
@@ -1252,6 +1287,23 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
 
 </main>
 <div class="settings-toast" id="settingsToast">설정이 저장됐어요 ✓</div>
+<!-- 채팅방 내 초대 모달 -->
+<div class="group-profile-modal" id="chatInviteModal" onclick="closeChatInviteModal(event)">
+  <div class="group-profile-sheet" onclick="event.stopPropagation()">
+    <div class="gp-header">
+      <div class="gp-avatar">📨</div>
+      <div class="gp-name">친구 초대</div>
+      <div class="gp-count" id="chatInviteRoomName" style="font-size:.72rem;color:var(--muted);"></div>
+    </div>
+    <div class="gp-members">
+      <div class="gp-members-title">초대할 친구를 선택하세요</div>
+      <div id="chatInviteFriendList" style="display:flex;flex-direction:column;gap:.3rem;max-height:300px;overflow-y:auto;"></div>
+    </div>
+    <div style="padding:.6rem 1.2rem 1.5rem;">
+      <button onclick="closeChatInviteModal()" style="width:100%;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;">닫기</button>
+    </div>
+  </div>
+</div>
 <!-- 단체 채팅 프로필 모달 -->
 <div class="group-profile-modal" id="groupProfileModal" onclick="closeGroupProfile(event)">
   <div class="group-profile-sheet" onclick="event.stopPropagation()">
@@ -1266,7 +1318,6 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     </div>
     <div style="padding:.6rem 1.2rem 1.5rem;display:flex;gap:.5rem;">
       <button onclick="document.getElementById('groupProfileModal').classList.remove('open')" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;">닫기</button>
-      <button onclick="leaveChatRoom()" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.25);color:#ff6b6b;border-radius:10px;padding:.5rem;cursor:pointer;">나가기 🚪</button>
     </div>
   </div>
 </div>
@@ -1782,7 +1833,14 @@ window.saveProfile = async function() {
     currentUser.nickname = nn;
     window._currentUser = currentUser;
     document.getElementById('userNameDisplay').textContent = nn + ' 트레이너';
-    document.getElementById('headerAvatar').textContent = avatar;
+    const headerAv = document.getElementById('headerAvatar');
+    if (headerAv) {
+      if (_myProfile?.profileImage) {
+        headerAv.innerHTML = `<img src="${_myProfile.profileImage}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+      } else {
+        headerAv.textContent = avatar;
+      }
+    }
     renderMyProfile();
     window.cancelEditProfile();
     // 닉네임 변경을 친구들에게도 반영 (denormalized cache 업데이트)
@@ -2083,6 +2141,8 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
   document.getElementById('chatView').style.display   = 'block';
   const gpBtn = document.getElementById('groupProfileBtn');
   if (gpBtn) gpBtn.style.display = 'none';
+  const invBtn2 = document.getElementById('groupInviteBtn');
+  if (invBtn2) invBtn2.style.display = 'none';
 
   // 투어 피커 초기화
   buildTourPickerGrid();
@@ -2091,6 +2151,10 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
   // 이전 리스너 해제
   if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
   if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
+
+  // 공지 배너 숨기기 (DM은 공지 없음)
+  document.getElementById('noticeBanner')?.classList.remove('show');
+  document.getElementById('noticeEditPanel')?.classList.remove('show');
 
   // 온라인 상태 구독
   _onlineUnsub = onSnapshot(doc(db,'presence',friendUid), snap => {
@@ -2129,7 +2193,7 @@ window.openGroupChat = async function(roomId, roomName, members) {
   document.getElementById('chatFriendName').textContent   = roomName;
   document.getElementById('chatFriendAvatar').innerHTML   = '👥<div class="online-dot" style="display:none"></div>';
   // Firestore에서 실제 participants 수 가져오기
-  document.getElementById('chatFriendStatus').textContent = Object.keys(members||{}).length + '명';
+  document.getElementById('chatFriendStatus').textContent = '...';
   try {
     const roomSnap = await getDoc(doc(db,'chats',roomId));
     if (roomSnap.exists()) {
@@ -2137,12 +2201,18 @@ window.openGroupChat = async function(roomId, roomName, members) {
       const cnt = (rData.participants||[]).length;
       document.getElementById('chatFriendStatus').textContent = cnt + '명';
       _groupMembers = rData.groupMembers || members || {};
+    } else {
+      document.getElementById('chatFriendStatus').textContent = Object.keys(members||{}).length + '명';
     }
-  } catch(e) {}
+  } catch(e) {
+    document.getElementById('chatFriendStatus').textContent = Object.keys(members||{}).length + '명';
+  }
   document.getElementById('dmListView').style.display = 'none';
   document.getElementById('chatView').style.display   = 'block';
   const gpBtn = document.getElementById('groupProfileBtn');
   if (gpBtn) gpBtn.style.display = 'flex';
+  const invBtn = document.getElementById('groupInviteBtn');
+  if (invBtn) invBtn.style.display = 'flex';
 
   if (_chatUnsubscribe) { _chatUnsubscribe(); _chatUnsubscribe = null; }
   if (_onlineUnsub)     { _onlineUnsub();     _onlineUnsub = null; }
@@ -2150,6 +2220,7 @@ window.openGroupChat = async function(roomId, roomName, members) {
   buildTourPickerGrid();
   cancelReply();
   loadPinnedMsg(roomId);
+  loadNotice(roomId);
   subscribeMessages(roomId, true);
 };
 
@@ -2287,11 +2358,10 @@ async function markChatRead(roomId) {
   try {
     const msgsRef = collection(db,'chats',roomId,'messages');
     const recent = await getDocs(query(msgsRef, orderBy('ts','desc'), limit(20)));
-    recent.docs.forEach(async d => {
-      if (d.data().from !== currentUser.uid) {
-        await updateDoc(doc(db,'chats',roomId,'messages',d.id), { readBy: arrayUnion(currentUser.uid) });
-      }
-    });
+    await Promise.all(recent.docs
+      .filter(d => d.data().from !== currentUser.uid)
+      .map(d => updateDoc(doc(db,'chats',roomId,'messages',d.id), { readBy: arrayUnion(currentUser.uid) }).catch(()=>{}))
+    );
   } catch(e){}
 }
 
@@ -2726,32 +2796,38 @@ async function loadDmList() {
       const isPinned = _pinnedRooms.has(roomId);
       const isMuted  = _mutedRooms.has(roomId);
 
-      let avatar, name, sub;
+      let avatar, name, previewSub;
       if (isGroup) {
         avatar = `<div class="group-avatar">👥</div>`;
         name = data.groupName || '단체 채팅';
-        sub = (data.participants||[]).length + '명 참여 중';
+        previewSub = (data.participants||[]).length + '명';
       } else {
         const friendUid = (data.participants||[]).find(p => p !== currentUser.uid);
         const fData = friendsData[friendUid] || {};
-        avatar = `<div class="dm-avatar">${fData.avatar||'🎒'}</div>`;
+        const avatarVal = fData.avatar || '🎒';
+        // 프로필 이미지(base64 또는 URL)이면 img 태그, 아니면 이모지
+        const isImgUrl = avatarVal && (avatarVal.startsWith('data:') || avatarVal.startsWith('http'));
+        avatar = `<div class="dm-avatar">${isImgUrl ? `<img src="${escapeHtml(avatarVal)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=""/>` : avatarVal}</div>`;
         name = fData.nickname || '트레이너';
-        sub = '';
+        previewSub = '';
       }
 
-      const lastMsgText = isMuted ? '' : escapeHtml(data.lastMsg||'');
+      const lastMsgText = isMuted ? '🔕 알림 꺼짐' : escapeHtml(data.lastMsg||'');
+      const previewText = previewSub ? `<span style="color:var(--accent);margin-right:.25rem;">${previewSub}</span>${lastMsgText}` : lastMsgText;
 
       const row = document.createElement('div');
       row.className = 'dm-row' + (unread>0?' unread':'');
       row.innerHTML = `
         ${avatar}
         <div class="dm-info">
-          <div class="dm-name">${escapeHtml(name)}${isPinned?'<span style="font-size:.6rem;margin-left:.3rem">📌</span>':''}${isMuted?'<span style="font-size:.6rem;margin-left:.2rem;color:var(--muted)">🔕</span>':''}</div>
-          <div class="dm-preview">${lastMsgText}</div>
-        </div>
-        <div class="dm-meta">
-          <div class="dm-time">${timeStr}</div>
-          ${unread>0&&!isMuted?`<div class="dm-unread-count">${unread}</div>`:''}
+          <div class="dm-name-row">
+            <span class="dm-name">${escapeHtml(name)}${isPinned?'<span style="font-size:.6rem;margin-left:.3rem">📌</span>':''}${isMuted?'<span style="font-size:.6rem;margin-left:.2rem;color:var(--muted)">🔕</span>':''}</span>
+            <span class="dm-time">${timeStr}</span>
+          </div>
+          <div class="dm-preview-row">
+            <div class="dm-preview">${previewText}</div>
+            ${unread>0&&!isMuted?`<div class="dm-unread-count">${unread>99?'99+':unread}</div>`:''}
+          </div>
         </div>`;
       row.onclick = () => {
         if (isGroup) {
@@ -3323,6 +3399,8 @@ window.submitSpotlight = async function() {
     // 버튼 갱신
     const btn = document.getElementById('spotlightWriteBtn');
     if (btn) btn.textContent = '✅ 오늘 소개 완료';
+    // 피드 즉시 갱신
+    await loadSpotlight();
   } catch(e) {
     showSocialToast('등록 실패: ' + e.message);
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '등록'; }
@@ -3535,15 +3613,82 @@ window.inviteBackToStep1 = function() {
   document.getElementById('inviteStep2').style.display = 'none';
 };
 
-window.sendInviteToRoom = async function(friendUid, friendName) {
-  if (!currentUser || !_inviteTargetRoomId) return;
+// ── 채팅방 공지 ──────────────────────────────
+async function loadNotice(roomId) {
+  const banner = document.getElementById('noticeBanner');
+  const bannerText = document.getElementById('noticeBannerText');
+  const editBtn = document.getElementById('noticeEditBtn');
+  if (!banner || !bannerText) return;
+  try {
+    const roomSnap = await getDoc(doc(db,'chats',roomId));
+    if (roomSnap.exists()) {
+      const notice = roomSnap.data().notice || '';
+      if (notice) {
+        bannerText.textContent = notice;
+        banner.classList.add('show');
+      } else {
+        banner.classList.remove('show');
+      }
+      // 공지 편집 버튼: 단체 채팅방에서만 표시
+      if (editBtn) editBtn.style.display = _currentIsGroup ? 'inline-block' : 'none';
+    }
+  } catch(e) {}
+}
+
+window.toggleNoticeEdit = function() {
+  const panel = document.getElementById('noticeEditPanel');
+  if (!panel) return;
+  const isOpen = panel.classList.contains('show');
+  panel.classList.toggle('show', !isOpen);
+  if (!isOpen) {
+    const inp = document.getElementById('noticeEditInp');
+    if (inp) inp.value = document.getElementById('noticeBannerText')?.textContent || '';
+    setTimeout(() => document.getElementById('noticeEditInp')?.focus(), 80);
+  }
+};
+
+window.saveNotice = async function() {
+  if (!currentUser || !_currentRoomId || !_currentIsGroup) return;
+  const inp = document.getElementById('noticeEditInp');
+  const text = (inp?.value || '').trim();
+  try {
+    await updateDoc(doc(db,'chats',_currentRoomId), { notice: text });
+    // 공지 시스템 메시지
+    const myNick = _myProfile?.nickname || '트레이너';
+    const sysMsg = text ? `${myNick}이(가) 공지를 등록했어요 📢` : `${myNick}이(가) 공지를 삭제했어요`;
+    await addDoc(collection(db,'chats',_currentRoomId,'messages'), {
+      from: currentUser.uid, type: 'system', text: sysMsg,
+      ts: serverTimestamp(), readBy: [currentUser.uid]
+    });
+    await updateDoc(doc(db,'chats',_currentRoomId), { lastMsg: sysMsg, lastTs: serverTimestamp() });
+    document.getElementById('noticeEditPanel')?.classList.remove('show');
+    loadNotice(_currentRoomId);
+    showSocialToast(text ? '공지가 등록됐어요 📢' : '공지가 삭제됐어요');
+  } catch(e) { showSocialToast('저장 실패: ' + e.message); }
+};
+
+window.clearNotice = async function() {
+  if (!confirm('공지를 삭제할까요?')) return;
+  const inp = document.getElementById('noticeEditInp');
+  if (inp) inp.value = '';
+  await window.saveNotice();
+};
+
+window.sendInviteToRoom = async function(friendUid, friendName, roomId) {
+  const targetRoomId = roomId || _inviteTargetRoomId || _currentRoomId;
+  if (!currentUser || !targetRoomId) return;
   const btn = document.getElementById('invBtn_' + friendUid);
   if (btn) { btn.disabled = true; btn.textContent = '추가 중...'; }
   try {
-    const roomRef = doc(db,'chats',_inviteTargetRoomId);
+    const roomRef = doc(db,'chats',targetRoomId);
     const roomSnap = await getDoc(roomRef);
     if (!roomSnap.exists()) { showSocialToast('채팅방을 찾을 수 없어요'); return; }
     const rData = roomSnap.data();
+    // 이미 참여 중인지 확인
+    if ((rData.participants||[]).includes(friendUid)) {
+      showSocialToast('이미 채팅방에 있는 멤버예요');
+      if (btn) { btn.textContent = '이미 참여 중'; } return;
+    }
     // 친구 정보 가져오기
     const fSnap = await getDoc(doc(db,'users',friendUid));
     const fData = fSnap.exists() ? fSnap.data() : {};
@@ -3553,20 +3698,111 @@ window.sendInviteToRoom = async function(friendUid, friendName) {
       participants: arrayUnion(friendUid),
       groupMembers: newMembers
     });
+    // 내 닉네임
+    const myNick = _myProfile?.nickname || '트레이너';
+    const invitedNick = fData.nickname || friendName || '트레이너';
+    // 조사 처리 (이/가)
+    const myNickLast = myNick.charCodeAt(myNick.length-1);
+    const hasFinal = (myNickLast - 0xAC00) % 28 !== 0;
+    const particle = hasFinal ? '이' : '가';
+    const inviteMsg = `${myNick}${particle} ${invitedNick}을 초대했어요 🎉`;
     // 입장 메시지
-    const msgsRef = collection(db,'chats',_inviteTargetRoomId,'messages');
+    const msgsRef = collection(db,'chats',targetRoomId,'messages');
     await addDoc(msgsRef, {
       from: currentUser.uid, type: 'system',
-      text: `${friendName} 트레이너가 초대됐어요 🎉`,
+      text: inviteMsg,
       ts: serverTimestamp(), readBy: [currentUser.uid]
     });
-    await setDoc(roomRef, { lastMsg: `${friendName} 트레이너가 초대됐어요 🎉`, lastTs: serverTimestamp() }, {merge:true});
+    await setDoc(roomRef, { lastMsg: inviteMsg, lastTs: serverTimestamp() }, {merge:true});
+    // 자동 친구 추가 (친구가 아닌 경우)
+    if (!_friends.includes(friendUid)) {
+      try {
+        const mySnap2 = await getDoc(doc(db,'users',currentUser.uid));
+        const myData2 = mySnap2.exists() ? mySnap2.data() : {};
+        const myFriends2 = myData2.friends || [];
+        const myFriendsData2 = myData2.friendsData || {};
+        if (!myFriends2.includes(friendUid)) {
+          myFriends2.push(friendUid);
+          myFriendsData2[friendUid] = { nickname: fData.nickname||'트레이너', avatar: fData.avatar||'🎒', username: fData.username||'' };
+          await updateDoc(doc(db,'users',currentUser.uid), { friends: myFriends2, friendsData: myFriendsData2 });
+          // 상대방에도 나를 친구로 추가
+          const theirSnap2 = await getDoc(doc(db,'users',friendUid));
+          const theirData2 = theirSnap2.exists() ? theirSnap2.data() : {};
+          const theirFriends2 = theirData2.friends || [];
+          const theirFriendsData2 = theirData2.friendsData || {};
+          if (!theirFriends2.includes(currentUser.uid)) {
+            theirFriends2.push(currentUser.uid);
+            theirFriendsData2[currentUser.uid] = { nickname: _myProfile?.nickname||'트레이너', avatar: _myProfile?.avatar||'🎒', username: _myProfile?.uid||'' };
+            await updateDoc(doc(db,'users',friendUid), { friends: theirFriends2, friendsData: theirFriendsData2 });
+          }
+          _friends = myFriends2;
+        }
+      } catch(e2) {}
+    }
+    // 현재 그룹멤버 업데이트
+    _groupMembers[friendUid] = newMember;
     if (btn) { btn.textContent = '✓ 초대됨'; }
-    showSocialToast(`${friendName} 트레이너를 초대했어요 🎉`);
+    showSocialToast(`${invitedNick} 트레이너를 초대했어요 🎉`);
+    // 인원수 갱신
+    const newCnt = (rData.participants||[]).length + 1;
+    const statusEl = document.getElementById('chatFriendStatus');
+    if (statusEl && _currentIsGroup) statusEl.textContent = newCnt + '명';
   } catch(e) {
     showSocialToast('초대 실패: ' + e.message);
     if (btn) { btn.disabled = false; btn.textContent = '초대'; }
   }
+};
+
+// 채팅방 내 초대 기능
+window.openInviteInChat = async function() {
+  if (!_currentIsGroup || !_currentRoomId || !currentUser) return;
+  const modal = document.getElementById('chatInviteModal');
+  if (!modal) return;
+  const roomNameEl = document.getElementById('chatInviteRoomName');
+  if (roomNameEl) roomNameEl.textContent = _currentChatName || '단체 채팅';
+  modal.classList.add('open');
+
+  const listEl = document.getElementById('chatInviteFriendList');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem;text-align:center">불러오는 중...</div>';
+
+  try {
+    const roomSnap = await getDoc(doc(db,'chats',_currentRoomId));
+    const participants = roomSnap.exists() ? (roomSnap.data().participants||[]) : [];
+
+    const mySnap = await getDoc(doc(db,'users',currentUser.uid));
+    const myData = mySnap.exists() ? mySnap.data() : {};
+    const friendsData = myData.friendsData || {};
+    // 모든 친구 + 현재 방 멤버 중 친구가 아닌 사람도 표시 가능 (여기선 친구만)
+    const invitable = _friends.filter(uid => !participants.includes(uid));
+
+    listEl.innerHTML = '';
+    if (!invitable.length) {
+      listEl.innerHTML = '<div style="font-size:.72rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem;text-align:center">초대할 수 있는 친구가 없어요<br><span style="font-size:.6rem">(이미 모두 참여 중이거나 친구가 없어요)</span></div>';
+      return;
+    }
+    invitable.forEach(uid => {
+      const fData = friendsData[uid] || {};
+      const row = document.createElement('div');
+      row.className = 'gp-member-row';
+      row.style.cursor = 'default';
+      row.innerHTML = `
+        <div class="gp-member-av">${fData.avatar||'🎒'}</div>
+        <div style="flex:1;min-width:0">
+          <div class="gp-member-name">${escapeHtml(fData.nickname||'트레이너')}</div>
+          <div class="gp-member-tag">@${escapeHtml(fData.username||'')}</div>
+        </div>
+        <button class="invite-to-chat-btn" style="font-size:.65rem;" id="invBtn_${uid}" onclick="sendInviteToRoom('${uid}','${escapeHtml(fData.nickname||'트레이너').replace(/'/g,"\\'")}','${_currentRoomId}')">초대</button>`;
+      listEl.appendChild(row);
+    });
+  } catch(e) {
+    listEl.innerHTML = '<div style="font-size:.7rem;color:#ff6b6b;font-family:Galmuri11,monospace;padding:.4rem">불러오기 실패</div>';
+  }
+};
+
+window.closeChatInviteModal = function(e) {
+  if (e && e.target && e.target !== document.getElementById('chatInviteModal')) return;
+  document.getElementById('chatInviteModal')?.classList.remove('open');
 };
 
 let _socialTab = 'friends';
@@ -3626,6 +3862,43 @@ function showSocialToast(msg) {
   t._timer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2200);
 }
 
+// ── 새로고침 ──────────────────────────────────
+window.handleRefresh = async function() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) { btn.classList.add('spinning'); setTimeout(() => btn.classList.remove('spinning'), 520); }
+
+  // 현재 활성 탭 감지
+  const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('onclick')?.match(/showTab\('(\w+)'\)/)?.[1] || 'dex';
+
+  try {
+    if (activeTab === 'dex') {
+      // 오늘의 도감 재로드
+      if (typeof init === 'function') init();
+    } else if (activeTab === 'ndex') {
+      if (typeof initNdex === 'function') initNdex();
+    } else if (activeTab === 'met') {
+      if (window.renderMetPage) await window.renderMetPage();
+    } else if (activeTab === 'quiz') {
+      if (window.renderQuizHistory) window.renderQuizHistory();
+    } else if (activeTab === 'social') {
+      // 소셜 탭: 현재 서브탭에 맞게
+      if (window._loadMyProfile) await window._loadMyProfile();
+      if (window.loadSpotlight) await loadSpotlight();
+      if (typeof _socialTab !== 'undefined') {
+        if (_socialTab === 'friends' && typeof loadFriends === 'function') await loadFriends();
+        else if (_socialTab === 'messages' && typeof loadDmList === 'function') await loadDmList();
+      }
+    } else if (activeTab === 'settings') {
+      if (typeof initSettingsUI === 'function') initSettingsUI();
+    }
+    showSocialToast('새로고침 완료 ✓');
+  } catch(e) {
+    showSocialToast('새로고침 실패');
+  }
+};
+
+// loadSpotlight를 모듈 외부에서도 접근 가능하도록 노출
+window.loadSpotlight = loadSpotlight;
 </script>
 <script>
 /* ===== 로그인 모드 전환 (모듈 스크립트와 무관하게 즉시 실행) ===== */
@@ -3822,11 +4095,11 @@ async function init(){dexViewed=false;quizQuestions=[];quizIdx=0;quizScore=0;qui
 function makeBallSVG(isLegendary){
   if(isLegendary){return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="mbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="mbTopGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#b060e8"/><stop offset="100%" stop-color="#5a00aa"/></radialGradient><radialGradient id="mbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#1a0030" stroke="#1a0030" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#mbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#mbTopGrad)" clip-path="url(#mbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#1a0030" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><text x="60" y="44" font-size="20" fill="white" font-family="Arial Black,Impact,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">M</text><circle cx="36" cy="50" r="4" fill="#ff80cc"/><circle cx="84" cy="50" r="4" fill="#ff80cc"/><circle cx="60" cy="60" r="11" fill="url(#mbBtnGrad)" stroke="#1a0030" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#8800cc"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.6)"/><ellipse cx="44" cy="22" rx="14" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20 44 22)" clip-path="url(#mbClip)"/></svg>`;}
   return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="pbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="pbRedGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#ff5555"/><stop offset="100%" stop-color="#cc0000"/></radialGradient><radialGradient id="pbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#111111" stroke="#111111" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#pbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#pbRedGrad)" clip-path="url(#pbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#111111" clip-path="url(#pbClip)"/><circle cx="60" cy="60" r="11" fill="url(#pbBtnGrad)" stroke="#111111" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#dd0000"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.65)"/><ellipse cx="42" cy="24" rx="14" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-20 42 24)" clip-path="url(#pbClip)"/></svg>`;}
-function renderDex(){document.getElementById('dex-loading').style.display='none';document.getElementById('dex-content').style.display='block';const titleEl=document.getElementById('dexSectionTitle');if(titleEl)titleEl.textContent='오늘의 포켓몬 '+pokemonData.length+'마리 — 몬스터볼을 클릭해보세요!';const grid=document.getElementById('pokemonGrid');grid.innerHTML='';pokemonData.forEach((p,i)=>{const wrapper=document.createElement('div');wrapper.dataset.idx=i;wrapper.dataset.opened='false';wrapper.style.setProperty('--card-delay',i*0.1+'s');grid.appendChild(wrapper);renderBallCard(wrapper,p);});}
+function renderDex(){document.getElementById('dex-loading').style.display='none';document.getElementById('dex-content').style.display='block';const titleEl=document.getElementById('dexSectionTitle');if(titleEl)titleEl.textContent='오늘의 포켓몬 '+pokemonData.length+'마리 — 몬스터볼을 클릭해보세요!';const grid=document.getElementById('pokemonGrid');grid.innerHTML='';const autoOpen=getUserSetting('autoOpen',false);pokemonData.forEach((p,i)=>{const wrapper=document.createElement('div');wrapper.dataset.idx=i;wrapper.dataset.opened='false';wrapper.style.setProperty('--card-delay',i*0.1+'s');grid.appendChild(wrapper);renderBallCard(wrapper,p);});if(autoOpen)dexViewed=true;}
 function renderBallCard(wrapper,p){wrapper.innerHTML='';const autoOpen=getUserSetting('autoOpen',false);if(autoOpen){wrapper.dataset.opened='true';dexViewed=true;renderPokemonCard(wrapper,p);return;}const ball=document.createElement('div');ball.className='ball-card'+(p.isLegendary?' legendary':'');ball.innerHTML=`<div class="ball-svg-wrap">${makeBallSVG(p.isLegendary)}</div><div class="ball-card-hint">No.${String(p.id).padStart(4,'0')}<br>${p.isLegendary?'✨ 마스터볼':'🔴 몬스터볼'}<br><br>탭해서 열기!</div>`;ball.onclick=()=>{ball.classList.add('shaking');setTimeout(()=>{renderPokemonCard(wrapper,p);if(window.markMet)window.markMet(p);},520);};wrapper.appendChild(ball);}
 function renderPokemonCard(wrapper,p){const color=TYPE_COLOR[p.types[0]]||'#ffcb05';wrapper.innerHTML='';wrapper.dataset.opened='true';dexViewed=true;const card=document.createElement('div');card.className='pokemon-card';card.style.setProperty('--card-color',color);card.style.setProperty('--card-glow',color+'44');card.style.animation='slideUp .4s ease both';let isShiny=false;const updateImg=()=>{const img=card.querySelector('.card-image');const toggle=card.querySelector('.shiny-toggle');if(img){img.src=isShiny&&p.shinyImage?p.shinyImage:p.image;img.className='card-image'+(isShiny?' shiny-img':'');}if(toggle)toggle.className='shiny-toggle'+(isShiny?' active':'');};card.innerHTML=`<div class="card-bg"></div><span class="card-hint">자세히 ▶</span><div class="card-number">No.${String(p.id).padStart(4,'0')} · ${p.genus}</div><div class="card-image-wrap"><img class="card-image" src="${p.image}" alt="${p.name}" loading="lazy"/></div><div class="card-name">${p.name}</div><div class="type-badges">${p.types.map(t=>`<span class="type-badge type-${t}">${TYPE_KO[t]||t}</span>`).join('')}</div><div class="card-desc">${p.desc}</div><div class="card-stats">${p.stats.map(s=>`<div class="stat-row"><span class="stat-label">${STAT_KO[s.name]||s.name}</span><div class="stat-bar-wrap"><div class="stat-bar" style="width:0%" data-val="${Math.min(s.value,255)/255*100}"></div></div><span class="stat-value">${s.value}</span></div>`).join('')}</div><div class="card-meta"><span>키 ${p.height}m</span><span>무게 ${p.weight}kg</span></div><div style="text-align:center"><span class="shiny-toggle"><span class="sw-track"><span class="sw-thumb"></span></span>✨ 이로치</span></div>`;const shinyToggleEl=card.querySelector('.shiny-toggle');
 if(!p.shinyImage){shinyToggleEl.style.opacity='.35';shinyToggleEl.style.cursor='default';shinyToggleEl.title='이로치 미구현';}
-shinyToggleEl.onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};card.onclick=e=>{if(e.target.classList.contains('shiny-toggle'))return;openModal(p,isShiny);};wrapper.appendChild(card);requestAnimationFrame(()=>requestAnimationFrame(()=>{card.querySelectorAll('.stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});}));}
+shinyToggleEl.onclick=e=>{e.stopPropagation();if(!p.shinyImage)return;isShiny=!isShiny;updateImg();};card.onclick=e=>{if(e.target.closest('.shiny-toggle'))return;openModal(p,isShiny);};wrapper.appendChild(card);requestAnimationFrame(()=>requestAnimationFrame(()=>{card.querySelectorAll('.stat-bar').forEach(b=>{b.style.width=b.dataset.val+'%';});}));}
 function initNdex(){
   if(ndexAllIds.length)return;
   ndexAllIds=Array.from({length:MAX_ID},(_,i)=>i+1);
@@ -3910,7 +4183,14 @@ function loadMoreNdex(){renderNdexPage();}
 async function openModalById(id){let p=pokemonData.find(x=>x.id===id);if(!p){const cached=window._modalCache||(window._modalCache={});if(cached[id])p=cached[id];else{p=await fetchPokemon(id);if(p)cached[id]=p;}}if(p)openModal(p);}
 let _modalOpen=false;
 async function openModal(p,startShiny=false){
-  if(_modalOpen)return;
+  // 이미 열려있으면 닫고 재오픈 (진화 체인 클릭 등)
+  if(_modalOpen){
+    const overlay=document.getElementById('modalOverlay');
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+    _modalOpen=false;
+    await new Promise(r=>setTimeout(r,50));
+  }
   _modalOpen=true;
   const color=TYPE_COLOR[p.types[0]]||'#ffcb05';
   const overlay=document.getElementById('modalOverlay');
@@ -3942,7 +4222,7 @@ async function openModal(p,startShiny=false){
 }
 async function loadForms(p){const grid=document.getElementById('formsGrid');if(!grid)return;const results=await Promise.all(p.forms.map(async f=>{try{const pk=await fetch(f.url).then(r=>r.json());const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;const shinyImg=pk.sprites.other['official-artwork']?.front_shiny||pk.sprites.front_shiny||null;const defaultFormName=p.forms.find(x=>x.isDefault)?.name||p.nameEn;const label=f.isDefault?p.name:(getFormLabel(f.name,defaultFormName)||f.name.replace(defaultFormName+'-','').replace(/-/g,' '));return{name:f.name,label,img,shinyImg,isDefault:f.isDefault};}catch(e){return null;}}));grid.innerHTML='';results.filter(Boolean).forEach(f=>{const card=document.createElement('div');card.className='form-card'+(f.isDefault?' active-form':'');card.innerHTML=`${f.img?`<img src="${f.img}" alt="${f.label}" style="width:58px;height:58px;image-rendering:pixelated"/>`:`<div style="width:58px;height:58px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.5rem">?</div>`}<div class="form-card-name">${f.label}</div>`;card.onclick=()=>{
     // window 공유 변수 사용 → 스코프 문제 해결
-    window._currentFormNormal=f.img||p.image;
+    window._currentFormNormal=f.img||p.image||'';
     window._currentFormShiny=f.shinyImg||null;
     const mainImg=document.getElementById('modalMainImg');
     const shinyBtn=document.getElementById('modalShinyBtn');
@@ -4105,7 +4385,9 @@ function buildRetryQuiz(wrongList){
     const wrongTypes=shuffle(Object.keys(TYPE_KO).filter(t=>!pokemon.types?.includes(t))).slice(0,3);
     const genInfo=GEN_INFO[pokemon.generation]||{name:'알 수 없음'};
     if(w.type==='silhouette'||w.type==='desc'){
-      quizQuestions.push({type:w.type,pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,namePool[0],namePool[1],namePool[2]])});
+      const opts=[w.answer,namePool[0],namePool[1],namePool[2]].filter(Boolean);
+      while(opts.length<4)opts.push(EXTRA_NAMES[opts.length]||'???');
+      quizQuestions.push({type:w.type,pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(opts)});
     } else if(w.type==='type'){
       quizQuestions.push({type:'type',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,...wrongTypes.map(t=>TYPE_KO[t]).slice(0,3)])});
     } else if(w.type==='gen'){
@@ -4137,7 +4419,10 @@ function showTab(tab){
   // 소셜탭: 최초 1회만 전체 초기화, 이후엔 badges만 갱신
   if(tab==='social'){
     if(!_socialPageInited && window.initSocialPage){ _socialPageInited=true; window.initSocialPage(); }
-    else if(window.initSocialBadges){ window.initSocialBadges(); }
+    else {
+      if(window.initSocialBadges) window.initSocialBadges();
+      if(window.loadSpotlight) window.loadSpotlight();
+    }
   }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab+'-page').classList.add('active');
