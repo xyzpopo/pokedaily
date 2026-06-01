@@ -37,7 +37,7 @@ body.light-mode header{background:rgba(240,244,255,.94);}
 @keyframes spin-slow{to{transform:rotate(360deg);}}
 .logo h1{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
 @media(max-width:360px){.logo h1{display:none;}}
-.refresh-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.refresh-btn{width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .refresh-btn:hover{border-color:rgba(255,203,5,.4);color:var(--accent);}
 .refresh-btn:active{transform:scale(.88);}
 @keyframes spin-once{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -430,6 +430,15 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
   .chat-messages{height:calc(100dvh - 220px);}
 }
 
+/* ===== 전체 공지 배너 ===== */
+.site-notice-bar{display:none;background:linear-gradient(90deg,rgba(59,76,202,.15),rgba(255,203,5,.08));border-bottom:2px solid rgba(59,76,202,.35);padding:.45rem 1rem;font-size:.72rem;color:var(--text);font-family:'Galmuri11',monospace;align-items:center;gap:.55rem;position:sticky;top:50px;z-index:29;}
+.site-notice-bar.show{display:flex;}
+.site-notice-icon{font-size:.9rem;flex-shrink:0;}
+.site-notice-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.site-notice-edit{background:transparent;border:1px solid rgba(59,76,202,.4);color:#7090ff;cursor:pointer;font-size:.6rem;padding:.15rem .45rem;border-radius:6px;flex-shrink:0;font-family:'Galmuri11',monospace;transition:all .15s;}
+.site-notice-edit:hover{background:rgba(59,76,202,.15);}
+.site-notice-edit-panel{display:none;background:rgba(59,76,202,.06);border-bottom:1px solid rgba(59,76,202,.2);padding:.55rem 1rem;gap:.4rem;flex-direction:column;}
+.site-notice-edit-panel.show{display:flex;}
 /* ===== 프로필/친구/메시지 CSS ===== */
 /* 프로필 페이지 */
 .profile-hero{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.8rem 1rem 1.2rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:22px;position:relative;overflow:hidden;}
@@ -532,12 +541,12 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 /* 친구 목록 터치 타겟 */
 .friend-row{display:flex;align-items:center;gap:.8rem;padding:.75rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s;min-height:60px;}
 .friend-row:hover,.friend-row:active{border-color:var(--accent);}
-.friend-avatar{width:42px;height:42px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.friend-avatar{width:42px;height:42px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;overflow:hidden;}
 .friend-info{flex:1;min-width:0;}
 .friend-name{font-family:'Galmuri11',monospace;font-size:.86rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .friend-id{font-size:.62rem;color:var(--muted);}
 .friend-actions{display:flex;gap:.35rem;flex-shrink:0;}
-.friend-action-btn{font-size:.62rem;font-family:'Galmuri11',monospace;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.3rem .55rem;border-radius:8px;cursor:pointer;transition:all .15s;min-height:30px;}
+.friend-action-btn{font-size:.62rem;font-family:'Galmuri11',monospace;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.35rem .65rem;border-radius:8px;cursor:pointer;transition:all .15s;min-height:34px;}
 .friend-action-btn:hover{border-color:var(--accent);color:var(--accent);}
 .friend-action-btn.danger:hover{border-color:#ff6b6b;color:#ff6b6b;}
 /* 소셜 내부 탭 (프로필/친구/메시지) pill 형태 */
@@ -644,7 +653,7 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
 .tour-picker-item img{width:44px;height:44px;image-rendering:pixelated;}
 .tour-picker-item span{font-size:.55rem;color:var(--text);font-family:'Galmuri11',monospace;}
 /* ===== 단체 채팅 ===== */
-.group-create-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.32rem .75rem;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.group-create-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:0 .75rem;height:34px;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;}
 .group-create-btn:hover{border-color:var(--accent);color:var(--accent);}
 .group-badge{display:inline-block;font-size:.52rem;font-family:'Galmuri11',monospace;background:rgba(59,76,202,.2);border:1px solid rgba(59,76,202,.4);color:#7090ff;padding:.08rem .4rem;border-radius:10px;margin-left:.3rem;vertical-align:middle;}
 /* 그룹 생성 모달 */
@@ -724,7 +733,7 @@ body.light-mode .tour-card{background:var(--surface);}
 .group-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(59,76,202,.4),rgba(255,203,5,.2));border:2px solid rgba(59,76,202,.4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;}
 /* 채팅 헤더 우측 버튼들 */
 .chat-header-actions{display:flex;align-items:center;gap:.2rem;margin-left:auto;}
-.chat-header-icon-btn{background:transparent;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:.3rem;border-radius:8px;transition:color .15s;-webkit-tap-highlight-color:transparent;}
+.chat-header-icon-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.9rem;cursor:pointer;padding:0;border-radius:8px;transition:all .15s;-webkit-tap-highlight-color:transparent;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .chat-header-icon-btn:hover{color:var(--accent);}
 /* 이미지 버블 */
 .chat-img-bubble{max-width:200px;border-radius:12px;overflow:hidden;cursor:pointer;}
@@ -877,6 +886,21 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     <span class="tab-icon">👥</span><span class="tab-label">소셜</span>
     <span class="tab-badge" id="friendReqBadge" style="display:none">0</span>
   </button>
+</div>
+<!-- 사이트 전체 공지 배너 (popo 작성, 전체 표시) -->
+<div class="site-notice-bar" id="siteNoticeBar">
+  <span class="site-notice-icon">📢</span>
+  <span class="site-notice-text" id="siteNoticeText"></span>
+  <button class="site-notice-edit" id="siteNoticeEditBtn" onclick="toggleSiteNoticeEdit()" style="display:none">✏️</button>
+</div>
+<div class="site-notice-edit-panel" id="siteNoticeEditPanel">
+  <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:#7090ff;margin-bottom:.15rem;">📢 전체 공지 (관리자 전용)</div>
+  <textarea class="notice-edit-inp" id="siteNoticeEditInp" rows="2" maxlength="300" placeholder="전체 공지 내용을 입력하세요... (최대 300자)"></textarea>
+  <div class="notice-edit-btns">
+    <button onclick="toggleSiteNoticeEdit()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.28rem .65rem;cursor:pointer;">취소</button>
+    <button onclick="clearSiteNotice()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid rgba(255,0,0,.3);color:#ff6b6b;border-radius:8px;padding:.28rem .65rem;cursor:pointer;">공지 삭제</button>
+    <button onclick="saveSiteNotice()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:.28rem .75rem;cursor:pointer;font-weight:700;">저장</button>
+  </div>
 </div>
 <main>
   <div id="dex-page" class="page active">
@@ -1175,7 +1199,12 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
         <div class="friend-list" id="friendRequestsList"></div>
       </div>
       <!-- 친구 목록 -->
-      <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);margin-bottom:.5rem;" id="friendListTitle">친구 목록 (0명)</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+        <div style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);" id="friendListTitle">친구 목록 (0명)</div>
+      </div>
+      <div style="margin-bottom:.5rem;">
+        <input class="add-friend-inp" id="friendSearchInp" placeholder="🔍 친구 검색..." oninput="filterFriendList(this.value)" style="width:100%;"/>
+      </div>
       <div class="friend-list" id="friendList">
         <div style="text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;font-family:'Galmuri11',monospace;">친구를 추가해보세요!</div>
       </div>
@@ -1323,7 +1352,17 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       <div class="gp-members-title">📋 멤버 목록</div>
       <div id="gpMemberList"></div>
     </div>
+    <!-- 방 이름 편집 패널 (방장/관리자만) -->
+    <div id="gpEditPanel" style="display:none;padding:0 1.2rem .8rem;flex-direction:column;gap:.4rem;">
+      <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.2rem;">채팅방 이름 변경</div>
+      <input id="gpNameEditInp" class="add-friend-inp" style="width:100%;font-size:.8rem;" placeholder="새 채팅방 이름"/>
+      <div style="display:flex;gap:.4rem;justify-content:flex-end;margin-top:.2rem;">
+        <button onclick="document.getElementById('gpEditPanel').style.display='none'" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .65rem;cursor:pointer;">취소</button>
+        <button onclick="saveGroupName()" style="font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:.3rem .75rem;cursor:pointer;font-weight:700;">저장</button>
+      </div>
+    </div>
     <div style="padding:.6rem 1.2rem 1.5rem;display:flex;gap:.5rem;">
+      <button id="gpEditNameBtn" onclick="toggleGpEditPanel()" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;display:none;">✏️ 이름 변경</button>
       <button onclick="document.getElementById('groupProfileModal').classList.remove('open')" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;">닫기</button>
     </div>
   </div>
@@ -1437,6 +1476,12 @@ onAuthStateChanged(auth, async (user) => {
     renderMetPage();
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
+    // 전체 공지 로드 — _myProfile이 필요하므로 loadMyProfile 후 실행
+    if (window._loadMyProfile) {
+      window._loadMyProfile().then(() => {
+        if (window.loadSiteNotice) window.loadSiteNotice();
+      });
+    } else if (window.loadSiteNotice) window.loadSiteNotice();
   } else {
     currentUser = null;
     window._currentUser = null;
@@ -1760,19 +1805,20 @@ async function loadMyProfile() {
   if (!currentUser) return;
   const snap = await getDoc(doc(db, 'users', currentUser.uid));
   const d = snap.exists() ? snap.data() : {};
+  // uid = 아이디 (username 필드 또는 usernames 컬렉션에서 가져옴)
+  const idSnap = await getDoc(doc(db, 'usernames', currentUser.uid));
+  const resolvedUid = idSnap.exists()
+    ? (idSnap.data().username || d.username || '')
+    : (d.username || '');
   _myProfile = {
     nickname: d.nickname || currentUser.nickname || '트레이너',
-    uid: document.getElementById('loginId')?.value || currentUser.nickname || '',
+    uid: resolvedUid,
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
     profileImage: d.profileImage || null,
     met: (d.met||[]).length,
     quizHistory: (d.quizHistory||[]).length,
   };
-  // uid = 아이디로 저장된 값
-  const idSnap = await getDoc(doc(db, 'usernames', currentUser.uid));
-  if (idSnap.exists()) _myProfile.uid = idSnap.data().username || _myProfile.uid;
-  else if (d.username) _myProfile.uid = d.username; // users doc fallback
   renderMyProfile();
 }
 
@@ -1893,6 +1939,9 @@ function renderAvatarHtml(avatarVal, profileImage, size=44) {
 
 async function loadFriends() {
   if (!currentUser) return;
+  // 검색 필터 초기화 (loadFriends 호출 시 항상 전체 표시)
+  const searchInp = document.getElementById('friendSearchInp');
+  if (searchInp) searchInp.value = '';
   const snap = await getDoc(doc(db, 'users', currentUser.uid));
   const d = snap.exists() ? snap.data() : {};
   _friends = d.friends || [];
@@ -2074,7 +2123,10 @@ window.acceptFriend = async function(fromUid, fromNick, fromAvatar, fromUsername
     const myFriendsData = myData.friendsData || {};
     const myReqs = (myData.friendRequests || []).filter(id => id !== fromUid);
     if (!myFriends.includes(fromUid)) myFriends.push(fromUid);
-    myFriendsData[fromUid] = { nickname: fromNick, avatar: fromAvatar, username: fromUsername };
+    // profileImage는 상대 Firestore에서 직접 읽어 저장
+    const fromSnap2 = await getDoc(doc(db, 'users', fromUid));
+    const fromProfileImage = fromSnap2.exists() ? (fromSnap2.data().profileImage || null) : null;
+    myFriendsData[fromUid] = { nickname: fromNick, avatar: fromAvatar, username: fromUsername, profileImage: fromProfileImage };
     await updateDoc(doc(db, 'users', currentUser.uid), { friends: myFriends, friendsData: myFriendsData, friendRequests: myReqs });
 
     // 상대방 쪽
@@ -2083,7 +2135,7 @@ window.acceptFriend = async function(fromUid, fromNick, fromAvatar, fromUsername
     const theirFriends = theirData.friends || [];
     const theirFriendsData = theirData.friendsData || {};
     if (!theirFriends.includes(currentUser.uid)) theirFriends.push(currentUser.uid);
-    theirFriendsData[currentUser.uid] = { nickname: _myProfile?.nickname || currentUser.nickname || '트레이너', avatar: _myProfile?.avatar || '🎒', username: _myProfile?.uid || '' };
+    theirFriendsData[currentUser.uid] = { nickname: _myProfile?.nickname || currentUser.nickname || '트레이너', avatar: _myProfile?.avatar || '🎒', username: _myProfile?.uid || '', profileImage: _myProfile?.profileImage || null };
     await updateDoc(doc(db, 'users', fromUid), { friends: theirFriends, friendsData: theirFriendsData });
 
     showSocialToast('친구가 됐어요! 🎉');
@@ -2104,12 +2156,24 @@ window.rejectFriend = async function(fromUid) {
 window.removeFriend = async function(fuid) {
   if (!confirm('친구를 삭제할까요?')) return;
   try {
+    // 내 쪽에서 제거
     const snap = await getDoc(doc(db, 'users', currentUser.uid));
     const d = snap.exists() ? snap.data() : {};
     const friends = (d.friends || []).filter(id => id !== fuid);
     const fd = d.friendsData || {};
     delete fd[fuid];
     await updateDoc(doc(db, 'users', currentUser.uid), { friends, friendsData: fd });
+    // 상대방 쪽에서도 제거
+    try {
+      const theirSnap = await getDoc(doc(db, 'users', fuid));
+      if (theirSnap.exists()) {
+        const td = theirSnap.data();
+        const theirFriends = (td.friends || []).filter(id => id !== currentUser.uid);
+        const theirFd = td.friendsData || {};
+        delete theirFd[currentUser.uid];
+        await updateDoc(doc(db, 'users', fuid), { friends: theirFriends, friendsData: theirFd });
+      }
+    } catch(e2) {}
     showSocialToast('친구를 삭제했어요');
     await loadFriends();
   } catch(e) {}
@@ -2226,9 +2290,9 @@ window.openGroupChat = async function(roomId, roomName, members) {
     const roomSnap = await getDoc(doc(db,'chats',roomId));
     if (roomSnap.exists()) {
       const rData = roomSnap.data();
-      const cnt = (rData.participants||[]).length;
+        _groupMembers = rData.groupMembers || members || {};
+      const cnt = Object.keys(_groupMembers).length;
       document.getElementById('chatFriendStatus').textContent = cnt + '명';
-      _groupMembers = rData.groupMembers || members || {};
     } else {
       document.getElementById('chatFriendStatus').textContent = Object.keys(members||{}).length + '명';
     }
@@ -2251,6 +2315,12 @@ window.openGroupChat = async function(roomId, roomName, members) {
   loadNotice(roomId);
   subscribeMessages(roomId, true);
 };
+
+// ── 아바타 HTML 헬퍼 (채팅 버블용) ────────────
+function makeBubbleAvatar(profileImage, avatarEmoji, size=32) {
+  if (profileImage) return `<img src="${profileImage}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt=""/>`;
+  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;flex-shrink:0;">${escapeHtml(avatarEmoji||'🎒')}</div>`;
+}
 
 // ── 메시지 구독 ──────────────────────────────
 function subscribeMessages(roomId, isGroup) {
@@ -2287,12 +2357,6 @@ function subscribeMessages(roomId, isGroup) {
         wrap.innerHTML = `<div style="text-align:center;font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;padding:.2rem 0;margin:.1rem 0;">${escapeHtml(data.text||'')}</div>`;
         msgs.appendChild(wrap);
         return;
-      }
-
-      // ── 아바타 HTML ──────────────────────────
-      function makeBubbleAvatar(profileImage, avatarEmoji, size=32) {
-        if (profileImage) return `<img src="${profileImage}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt=""/>`;
-        return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;flex-shrink:0;">${escapeHtml(avatarEmoji||'🎒')}</div>`;
       }
 
       // 상대 아바타 (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
@@ -2342,16 +2406,16 @@ function subscribeMessages(roomId, isGroup) {
       let readHtml = '';
       if (isMe) {
         if (!isGroup) {
-          // DM: 읽음/전송됨
+          // DM: 상대가 읽지 않으면 "1", 읽었으면 빈칸 (카카오톡 스타일)
           const readBy = data.readBy || [];
-          readHtml = readBy.includes(_currentChatUid)
-            ? `<div class="read-receipt read">읽음</div>`
-            : `<div class="read-receipt unread-count">1</div>`;
+          const isRead = readBy.includes(_currentChatUid);
+          if (!isRead) readHtml = `<div class="read-receipt unread-count">1</div>`;
         } else {
-          // 그룹: 안 읽은 사람 수 = 총 인원 - 읽은 사람 수
+          // 그룹: 안 읽은 사람 수 = (총 인원 - 나) - (readBy 중 나 제외 수)
           const readBy = data.readBy || [];
-          const totalMembers = Object.keys(_groupMembers).length || 1;
-          const unreadCnt = Math.max(0, totalMembers - readBy.length);
+          const totalOthers = Math.max(0, Object.keys(_groupMembers).length - 1);
+          const readByOthers = readBy.filter(uid => uid !== currentUser.uid).length;
+          const unreadCnt = Math.max(0, totalOthers - readByOthers);
           if (unreadCnt > 0) readHtml = `<div class="read-receipt unread-count">${unreadCnt}</div>`;
         }
       }
@@ -2618,7 +2682,9 @@ async function updateRoomMeta(roomId, lastMsg) {
   const roomRef = doc(db,'chats',roomId);
   const metaSnap = await getDoc(roomRef);
   const meta = metaSnap.exists() ? metaSnap.data() : {};
-  const participants = meta.participants || [currentUser.uid, _currentChatUid].filter(Boolean);
+  const participants = meta.participants || (_currentIsGroup
+    ? [currentUser.uid]
+    : [currentUser.uid, _currentChatUid].filter(Boolean));
   const updates = { lastMsg, lastTs: serverTimestamp(), lastFrom: currentUser.uid };
   // 현재 participants(나간 사람 제외)에 포함된 수신자만 unread 증가
   participants.forEach(uid => {
@@ -3006,19 +3072,20 @@ window.createGroupChat = async function() {
   members[currentUser.uid] = {
     nickname: myData.nickname || _myProfile?.nickname || currentUser.nickname || '트레이너',
     avatar: myData.avatar || _myProfile?.avatar || '🎒',
-    username: myData.username || _myProfile?.uid || ''
+    username: myData.username || _myProfile?.uid || '',
+    profileImage: myData.profileImage || _myProfile?.profileImage || null
   };
   // 선택된 친구들 정보
   for (const uid of selected) {
     const fd = friendsData[uid];
     if (fd && (fd.nickname || fd.avatar)) {
-      members[uid] = { nickname: fd.nickname || '트레이너', avatar: fd.avatar || '🎒', username: fd.username || '' };
+      members[uid] = { nickname: fd.nickname || '트레이너', avatar: fd.avatar || '🎒', username: fd.username || '', profileImage: fd.profileImage || null };
     } else {
       // fallback: Firestore에서 직접 가져오기
       try {
         const fSnap = await getDoc(doc(db,'users',uid));
         const fData = fSnap.exists() ? fSnap.data() : {};
-        members[uid] = { nickname: fData.nickname || '트레이너', avatar: fData.avatar || '🎒', username: fData.username || '' };
+        members[uid] = { nickname: fData.nickname || '트레이너', avatar: fData.avatar || '🎒', username: fData.username || '', profileImage: fData.profileImage || null };
       } catch(e) {
         members[uid] = { nickname: '트레이너', avatar: '🎒', username: '' };
       }
@@ -3045,6 +3112,15 @@ function escapeHtml(str) {
 }
 
 // ── 친구 검색 (단체채팅 생성) ─────────────────
+window.filterFriendList = function(query) {
+  const q = (query || '').toLowerCase();
+  const rows = document.querySelectorAll('#friendList .friend-row');
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(q) ? '' : 'none';
+  });
+};
+
 window.filterGroupMembers = function(query) {
   const rows = document.querySelectorAll('#groupMemberList .group-member-row');
   const q = query.toLowerCase();
@@ -3062,15 +3138,23 @@ window.openGroupProfile = async function() {
   document.getElementById('gpName').textContent = _currentChatName || '단체 채팅';
   modal.classList.add('open');
 
-  // Firestore에서 최신 멤버 정보 로드
+  // Firestore에서 최신 멤버·방장 정보 한 번에 로드
   try {
     const roomSnap = await getDoc(doc(db,'chats',_currentRoomId));
     if (roomSnap.exists()) {
       const rData = roomSnap.data();
       _groupMembers = rData.groupMembers || _groupMembers;
-      const actualCount = (rData.participants||[]).length;
+      const actualCount = Object.keys(_groupMembers).length;
       document.getElementById('gpCount').textContent = actualCount + '명';
       document.getElementById('chatFriendStatus').textContent = actualCount + '명';
+      // 방장만 이름 변경 가능
+      const gpEditBtn = document.getElementById('gpEditNameBtn');
+      const gpNameInp = document.getElementById('gpNameEditInp');
+      const gpEditPanel = document.getElementById('gpEditPanel');
+      const canEdit = rData.createdBy === currentUser.uid;
+      if (gpEditBtn) gpEditBtn.style.display = canEdit ? 'flex' : 'none';
+      if (gpNameInp) gpNameInp.value = _currentChatName || '';
+      if (gpEditPanel) gpEditPanel.style.display = 'none';
     }
   } catch(e) {
     document.getElementById('gpCount').textContent = Object.keys(_groupMembers).length + '명';
@@ -3082,14 +3166,47 @@ window.openGroupProfile = async function() {
     const isMe = uid === currentUser.uid;
     const row = document.createElement('div');
     row.className = 'gp-member-row';
+    const avContent = m.profileImage
+      ? `<img src="${m.profileImage}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=""/>`
+      : escapeHtml(m.avatar||'🎒');
     row.innerHTML = `
-      <div class="gp-member-av">${m.avatar||'🎒'}</div>
+      <div class="gp-member-av" style="overflow:hidden">${avContent}</div>
       <div>
         <div class="gp-member-name">${escapeHtml(m.nickname||'트레이너')}${isMe?' <span style="font-size:.55rem;color:var(--accent);font-family:Galmuri11,monospace">나</span>':''}</div>
         <div class="gp-member-tag">@${escapeHtml(m.username||'')}</div>
       </div>`;
     listEl.appendChild(row);
   });
+};
+
+window.toggleGpEditPanel = function() {
+  const panel = document.getElementById('gpEditPanel');
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none' && panel.style.display !== '';
+  panel.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) setTimeout(() => document.getElementById('gpNameEditInp')?.focus(), 60);
+};
+
+window.saveGroupName = async function() {
+  if (!currentUser || !_currentRoomId) return;
+  const inp = document.getElementById('gpNameEditInp');
+  const newName = (inp?.value || '').trim();
+  if (!newName) { showSocialToast('이름을 입력해주세요'); return; }
+  try {
+    await updateDoc(doc(db,'chats',_currentRoomId), { groupName: newName });
+    const myNick = _myProfile?.nickname || '트레이너';
+    await addDoc(collection(db,'chats',_currentRoomId,'messages'), {
+      from: currentUser.uid, type: 'system',
+      text: `${myNick}이(가) 채팅방 이름을 "${newName}"으로 변경했어요`,
+      ts: serverTimestamp(), readBy: [currentUser.uid]
+    });
+    _currentChatName = newName;
+    document.getElementById('chatFriendName').textContent = newName;
+    document.getElementById('gpName').textContent = newName;
+    document.getElementById('gpEditPanel').style.display = 'none';
+    showSocialToast('채팅방 이름이 변경됐어요 ✓');
+    loadDmList();
+  } catch(e) { showSocialToast('변경 실패: ' + e.message); }
 };
 
 window.closeGroupProfile = function(e) {
@@ -3718,7 +3835,8 @@ async function loadNotice(roomId) {
       } else {
         banner.classList.remove('show');
       }
-      // 공지 편집 버튼: 단체 채팅방에서만 표시
+      // 공지 편집 버튼: popo 아이디만 작성 가능
+      // 채팅방 공지는 모든 멤버 작성 가능
       if (editBtn) editBtn.style.display = _currentIsGroup ? 'inline-block' : 'none';
     }
   } catch(e) {}
@@ -3910,6 +4028,7 @@ window.showSocialTab = function(tab) {
 window._loadMyProfile = loadMyProfile;
 window.initSocialPage = async function() {
   await loadMyProfile();
+  loadSiteNotice();
   await loadSpotlight();
   if (_socialTab === 'friends') await loadFriends();
   else await loadDmList();
@@ -3987,7 +4106,75 @@ window.handleRefresh = async function() {
 };
 
 // loadSpotlight를 모듈 외부에서도 접근 가능하도록 노출
+
+// ═══════════════════════════════════════════════
+// 사이트 전체 공지 (popo 전용 작성, 전체 표시)
+// ═══════════════════════════════════════════════
+async function loadSiteNotice() {
+  try {
+    const snap = await getDoc(doc(db, 'siteConfig', 'notice'));
+    const bar = document.getElementById('siteNoticeBar');
+    const textEl = document.getElementById('siteNoticeText');
+    const editBtn = document.getElementById('siteNoticeEditBtn');
+    if (!bar || !textEl) return;
+
+    const notice = snap.exists() ? (snap.data().text || '') : '';
+    if (notice) {
+      textEl.textContent = notice;
+      bar.classList.add('show');
+    } else {
+      bar.classList.remove('show');
+    }
+    // popo만 편집 버튼 표시
+    const isPopo = (_myProfile?.uid === 'popo');
+    if (editBtn) {
+      editBtn.style.display = isPopo ? 'inline-block' : 'none';
+      // popo는 공지가 없어도 배너 표시 (편집용)
+      if (isPopo && !notice) {
+        textEl.textContent = '(공지 없음 — 편집 버튼으로 추가)';
+        bar.classList.add('show');
+      }
+    }
+  } catch(e) {}
+}
+
+window.toggleSiteNoticeEdit = function() {
+  const panel = document.getElementById('siteNoticeEditPanel');
+  if (!panel) return;
+  const isOpen = panel.classList.contains('show');
+  panel.classList.toggle('show', !isOpen);
+  if (!isOpen) {
+    const inp = document.getElementById('siteNoticeEditInp');
+    const cur = document.getElementById('siteNoticeText')?.textContent || '';
+    if (inp) {
+      inp.value = cur.startsWith('(공지 없음') ? '' : cur;
+      setTimeout(() => inp.focus(), 80);
+    }
+  }
+};
+
+window.saveSiteNotice = async function() {
+  const isPopo = (_myProfile?.uid === 'popo');
+  if (!isPopo) { showSocialToast('권한이 없어요'); return; }
+  const inp = document.getElementById('siteNoticeEditInp');
+  const text = (inp?.value || '').trim();
+  try {
+    await setDoc(doc(db, 'siteConfig', 'notice'), { text, updatedAt: serverTimestamp(), updatedBy: currentUser.uid });
+    document.getElementById('siteNoticeEditPanel')?.classList.remove('show');
+    loadSiteNotice();
+    showSocialToast(text ? '전체 공지가 등록됐어요 📢' : '공지가 삭제됐어요');
+  } catch(e) { showSocialToast('저장 실패: ' + e.message); }
+};
+
+window.clearSiteNotice = async function() {
+  if (!confirm('전체 공지를 삭제할까요?')) return;
+  const inp = document.getElementById('siteNoticeEditInp');
+  if (inp) inp.value = '';
+  await window.saveSiteNotice();
+};
+
 window.loadSpotlight = loadSpotlight;
+window.loadSiteNotice = loadSiteNotice;
 </script>
 <script>
 /* ===== 로그인 모드 전환 (모듈 스크립트와 무관하게 즉시 실행) ===== */
