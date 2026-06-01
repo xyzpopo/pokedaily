@@ -500,6 +500,13 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .chat-bubble-wrap{display:flex;flex-direction:column;gap:.06rem;}
 .chat-bubble-wrap.me{align-items:flex-end;}
 .chat-bubble-wrap.them{align-items:flex-start;}
+/* 버블 메인 행 (프사+메시지+시간) */
+.bubble-main-row{display:flex;align-items:flex-end;gap:.35rem;}
+.bubble-main-row.me{flex-direction:row;justify-content:flex-end;}
+.bubble-main-row.them{flex-direction:row;justify-content:flex-start;}
+.bubble-content{display:flex;flex-direction:column;gap:.06rem;max-width:78%;}
+.bubble-time-row{display:flex;flex-direction:column;align-items:flex-end;gap:.1rem;flex-shrink:0;padding-bottom:.15rem;}
+.read-receipt.unread-count{font-family:'Galmuri11',monospace;font-size:.55rem;color:var(--accent);font-weight:700;}
 .chat-bubble{max-width:78%;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
 .chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
 .chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
@@ -1808,16 +1815,19 @@ window.startEditProfile = function() {
   }
 };
 window.selectAvatarInline = function(av) {
-  if (_myProfile) _myProfile._pendingAvatar = av;
+  if (_myProfile) { _myProfile._pendingAvatar = av; _myProfile._pendingClearImage = true; }
   document.querySelectorAll('#avatarPickerInline button').forEach(b => {
     const isMe = b.textContent === av;
     b.style.background = isMe ? 'rgba(255,203,5,.2)' : 'var(--surface)';
     b.style.borderColor = isMe ? 'var(--accent)' : 'var(--border)';
   });
+  // 미리보기 즉시 반영
+  const emojiEl = document.getElementById('profileAvatarEmoji');
+  if (emojiEl) emojiEl.textContent = av;
 };
 window.cancelEditProfile = function() {
   document.getElementById('profileEditPanel').style.display = 'none';
-  if (_myProfile) delete _myProfile._pendingAvatar;
+  if (_myProfile) { delete _myProfile._pendingAvatar; delete _myProfile._pendingClearImage; }
 };
 window.startEditBio = function() { window.startEditProfile(); };
 window.openAvatarPicker = function() { window.startEditProfile(); };
@@ -1827,31 +1837,30 @@ window.saveProfile = async function() {
   const nn = document.getElementById('editNicknameInp').value.trim() || _myProfile?.nickname || '트레이너';
   const bio = document.getElementById('editBioInp').value.trim();
   const avatar = (_myProfile?._pendingAvatar) || _myProfile?.avatar || '🎒';
+  // 아바타 이모지를 새로 선택했으면 profileImage 제거
+  const clearImage = !!(_myProfile?._pendingClearImage);
+  const newProfileImage = clearImage ? null : (_myProfile?.profileImage || null);
   try {
-    await updateDoc(doc(db, 'users', currentUser.uid), { nickname: nn, bio, avatar });
-    if (_myProfile) { _myProfile.nickname = nn; _myProfile.bio = bio; _myProfile.avatar = avatar; delete _myProfile._pendingAvatar; }
+    const updateData = { nickname: nn, bio, avatar };
+    if (clearImage) updateData.profileImage = null;
+    await updateDoc(doc(db, 'users', currentUser.uid), updateData);
+    if (_myProfile) {
+      _myProfile.nickname = nn; _myProfile.bio = bio; _myProfile.avatar = avatar;
+      _myProfile.profileImage = newProfileImage;
+      delete _myProfile._pendingAvatar; delete _myProfile._pendingClearImage;
+    }
     currentUser.nickname = nn;
     window._currentUser = currentUser;
     document.getElementById('userNameDisplay').textContent = nn + ' 트레이너';
-    const headerAv = document.getElementById('headerAvatar');
-    if (headerAv) {
-      if (_myProfile?.profileImage) {
-        headerAv.innerHTML = `<img src="${_myProfile.profileImage}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
-      } else {
-        headerAv.textContent = avatar;
-      }
-    }
     renderMyProfile();
     window.cancelEditProfile();
-    // 닉네임 변경을 친구들에게도 반영 (denormalized cache 업데이트)
-    await updateFriendNicknameCache(nn, avatar);
+    await updateFriendNicknameCache(nn, avatar, newProfileImage);
     showSocialToast('프로필이 저장됐어요 ✓');
   } catch(e) { showSocialToast('저장 실패: ' + e.message); }
 };
 
-async function updateFriendNicknameCache(nn, avatar) {
-  // 내가 보낸 메시지가 있는 채팅방의 캐시 업데이트는 생략 (복잡도 대비 효과 낮음)
-  // 친구들의 friendList 내 내 정보를 갱신
+async function updateFriendNicknameCache(nn, avatar, profileImage) {
+  // 친구들의 friendsData 내 내 정보를 갱신 (nickname, avatar, profileImage)
   try {
     const mySnap = await getDoc(doc(db, 'users', currentUser.uid));
     const friends = mySnap.exists() ? (mySnap.data().friends || []) : [];
@@ -1862,6 +1871,8 @@ async function updateFriendNicknameCache(nn, avatar) {
       if (fFriends[currentUser.uid]) {
         fFriends[currentUser.uid].nickname = nn;
         fFriends[currentUser.uid].avatar = avatar;
+        // profileImage가 undefined면 기존값 유지, null이면 명시적으로 지움
+        if (profileImage !== undefined) fFriends[currentUser.uid].profileImage = profileImage;
         await updateDoc(doc(db, 'users', fid), { friendsData: fFriends });
       }
     }
@@ -1871,6 +1882,14 @@ async function updateFriendNicknameCache(nn, avatar) {
 // ---------- 친구 ----------
 let _pendingRequests = []; // 받은 친구 요청
 let _friends = [];
+
+// ── 아바타 HTML 헬퍼 (이모지/이미지 프로필 통합) ────────────
+function renderAvatarHtml(avatarVal, profileImage, size=44) {
+  if (profileImage) {
+    return `<img src="${profileImage}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" alt=""/>`;
+  }
+  return escapeHtml(avatarVal || '🎒');
+}
 
 async function loadFriends() {
   if (!currentUser) return;
@@ -1902,7 +1921,7 @@ async function loadFriends() {
         const row = document.createElement('div');
         row.className = 'friend-row';
         row.innerHTML = `
-          <div class="friend-avatar">${uData.avatar||'🎒'}</div>
+          <div class="friend-avatar">${renderAvatarHtml(uData.avatar, uData.profileImage||null, 44)}</div>
           <div class="friend-info">
             <div class="friend-name">${uData.nickname||username}</div>
             <div class="friend-id">@${username}</div>
@@ -1935,16 +1954,16 @@ async function loadFriends() {
     const row = document.createElement('div');
     row.className = 'friend-row';
     row.innerHTML = `
-      <div class="friend-avatar">${fData.avatar||'🎒'}</div>
+      <div class="friend-avatar">${renderAvatarHtml(fData.avatar, fData.profileImage||null, 44)}</div>
       <div class="friend-info">
         <div class="friend-name">${fData.nickname||'트레이너'}</div>
         <div class="friend-id">@${fData.username||'?'}</div>
       </div>
       <div class="friend-actions">
-        <button class="friend-action-btn" onclick="openChat('${fuid}','${(fData.nickname||'트레이너').replace(/'/g,"\'")}','${fData.avatar||'🎒'}','${fData.username||'?'}')">💬 DM</button>
+        <button class="friend-action-btn" onclick="openChat('${fuid}','${(fData.nickname||'트레이너').replace(/'/g,"\'")}','${fData.avatar||'🎒'}','${fData.username||'?'}','${encodeURIComponent(fData.profileImage||'')}')">💬 DM</button>
         <button class="friend-action-btn danger" onclick="removeFriend('${fuid}')">삭제</button>
       </div>`;
-    row.onclick = (e) => { if(e.target.tagName==='BUTTON') return; openChat(fuid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?'); };
+    row.onclick = (e) => { if(e.target.tagName==='BUTTON') return; openChat(fuid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?', fData.profileImage||''); };
     list.appendChild(row);
   }
 }
@@ -2123,7 +2142,11 @@ async function updateMyOnlineStatus(online) {
 document.addEventListener('visibilitychange', () => updateMyOnlineStatus(!document.hidden));
 
 // ── 채팅방 열기 ──────────────────────────────
-window.openChat = async function(friendUid, friendName, friendAvatar, friendUsername) {
+window.openChat = async function(friendUid, friendName, friendAvatar, friendUsername, friendProfileImage) {
+  // friendProfileImage가 인코딩된 문자열이면 디코딩
+  if (friendProfileImage && typeof friendProfileImage === 'string' && !friendProfileImage.startsWith('data:')) {
+    try { friendProfileImage = decodeURIComponent(friendProfileImage); } catch(e) { friendProfileImage = ''; }
+  }
   showSocialTab('messages');
   _currentChatUid    = friendUid;
   _currentChatName   = friendName;
@@ -2132,11 +2155,16 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
   const roomId = getChatRoomId(currentUser.uid, friendUid);
   _currentRoomId = roomId;
   _replyTo = null;
+  window._chatFriendProfileImage = friendProfileImage || null;
   document.getElementById('replyPreview').classList.remove('show');
 
   document.getElementById('chatFriendName').textContent    = friendName;
   document.getElementById('chatFriendStatus').textContent  = '...';
-  document.getElementById('chatFriendAvatar').innerHTML    = friendAvatar + '<div class="online-dot offline" id="chatOnlineDot"></div>';
+  // 프로필 이미지가 있으면 img, 없으면 이모지
+  const avatarHtml = friendProfileImage
+    ? `<img src="${friendProfileImage}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" alt=""/>`
+    : escapeHtml(friendAvatar || '🎒');
+  document.getElementById('chatFriendAvatar').innerHTML = avatarHtml + '<div class="online-dot offline" id="chatOnlineDot"></div>';
   document.getElementById('dmListView').style.display = 'none';
   document.getElementById('chatView').style.display   = 'block';
   const gpBtn = document.getElementById('groupProfileBtn');
@@ -2254,7 +2282,39 @@ function subscribeMessages(roomId, isGroup) {
       const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
       const timeStr = ts.getHours().toString().padStart(2,'0') + ':' + ts.getMinutes().toString().padStart(2,'0');
 
-      // 그룹: 발신자 이름
+      // 시스템 메시지 처리
+      if (data.type === 'system') {
+        wrap.innerHTML = `<div style="text-align:center;font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;padding:.2rem 0;margin:.1rem 0;">${escapeHtml(data.text||'')}</div>`;
+        msgs.appendChild(wrap);
+        return;
+      }
+
+      // ── 아바타 HTML ──────────────────────────
+      function makeBubbleAvatar(profileImage, avatarEmoji, size=32) {
+        if (profileImage) return `<img src="${profileImage}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt=""/>`;
+        return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;flex-shrink:0;">${escapeHtml(avatarEmoji||'🎒')}</div>`;
+      }
+
+      // 상대 아바타 (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
+      let theirAvatarHtml = '';
+      if (!isMe) {
+        if (isGroup) {
+          const m = _groupMembers[data.from] || {};
+          theirAvatarHtml = makeBubbleAvatar(m.profileImage||null, m.avatar||'🎒');
+        } else {
+          // DM 상대 — openChat에서 넘긴 profileImage는 저장 안 돼있으므로 friendsData 참조
+          const theirImg = window._chatFriendProfileImage || null;
+          theirAvatarHtml = makeBubbleAvatar(theirImg, _currentChatAvatar);
+        }
+      }
+
+      // 내 아바타
+      let myAvatarHtml = '';
+      if (isMe) {
+        myAvatarHtml = makeBubbleAvatar(_myProfile?.profileImage||null, _myProfile?.avatar||'🎒');
+      }
+
+      // 그룹: 발신자 이름 (them 위쪽)
       let senderHtml = '';
       if (isGroup && !isMe) {
         const sName = (_groupMembers[data.from]?.nickname) || '트레이너';
@@ -2269,12 +2329,6 @@ function subscribeMessages(roomId, isGroup) {
 
       // 내용
       let bodyHtml = '';
-      if (data.type === 'system') {
-        wrap.innerHTML = `<div style="text-align:center;font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;padding:.2rem 0;margin:.1rem 0;">${escapeHtml(data.text||'')}</div>`;
-        msgs.appendChild(wrap);
-        return;
-      }
-
       if (data.type === 'tour') {
         bodyHtml = renderTourCard(data, isMe, msgId);
       } else if (data.type === 'image') {
@@ -2284,20 +2338,52 @@ function subscribeMessages(roomId, isGroup) {
         bodyHtml = `<div class="chat-bubble ${isMe?'me':'them'}">${quoteHtml}${txt}</div>`;
       }
 
-      // 읽음 확인 (DM only)
+      // 읽음 / 안 본 사람 수
       let readHtml = '';
-      if (!isGroup && isMe) {
-        const readBy = data.readBy || [];
-        readHtml = readBy.includes(_currentChatUid)
-          ? `<div class="read-receipt read">읽음</div>`
-          : `<div class="read-receipt">전송됨</div>`;
+      if (isMe) {
+        if (!isGroup) {
+          // DM: 읽음/전송됨
+          const readBy = data.readBy || [];
+          readHtml = readBy.includes(_currentChatUid)
+            ? `<div class="read-receipt read">읽음</div>`
+            : `<div class="read-receipt unread-count">1</div>`;
+        } else {
+          // 그룹: 안 읽은 사람 수 = 총 인원 - 읽은 사람 수
+          const readBy = data.readBy || [];
+          const totalMembers = Object.keys(_groupMembers).length || 1;
+          const unreadCnt = Math.max(0, totalMembers - readBy.length);
+          if (unreadCnt > 0) readHtml = `<div class="read-receipt unread-count">${unreadCnt}</div>`;
+        }
       }
 
       // 리액션
       const reactions = data.reactions || {};
       const reactionHtml = buildReactionHtml(reactions, msgId);
 
-      wrap.innerHTML = senderHtml + bodyHtml + `<div style="display:flex;align-items:center;gap:.3rem;">${readHtml}<div class="chat-time">${timeStr}</div></div>` + reactionHtml;
+      const timeReadHtml = `<div class="bubble-time-row">${readHtml}<div class="chat-time">${timeStr}</div></div>`;
+
+      if (isMe) {
+        // 내 메시지: (안본수+시간) | (메시지) | (프사)
+        wrap.innerHTML =
+          `<div class="bubble-main-row me">` +
+            timeReadHtml +
+            bodyHtml +
+            myAvatarHtml +
+          `</div>` +
+          reactionHtml;
+      } else {
+        // 상대 메시지: (프사) | (이름+메시지) | (시간)
+        wrap.innerHTML =
+          `<div class="bubble-main-row them">` +
+            theirAvatarHtml +
+            `<div class="bubble-content">` +
+              senderHtml +
+              bodyHtml +
+            `</div>` +
+            timeReadHtml +
+          `</div>` +
+          reactionHtml;
+      }
 
       // 우클릭 / 롱프레스
       attachMsgContextMenu(wrap, { msgId, data, isMe, roomId });
@@ -2800,14 +2886,17 @@ async function loadDmList() {
       if (isGroup) {
         avatar = `<div class="group-avatar">👥</div>`;
         name = data.groupName || '단체 채팅';
-        previewSub = (data.participants||[]).length + '명';
+        // 인원 수: groupMembers 객체 키 수 우선 (participants보다 정확)
+        const memberCount = data.groupMembers ? Object.keys(data.groupMembers).length : (data.participants||[]).length;
+        previewSub = memberCount + '명';
       } else {
         const friendUid = (data.participants||[]).find(p => p !== currentUser.uid);
         const fData = friendsData[friendUid] || {};
-        const avatarVal = fData.avatar || '🎒';
-        // 프로필 이미지(base64 또는 URL)이면 img 태그, 아니면 이모지
-        const isImgUrl = avatarVal && (avatarVal.startsWith('data:') || avatarVal.startsWith('http'));
-        avatar = `<div class="dm-avatar">${isImgUrl ? `<img src="${escapeHtml(avatarVal)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=""/>` : avatarVal}</div>`;
+        // profileImage 우선, 없으면 avatar 이모지
+        const avatarContent = fData.profileImage
+          ? `<img src="${escapeHtml(fData.profileImage)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=""/>`
+          : escapeHtml(fData.avatar || '🎒');
+        avatar = `<div class="dm-avatar">${avatarContent}</div>`;
         name = fData.nickname || '트레이너';
         previewSub = '';
       }
@@ -2836,7 +2925,7 @@ async function loadDmList() {
         } else {
           const friendUid = (data.participants||[]).find(p=>p!==currentUser.uid);
           const fData = friendsData[friendUid]||{};
-          openChat(friendUid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?');
+          openChat(friendUid, fData.nickname||'트레이너', fData.avatar||'🎒', fData.username||'?', fData.profileImage||'');
         }
       };
       dmList.appendChild(row);
@@ -3128,7 +3217,7 @@ window.uploadProfileImage = async function(input) {
       setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 2000);
       showSocialToast('프로필 이미지가 변경됐어요 🖼️');
       // 친구들에게도 업데이트
-      await updateFriendNicknameCache(_myProfile?.nickname || currentUser.nickname, _myProfile?.avatar || '🎒');
+      await updateFriendNicknameCache(_myProfile?.nickname || currentUser.nickname, _myProfile?.avatar || '🎒', base64);
     } catch(err) {
       if (statusEl) statusEl.textContent = '실패';
       showSocialToast('저장 실패: ' + err.message);
