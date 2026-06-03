@@ -1596,7 +1596,8 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     // Firestore에서 닉네임 가져오기
     const snap = await getDoc(doc(db, 'users', user.uid));
-    const nickname = snap.exists() ? snap.data().nickname : user.email.replace('@pkdex.com','');
+    const fallbackName = (user.email || '').replace('@pkdex.com','') || '트레이너';
+    const nickname = snap.exists() ? (snap.data().nickname || fallbackName) : fallbackName;
     currentUser = { uid: user.uid, nickname };
     window._currentUser = currentUser;
     document.getElementById('loginScreen').style.display = 'none';
@@ -1615,7 +1616,7 @@ onAuthStateChanged(auth, async (user) => {
     // UID 기반 오늘의 포켓몬 재로드 (로그인 후 시드 재계산)
     document.getElementById('dex-loading').style.display='flex';
     document.getElementById('dex-content').style.display='none';
-    if (typeof init === 'function') init();
+    if (typeof init === 'function') await init();
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
     // 전체 공지 로드 — _myProfile이 필요하므로 loadMyProfile 후 실행
@@ -1669,8 +1670,10 @@ async function markMet(pokemon) {
 async function unmarkMet(id) {
   if (!currentUser) return;
   const list = await getMetList();
+  const newList = list.filter(m => m.id !== id);
   _metIdSet.delete(id);
-  await updateDoc(doc(db, 'users', currentUser.uid), { met: list.filter(m => m.id !== id) });
+  window._metPokemonCache = newList;
+  await updateDoc(doc(db, 'users', currentUser.uid), { met: newList });
   renderMetPage();
 }
 
@@ -1678,6 +1681,8 @@ window.clearMetPokemon = async function() {
   if (!currentUser) return;
   if (!confirm('만난 포켓몬 기록을 모두 초기화할까요?')) return;
   await updateDoc(doc(db, 'users', currentUser.uid), { met: [] });
+  _metIdSet = new Set();
+  window._metPokemonCache = [];
   renderMetPage();
 };
 
@@ -1757,8 +1762,7 @@ async function renderMetPage() {
 }
 
 window.setMetView = function(mode) {
-  saveSetting('metView', mode);
-  if (window.saveSettingToServer) window.saveSettingToServer('metView', mode);
+  saveSetting('metView', mode); // saveSetting already calls saveSettingToServer internally
   renderMetPage();
 };
 
@@ -4579,7 +4583,7 @@ function renderPollCard(data, msgId) {
     </div>
     <div style="display:flex;flex-direction:column;gap:.3rem;">${optHtml}</div>
     ${mode==='battle' ? `<button class="poll-battle-btn" onclick="startBattle('${msgId}')" ${!hasVoted?'disabled':''}>
-      ⚔️ ${hasVoted?'배틀 참전!':'먼저 투표하세요'}
+      ⚔️ ${hasVoted?'배틀 참전! (모두 준비하면 시작)':'먼저 투표하세요'}
     </button>` : ''}
     ${isCreator && !closed ? `<button onclick="closePoll('${msgId}')" style="width:100%;font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem;cursor:pointer;margin-top:.15rem;">마감하기</button>` : ''}
   </div>`;
@@ -4795,69 +4799,86 @@ window.confirmBattlePick = async function() {
   showRevealPhase(s);
 };
 
-// ── 3. 선택 공개 화면 (5초 카운트다운) ─────────────────────
+// ── 3. 선택 공개 화면 (모두 준비 완료 시 배틀 시작) ──────────
 function showRevealPhase(s) {
   const pick   = document.getElementById('battlePickPhase');
   const reveal = document.getElementById('battleRevealPhase');
   pick.style.display   = 'none';
   reveal.style.display = 'block';
 
-  let countdown = 5;
+  // 투표에 참여한 총 인원 수
+  const poll   = s.poll;
+  const votes  = poll.votes || {};
+  const totalVoters = Object.keys(votes).length;
+
   let unsubReady = null;
+  let launched   = false;
+  let _latestDocs = [];
 
   function renderReveal(readyDocs) {
+    _latestDocs = readyDocs;
+    const readyCount = readyDocs.length;
+    const allReady   = readyCount >= totalVoters && totalVoters > 0;
+
     const cards = readyDocs.map(d => `
       <div style="background:var(--surface);border:1.5px solid ${d.teamIdx===s.myTeam.idx?'var(--accent)':'var(--border)'};border-radius:12px;padding:.5rem .65rem;display:flex;align-items:center;gap:.5rem;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
-          ${d.profileImage?`<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt=""/>`:`<span style="font-size:.9rem;">${escapeHtml(d.avatar||'🎒')}</span>`}
+          ${d.profileImage?`<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt=""/>`:`<span style="font-size:.9rem;">${escapeHtml(d.avatar||"🎒")}</span>`}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--text);">${escapeHtml(d.nickname||'트레이너')}</div>
-          <div style="font-size:.58rem;color:var(--muted);font-family:Galmuri11,monospace;">팀 ${escapeHtml(d.teamText||'')}</div>
+          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--text);">${escapeHtml(d.nickname||"트레이너")}</div>
+          <div style="font-size:.58rem;color:var(--muted);font-family:Galmuri11,monospace;">팀 ${escapeHtml(d.teamText||"")}</div>
         </div>
-        <img src="${d.pokemonImage||''}" style="width:36px;height:36px;object-fit:contain;" alt=""/>
+        <img src="${d.pokemonImage||""}" style="width:36px;height:36px;object-fit:contain;" alt=""/>
         <div style="text-align:right;flex-shrink:0;">
-          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--accent);">${escapeHtml(d.pokemonName||'')}</div>
-          <div style="font-size:.6rem;color:var(--muted);font-family:Galmuri11,monospace;">${d.moveEmoji||''} ${escapeHtml(d.moveName||'')}</div>
+          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--accent);">${escapeHtml(d.pokemonName||"")}</div>
+          <div style="font-size:.6rem;color:var(--muted);font-family:Galmuri11,monospace;">${d.moveEmoji||""} ${escapeHtml(d.moveName||"")}</div>
         </div>
-      </div>`).join('');
+      </div>`).join("");
 
-    reveal.innerHTML = `
-      <div style="font-family:'Galmuri11',monospace;text-align:center;padding:.6rem 0 .8rem;">
-        <div style="font-size:.68rem;color:var(--muted);">⚔️ 참전 선언!</div>
-        <div style="font-size:1.6rem;color:var(--accent);font-weight:700;margin:.2rem 0;">${countdown}</div>
-        <div style="font-size:.68rem;color:var(--muted);">초 후 배틀 시작</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:.35rem;">${cards}</div>
-    `;
+    if (!launched) {
+      reveal.innerHTML = `
+        <div style="font-family:'Galmuri11',monospace;text-align:center;padding:.6rem 0 .8rem;">
+          <div style="font-size:.68rem;color:var(--muted);">⚔️ 참전 선언!</div>
+          ${allReady
+            ? `<div style="font-size:1rem;color:#78C850;font-weight:700;margin:.3rem 0;">🟢 전원 준비 완료! <span id="revealCd" style="color:var(--accent)">3</span>초 후 시작!</div>`
+            : `<div style="font-size:.85rem;color:var(--muted);margin:.3rem 0;">대기 중... <span style="color:var(--accent);font-weight:700;">${readyCount}/${totalVoters}</span>명 준비</div>
+               <div style="font-size:.62rem;color:var(--muted);">모든 플레이어가 준비를 마치면 배틀이 시작돼요</div>`}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;">${cards}</div>
+        <button onclick="exitBattle()" style="margin-top:.8rem;width:100%;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.4rem;cursor:pointer;">취소</button>
+      `;
+    }
+
+    // 전원 준비 완료 → 3초 카운트 후 시작
+    if (allReady && !launched) {
+      launched = true;
+      if (unsubReady) { unsubReady(); unsubReady = null; }
+      let cd = 3;
+      const cdTimer = setInterval(() => {
+        cd--;
+        const cdEl = document.getElementById('revealCd');
+        if (cdEl) cdEl.textContent = cd;
+        if (cd <= 0) {
+          clearInterval(cdTimer);
+          startBattleCanvas(_latestDocs, s);
+        }
+      }, 1000);
+    }
   }
 
-  // Firestore 리얼타임 구독
+  // Firestore 리얼타임 구독 → 누군가 준비할 때마다 갱신
   try {
     const readyRef = collection(db,'chats',_currentRoomId,'battleReady');
     unsubReady = onSnapshot(query(readyRef, where('pollMsgId','==',_battlePollMsgId)), snap => {
+      if (launched) return;
       const docs = snap.docs.map(d=>d.data());
       renderReveal(docs);
     });
   } catch(e) { renderReveal([]); }
-
-  const timer = setInterval(async () => {
-    countdown--;
-    const docs = [];
-    try {
-      const snap = await getDocs(query(collection(db,'chats',_currentRoomId,'battleReady'), where('pollMsgId','==',_battlePollMsgId)));
-      snap.docs.forEach(d => docs.push(d.data()));
-    } catch(e) {}
-    renderReveal(docs);
-    if (countdown <= 0) {
-      clearInterval(timer);
-      if (unsubReady) unsubReady();
-      startBattleCanvas(docs, s);
-    }
-  }, 1000);
 }
 
-// ── 4. 캔버스 배틀 (실시간 멀티플레이어) ─────────────────────
+// ── 4. 캔버스 배틀 (실시간 멀티플레이어, 큰 맵 + 카메라) ──────
 async function startBattleCanvas(allPlayers, s) {
   const reveal   = document.getElementById('battleRevealPhase');
   const canvas   = document.getElementById('battleCanvas');
@@ -4868,29 +4889,121 @@ async function startBattleCanvas(allPlayers, s) {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-  const TEAM_COLORS = ['#ffcb05','#a890f0','#78C850','#F08030','#6890F0','#F85888'];
-  const MAP_W = canvas.width, MAP_H = canvas.height;
-  const RADIUS = 26, SPEED = 2.8, ATK_RANGE = 58, ATK_CD = 45, ATK_CD2 = 60;
 
-  // ── 로컬 플레이어 맵 { uid → playerObj } ──
+  // roundRect 폴리필 (구형 브라우저)
+  if (!ctx.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+      this.beginPath();this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.quadraticCurveTo(x+w,y,x+w,y+r);
+      this.lineTo(x+w,y+h-r);this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+      this.lineTo(x+r,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r);
+      this.lineTo(x,y+r);this.quadraticCurveTo(x,y,x+r,y);this.closePath();
+    };
+  }
+
+  const TEAM_COLORS = ['#ffcb05','#a890f0','#78C850','#F08030','#6890F0','#F85888'];
+
+  // 맵 크기 (화면의 3배)
+  const MAP_W = 2400, MAP_H = 2400;
+  const VW = canvas.width, VH = canvas.height;
+
+  // 카메라
+  const cam = { x: 0, y: 0 };
+
+  const RADIUS = 16;   // 포켓몬 크기 (작게)
+  const SPEED = 3.2;
+  const ATK_RANGE = 52, ATK_CD = 45, ATK_CD2 = 60;
+
+  // ── 맵 오브젝트 생성 (시드 고정) ──────────────────────────────
+  const rng = (seed => { let s=seed; return ()=>{ s=Math.imul(s^(s>>>16),0x45d9f3b); s=Math.imul(s^(s>>>16),0x45d9f3b); return ((s^(s>>>16))>>>0)/0xffffffff; }; })(42);
+
+  // 벽 (회색 직사각형 블록)
+  const WALLS = [];
+  const wallDefs = [
+    // 외곽 벽 (맵 경계)
+    {x:0,   y:0,    w:MAP_W, h:32},  // 상단
+    {x:0,   y:MAP_H-32, w:MAP_W, h:32},  // 하단
+    {x:0,   y:0,    w:32, h:MAP_H},  // 좌측
+    {x:MAP_W-32, y:0, w:32, h:MAP_H}, // 우측
+  ];
+  // 내부 벽 랜덤 생성
+  const wallConfigs = [
+    {x:300,y:300,w:180,h:32},{x:300,y:300,w:32,h:180},
+    {x:800,y:200,w:32,h:220},{x:800,y:200,w:140,h:32},
+    {x:1100,y:500,w:200,h:32},{x:1100,y:500,w:32,h:120},
+    {x:400,y:700,w:32,h:200},{x:400,y:880,w:200,h:32},
+    {x:1600,y:300,w:180,h:32},{x:1760,y:300,w:32,h:180},
+    {x:1800,y:700,w:32,h:240},{x:1800,y:700,w:160,h:32},
+    {x:600,y:1200,w:240,h:32},{x:600,y:1200,w:32,h:160},
+    {x:1200,y:1000,w:180,h:32},{x:1200,y:1160,w:180,h:32},{x:1200,y:1000,w:32,h:192},{x:1380,y:1000,w:32,h:192},
+    {x:1800,y:1100,w:32,h:180},{x:1800,y:1100,w:160,h:32},
+    {x:400,y:1600,w:32,h:200},{x:400,y:1800,w:200,h:32},
+    {x:900,y:1700,w:200,h:32},{x:1080,y:1700,w:32,h:130},
+    {x:1400,y:1600,w:32,h:180},{x:1400,y:1760,w:180,h:32},
+    {x:1900,y:1800,w:32,h:160},{x:1900,y:1800,w:140,h:32},
+    {x:700,y:900,w:120,h:32},{x:1500,y:900,w:120,h:32},
+    {x:1100,y:1400,w:32,h:120},{x:1300,y:1400,w:32,h:120},
+  ];
+  WALLS.push(...wallDefs, ...wallConfigs);
+
+  // 풀숲 (초록 반투명 패치, 이동 가능하지만 시야 가림)
+  const BUSHES = [
+    {x:120,y:120,w:140,h:100},{x:500,y:450,w:160,h:120},
+    {x:1050,y:250,w:120,h:140},{x:1450,y:120,w:180,h:100},
+    {x:2000,y:200,w:140,h:140},{x:200,y:1000,w:160,h:100},
+    {x:700,y:1400,w:120,h:160},{x:1100,y:1600,w:160,h:120},
+    {x:1600,y:1300,w:140,h:140},{x:2050,y:1000,w:120,h:180},
+    {x:350,y:2000,w:160,h:140},{x:900,y:2100,w:120,h:120},
+    {x:1400,y:2000,w:180,h:100},{x:2000,y:1800,w:140,h:160},
+    {x:1200,y:700,w:100,h:120},{x:600,y:600,w:130,h:80},
+    {x:1700,y:550,w:110,h:130},{x:2100,y:500,w:150,h:100},
+    {x:1900,y:1400,w:120,h:110},{x:1500,y:2100,w:100,h:130},
+  ];
+
+  // 벽 충돌 AABB
+  function collidesWall(nx, ny, r) {
+    for (const w of WALLS) {
+      if (nx+r > w.x && nx-r < w.x+w.w && ny+r > w.y && ny-r < w.y+w.h) return true;
+    }
+    return false;
+  }
+
+  function inBush(x, y) {
+    for (const b of BUSHES) {
+      if (x > b.x && x < b.x+b.w && y > b.y && y < b.y+b.h) return true;
+    }
+    return false;
+  }
+
+  // ── 플레이어 초기화 ──────────────────────────────────────────
   const players = {};
   allPlayers.forEach((d, i) => {
-    const angle = (i / allPlayers.length) * Math.PI * 2;
-    const r = Math.min(MAP_W, MAP_H) * 0.3;
+    // 팀별 스폰 구역
+    const spawnZones = [
+      {cx:300,  cy:300},
+      {cx:MAP_W-300, cy:MAP_H-300},
+      {cx:MAP_W-300, cy:300},
+      {cx:300,  cy:MAP_H-300},
+      {cx:MAP_W/2, cy:200},
+      {cx:MAP_W/2, cy:MAP_H-200},
+    ];
+    const sz = spawnZones[d.teamIdx % spawnZones.length];
+    const offsetAngle = (i / allPlayers.length) * Math.PI * 2;
     players[d.uid] = {
       uid: d.uid, nickname: d.nickname,
       teamIdx: d.teamIdx, teamText: d.teamText,
       pokemonImage: d.pokemonImage, pokemonName: d.pokemonName,
       move: { name:d.moveName, emoji:d.moveEmoji, power:d.movePower, type:d.moveType },
-      x: MAP_W/2 + Math.cos(angle)*r,
-      y: MAP_H/2 + Math.sin(angle)*r,
+      x: Math.max(50, Math.min(MAP_W-50, sz.cx + Math.cos(offsetAngle)*60)),
+      y: Math.max(50, Math.min(MAP_H-50, sz.cy + Math.sin(offsetAngle)*60)),
       hp: 100, maxHp: 100, radius: RADIUS,
       color: TEAM_COLORS[d.teamIdx % TEAM_COLORS.length],
       img: null, attackCooldown: 0, moveUsed: false, dead: false,
       isMe: d.uid === currentUser.uid,
+      hidden: false, // 풀숲에 있으면 상대에게 숨김
     };
   });
   const me = players[currentUser.uid];
+  if (me) { cam.x = me.x - VW/2; cam.y = me.y - VH/2; }
 
   // 포켓몬 이미지 로드
   await Promise.all(Object.values(players).map(p => new Promise(res => {
@@ -4901,11 +5014,9 @@ async function startBattleCanvas(allPlayers, s) {
     img.src = p.pokemonImage;
   })));
 
-  // ── Firestore 실시간 동기화 ──────────────────────────
+  // ── Firestore 동기화 ─────────────────────────────────────────
   const stateCol = collection(db,'chats',_currentRoomId,'battleState');
   let _unsubState = null;
-
-  // 내 상태 업로드 (10fps)
   let _uploadTimer = setInterval(async () => {
     if (!me || gameOver) return;
     try {
@@ -4919,7 +5030,6 @@ async function startBattleCanvas(allPlayers, s) {
     } catch(e) {}
   }, 100);
 
-  // 다른 플레이어 상태 수신
   try {
     _unsubState = onSnapshot(query(stateCol, where('pollMsgId','==',_battlePollMsgId)), snap => {
       snap.docs.forEach(d => {
@@ -4928,7 +5038,6 @@ async function startBattleCanvas(allPlayers, s) {
         if (!uid || uid === currentUser.uid) return;
         const p = players[uid];
         if (!p) return;
-        // 부드럽게 보간 (이전 위치 → 새 위치)
         p._targetX = data.x; p._targetY = data.y;
         p.hp   = data.hp ?? p.hp;
         p.dead = data.dead ?? p.dead;
@@ -4936,13 +5045,13 @@ async function startBattleCanvas(allPlayers, s) {
     });
   } catch(e) {}
 
-  // ── 이펙트 ──
+  // ── 이펙트 ──────────────────────────────────────────────────
   const effects = [];
   function spawnEffect(x, y, color, text) {
     effects.push({ x, y, color, text, life:40, maxLife:40 });
   }
 
-  // ── HUD ──
+  // ── HUD ─────────────────────────────────────────────────────
   function renderHUD() {
     const hud = document.getElementById('battleHUD');
     if (!hud) return;
@@ -4953,41 +5062,107 @@ async function startBattleCanvas(allPlayers, s) {
       if (!p.dead) tg[p.teamIdx].alive++;
     });
     hud.innerHTML = Object.values(tg).map(t=>
-      `<div style="background:rgba(0,0,0,.6);border:1.5px solid ${t.color};border-radius:8px;padding:.18rem .45rem;font-family:Galmuri11,monospace;font-size:.6rem;color:${t.color};">
+      `<div style="background:rgba(0,0,0,.7);border:1.5px solid ${t.color};border-radius:8px;padding:.18rem .45rem;font-family:Galmuri11,monospace;font-size:.6rem;color:${t.color};">
         팀 ${escapeHtml(t.text)} ${t.alive}/${t.total}
       </div>`
     ).join('');
-    // 내 HP 표시
     if (me) {
-      hud.innerHTML += `<div style="background:rgba(0,0,0,.6);border:1.5px solid ${me.color};border-radius:8px;padding:.18rem .55rem;font-family:Galmuri11,monospace;font-size:.6rem;color:#fff;">
+      hud.innerHTML += `<div style="background:rgba(0,0,0,.7);border:1.5px solid ${me.color};border-radius:8px;padding:.18rem .55rem;font-family:Galmuri11,monospace;font-size:.6rem;color:#fff;">
         HP ${me.hp}/${me.maxHp}
       </div>`;
     }
   }
 
-  // ── 맵 ──
+  // ── 맵 렌더링 (카메라 적용) ──────────────────────────────────
   function drawMap() {
-    ctx.fillStyle = '#152015';
-    ctx.fillRect(0, 0, MAP_W, MAP_H);
-    ctx.strokeStyle = 'rgba(255,255,255,.035)';
+    // 바닥
+    ctx.fillStyle = '#1a2e1a';
+    ctx.fillRect(0, 0, VW, VH);
+
+    // 격자 (세계 좌표 → 화면 좌표)
+    ctx.strokeStyle = 'rgba(255,255,255,.025)';
     ctx.lineWidth = 1;
-    for (let x=0;x<MAP_W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,MAP_H);ctx.stroke();}
-    for (let y=0;y<MAP_H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(MAP_W,y);ctx.stroke();}
+    const gx0 = Math.floor(cam.x/60)*60;
+    const gy0 = Math.floor(cam.y/60)*60;
+    for (let x=gx0; x<cam.x+VW; x+=60) {
+      const sx = x-cam.x;
+      ctx.beginPath(); ctx.moveTo(sx,0); ctx.lineTo(sx,VH); ctx.stroke();
+    }
+    for (let y=gy0; y<cam.y+VH; y+=60) {
+      const sy = y-cam.y;
+      ctx.beginPath(); ctx.moveTo(0,sy); ctx.lineTo(VW,sy); ctx.stroke();
+    }
+
+    // 풀숲 (하층 - 포켓몬 뒤에)
+    BUSHES.forEach(b => {
+      const sx = b.x - cam.x, sy = b.y - cam.y;
+      if (sx+b.w < 0 || sx > VW || sy+b.h < 0 || sy > VH) return;
+      ctx.fillStyle = 'rgba(34,120,34,0.55)';
+      ctx.beginPath();
+      ctx.roundRect(sx, sy, b.w, b.h, 12);
+      ctx.fill();
+      // 풀 텍스처 점들
+      ctx.fillStyle = 'rgba(60,160,60,0.4)';
+      for (let i=0; i<6; i++) {
+        const tx = sx + (b.w*0.15) + (i%3)*(b.w*0.28);
+        const ty = sy + (b.h*0.25) + Math.floor(i/3)*(b.h*0.45);
+        ctx.beginPath(); ctx.arc(tx,ty,4,0,Math.PI*2); ctx.fill();
+      }
+    });
+
+    // 중앙 아레나 원
+    const cx2 = MAP_W/2 - cam.x, cy2 = MAP_H/2 - cam.y;
     ctx.beginPath();
-    ctx.arc(MAP_W/2,MAP_H/2,Math.min(MAP_W,MAP_H)*.46,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,203,5,.15)'; ctx.lineWidth=3; ctx.stroke();
+    ctx.arc(cx2, cy2, Math.min(MAP_W,MAP_H)*.42, 0, Math.PI*2);
+    ctx.strokeStyle='rgba(255,203,5,.08)'; ctx.lineWidth=3; ctx.stroke();
   }
 
-  // ── 플레이어 ──
+  function drawWalls() {
+    WALLS.slice(4).forEach(w => { // 외곽벽은 별도 처리
+      const sx = w.x - cam.x, sy = w.y - cam.y;
+      if (sx+w.w < 0 || sx > VW || sy+w.h < 0 || sy > VH) return;
+      // 벽 본체
+      ctx.fillStyle = '#445566';
+      ctx.fillRect(sx, sy, w.w, w.h);
+      // 벽 하이라이트 (상단/좌측)
+      ctx.fillStyle = 'rgba(255,255,255,.12)';
+      ctx.fillRect(sx, sy, w.w, 3);
+      ctx.fillRect(sx, sy, 3, w.h);
+      // 벽 그림자 (하단/우측)
+      ctx.fillStyle = 'rgba(0,0,0,.35)';
+      ctx.fillRect(sx, sy+w.h-3, w.w, 3);
+      ctx.fillRect(sx+w.w-3, sy, 3, w.h);
+    });
+  }
+
+  // 풀숲 상층 (포켓몬 위에 겹쳐서 숨김 효과)
+  function drawBushesTop() {
+    BUSHES.forEach(b => {
+      const sx = b.x - cam.x, sy = b.y - cam.y;
+      if (sx+b.w < 0 || sx > VW || sy+b.h < 0 || sy > VH) return;
+      ctx.fillStyle = 'rgba(20,90,20,0.45)';
+      ctx.beginPath();
+      ctx.roundRect(sx, sy, b.w, b.h, 12);
+      ctx.fill();
+    });
+  }
+
+  // ── 플레이어 렌더링 ──────────────────────────────────────────
   function drawPlayer(p) {
     if (p.dead) return;
-    ctx.save(); ctx.translate(p.x, p.y);
+    // 풀숲 안에 있는 적은 숨김 (내 팀은 표시)
+    if (p !== me && p.teamIdx !== me?.teamIdx && inBush(p.x, p.y)) return;
+
+    const sx = p.x - cam.x, sy = p.y - cam.y;
+    if (sx < -50 || sx > VW+50 || sy < -50 || sy > VH+50) return;
+
+    ctx.save(); ctx.translate(sx, sy);
     // 링
-    ctx.beginPath(); ctx.arc(0,0,p.radius+3,0,Math.PI*2);
+    ctx.beginPath(); ctx.arc(0,0,p.radius+2,0,Math.PI*2);
     ctx.strokeStyle = p.color; ctx.lineWidth = p.isMe ? 3 : 2;
-    if (p.isMe) { ctx.fillStyle='rgba(255,255,255,.15)'; ctx.fill(); }
+    if (p.isMe) { ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fill(); }
     ctx.stroke();
-    // 포켓몬
+    // 포켓몬 이미지 (클립)
     const sz = p.radius*2;
     ctx.beginPath(); ctx.arc(0,0,p.radius,0,Math.PI*2); ctx.clip();
     if (p.img) {
@@ -4999,32 +5174,63 @@ async function startBattleCanvas(allPlayers, s) {
     }
     ctx.restore();
     // HP 바
-    const bw=p.radius*2.2, bh=4, bx=p.x-bw/2, by=p.y+p.radius+5;
+    const bw=p.radius*2.4, bh=3, bx=sx-bw/2, by=sy+p.radius+4;
     ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(bx,by,bw,bh);
     const r=p.hp/p.maxHp;
     ctx.fillStyle=r>.5?'#78C850':r>.25?'#F8D030':'#C03028';
     ctx.fillRect(bx,by,bw*Math.max(0,r),bh);
     // 닉네임
-    ctx.font='9px Galmuri11,monospace'; ctx.textAlign='center';
+    ctx.font='8px Galmuri11,monospace'; ctx.textAlign='center';
     const nick=(p.nickname||'').slice(0,6);
     const tw=ctx.measureText(nick).width;
-    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(p.x-tw/2-2,by+bh+2,tw+4,11);
-    ctx.fillStyle=p.isMe?'#ffcb05':'#ddd'; ctx.fillText(nick,p.x,by+bh+11);
+    ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(sx-tw/2-2,by+bh+2,tw+4,10);
+    ctx.fillStyle=p.isMe?'#ffcb05':'#ddd'; ctx.fillText(nick,sx,by+bh+10);
   }
 
   function drawEffects() {
     for (let i=effects.length-1;i>=0;i--) {
       const e=effects[i]; const a=e.life/e.maxLife;
+      const sx=e.x-cam.x, sy=e.y-cam.y;
       ctx.globalAlpha=a; ctx.fillStyle=e.color;
-      ctx.font=`bold ${Math.floor(10*a+8)}px Galmuri11,monospace`;
+      ctx.font=`bold ${Math.floor(9*a+7)}px Galmuri11,monospace`;
       ctx.textAlign='center';
-      ctx.fillText(e.text, e.x, e.y-(1-a)*28);
+      ctx.fillText(e.text, sx, sy-(1-a)*24);
       e.life--; if(e.life<=0) effects.splice(i,1);
     }
     ctx.globalAlpha=1;
   }
 
-  // ── 공격 (내 클라이언트에서 판정 → Firestore에 결과 기록) ──
+  // 미니맵
+  function drawMinimap() {
+    const mmW=90, mmH=90, mmX=VW-mmW-10, mmY=10;
+    const scaleX=mmW/MAP_W, scaleY=mmH/MAP_H;
+    ctx.fillStyle='rgba(0,0,0,.55)';
+    ctx.fillRect(mmX,mmY,mmW,mmH);
+    ctx.strokeStyle='rgba(255,255,255,.2)';
+    ctx.lineWidth=1; ctx.strokeRect(mmX,mmY,mmW,mmH);
+    // 풀숲
+    BUSHES.forEach(b => {
+      ctx.fillStyle='rgba(34,120,34,.5)';
+      ctx.fillRect(mmX+b.x*scaleX, mmY+b.y*scaleY, Math.max(3,b.w*scaleX), Math.max(3,b.h*scaleY));
+    });
+    // 벽
+    WALLS.slice(4).forEach(w => {
+      ctx.fillStyle='rgba(100,130,160,.7)';
+      ctx.fillRect(mmX+w.x*scaleX, mmY+w.y*scaleY, Math.max(2,w.w*scaleX), Math.max(2,w.h*scaleY));
+    });
+    // 플레이어
+    Object.values(players).forEach(p => {
+      if (p.dead) return;
+      ctx.beginPath();
+      ctx.arc(mmX+p.x*scaleX, mmY+p.y*scaleY, p.isMe?3:2, 0, Math.PI*2);
+      ctx.fillStyle=p.isMe?'#fff':p.color; ctx.fill();
+    });
+    // 카메라 뷰포트 표시
+    ctx.strokeStyle='rgba(255,255,255,.3)';
+    ctx.strokeRect(mmX+cam.x*scaleX, mmY+cam.y*scaleY, VW*scaleX, VH*scaleY);
+  }
+
+  // ── 공격 판정 ────────────────────────────────────────────────
   async function tryAttack() {
     if (!me || me.dead || me.attackCooldown > 0) return;
     const move = me.moveUsed
@@ -5042,9 +5248,8 @@ async function startBattleCanvas(allPlayers, s) {
         target.hp = newHp;
         const newDead = newHp <= 0;
         if (newDead) { target.dead = true; spawnEffect(target.x, target.y,'#fff','💫 KO!'); }
-        spawnEffect(target.x, target.y-target.radius-12, me.color, `${move.emoji}${dmg}`);
+        spawnEffect(target.x, target.y-target.radius-10, me.color, `${move.emoji}${dmg}`);
         renderHUD();
-        // 상대 HP를 Firestore에 기록
         try {
           await setDoc(doc(stateCol, target.uid), {
             uid: target.uid, hp: newHp, dead: newDead,
@@ -5055,38 +5260,52 @@ async function startBattleCanvas(allPlayers, s) {
     });
   }
 
-  // ── 조이스틱 연결 ──
+  // ── 조이스틱 연결 ────────────────────────────────────────────
   setupJoystick('joyMoveBase','joyMoveKnob',_joyMove);
   setupJoystick('joyAttackBase','joyAttackKnob',_joyAttack, tryAttack);
 
-  // ── 게임 루프 ──
+  // ── 게임 루프 ────────────────────────────────────────────────
   let frame=0, gameOver=false;
   function gameLoop() {
     frame++;
     if (!gameOver) _battleAnimFrame = requestAnimationFrame(gameLoop);
 
-    // 내 이동
+    // 내 이동 + 벽 충돌
     if (me && !me.dead) {
-      me.x = Math.max(me.radius, Math.min(MAP_W-me.radius, me.x+_joyMove.x*SPEED));
-      me.y = Math.max(me.radius, Math.min(MAP_H-me.radius, me.y+_joyMove.y*SPEED));
+      const nx = me.x + _joyMove.x * SPEED;
+      const ny = me.y + _joyMove.y * SPEED;
+      if (!collidesWall(nx, me.y, me.radius)) me.x = Math.max(32+me.radius, Math.min(MAP_W-32-me.radius, nx));
+      if (!collidesWall(me.x, ny, me.radius)) me.y = Math.max(32+me.radius, Math.min(MAP_H-32-me.radius, ny));
+
       // 공격 조이스틱 홀드 시 자동 공격 (30프레임마다)
       if (_joyAttack.active && frame%30===0) tryAttack();
       if (me.attackCooldown>0) me.attackCooldown--;
+
+      // 카메라 부드럽게 따라가기
+      const targetCamX = me.x - VW/2;
+      const targetCamY = me.y - VH/2;
+      cam.x += (targetCamX - cam.x) * 0.12;
+      cam.y += (targetCamY - cam.y) * 0.12;
+      cam.x = Math.max(0, Math.min(MAP_W-VW, cam.x));
+      cam.y = Math.max(0, Math.min(MAP_H-VH, cam.y));
     }
 
     // 다른 플레이어 보간
     Object.values(players).forEach(p => {
       if (p.isMe || p.dead) return;
       if (p._targetX !== undefined) {
-        p.x += (p._targetX - p.x) * 0.25;
-        p.y += (p._targetY - p.y) * 0.25;
+        p.x += (p._targetX - p.x) * 0.22;
+        p.y += (p._targetY - p.y) * 0.22;
       }
     });
 
-    // 렌더
+    // 렌더 순서: 바닥 → 풀숲(하) → 벽 → 플레이어 → 풀숲(상) → 이펙트 → HUD → 미니맵
     drawMap();
+    drawWalls();
     Object.values(players).forEach(p => drawPlayer(p));
+    drawBushesTop();
     drawEffects();
+    drawMinimap();
 
     // 승패 판정
     const aliveTeams = new Set(Object.values(players).filter(p=>!p.dead).map(p=>p.teamIdx));
@@ -5102,6 +5321,7 @@ async function startBattleCanvas(allPlayers, s) {
   renderHUD();
   gameLoop();
 }
+
 // ── 조이스틱 셋업 ──────────────────────────────────────────
 function setupJoystick(baseId, knobId, state, onFire) {
   const base = document.getElementById(baseId);
@@ -5437,7 +5657,25 @@ let ndexLoading=false,activeTypeFilter=null,searchQuery='';
 const d0=new Date();
 document.getElementById('dateDisplay').textContent=`${d0.getFullYear()}.${String(d0.getMonth()+1).padStart(2,'0')}.${String(d0.getDate()).padStart(2,'0')}`;
 
-async function init(){dexViewed=false;quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];const ids=pickDailyIds();const results=await Promise.all(ids.map(id=>fetchPokemon(id)));pokemonData=results.filter(Boolean);if(pokemonData.length===0){document.getElementById('dex-loading').innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">포켓몬을 불러오지 못했어요. 새로고침 해보세요.</p>';return;}renderDex();}
+async function init(){
+  dexViewed=false;quizQuestions=[];quizIdx=0;quizScore=0;quizAnswered=[];
+  const loadingEl=document.getElementById('dex-loading');
+  if(loadingEl){loadingEl.style.display='flex';loadingEl.innerHTML='<div class="pokeball-loader"></div><p>포켓몬을 불러오는 중...</p>';}
+  const contentEl=document.getElementById('dex-content');
+  if(contentEl)contentEl.style.display='none';
+  try{
+    const ids=pickDailyIds();
+    const results=await Promise.all(ids.map(id=>fetchPokemon(id)));
+    pokemonData=results.filter(Boolean);
+    if(pokemonData.length===0){
+      if(loadingEl)loadingEl.innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">포켓몬을 불러오지 못했어요. 새로고침 해보세요.</p>';
+      return;
+    }
+    renderDex();
+  }catch(e){
+    if(loadingEl)loadingEl.innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">오류가 발생했어요. 새로고침 해보세요.</p>';
+  }
+}
 function makeBallSVG(isLegendary){
   if(isLegendary){return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="mbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="mbTopGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#b060e8"/><stop offset="100%" stop-color="#5a00aa"/></radialGradient><radialGradient id="mbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dddddd"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#1a0030" stroke="#1a0030" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#mbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#mbTopGrad)" clip-path="url(#mbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#1a0030" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="22" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(-20 22 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="13" ry="17" fill="#ff80cc" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><ellipse cx="98" cy="37" rx="8" ry="11" fill="#cc44aa" transform="rotate(20 98 37)" clip-path="url(#mbClip)"/><text x="60" y="44" font-size="20" fill="white" font-family="Arial Black,Impact,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">M</text><circle cx="36" cy="50" r="4" fill="#ff80cc"/><circle cx="84" cy="50" r="4" fill="#ff80cc"/><circle cx="60" cy="60" r="11" fill="url(#mbBtnGrad)" stroke="#1a0030" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#8800cc"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.6)"/><ellipse cx="44" cy="22" rx="14" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20 44 22)" clip-path="url(#mbClip)"/></svg>`;}
   return`<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="pbClip"><circle cx="60" cy="60" r="56"/></clipPath><radialGradient id="pbRedGrad" cx="38%" cy="28%" r="65%"><stop offset="0%" stop-color="#ff5555"/><stop offset="100%" stop-color="#cc0000"/></radialGradient><radialGradient id="pbBtnGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="#111111" stroke="#111111" stroke-width="2"/><path d="M4 60 Q4 116 60 116 Q116 116 116 60 Z" fill="#f0f0f0" clip-path="url(#pbClip)"/><path d="M4 60 Q4 4 60 4 Q116 4 116 60 Z" fill="url(#pbRedGrad)" clip-path="url(#pbClip)"/><rect x="4" y="55.5" width="112" height="9" fill="#111111" clip-path="url(#pbClip)"/><circle cx="60" cy="60" r="11" fill="url(#pbBtnGrad)" stroke="#111111" stroke-width="2.5"/><circle cx="60" cy="60" r="5.5" fill="#dd0000"/><circle cx="57" cy="57" r="2" fill="rgba(255,255,255,0.65)"/><ellipse cx="42" cy="24" rx="14" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-20 42 24)" clip-path="url(#pbClip)"/></svg>`;}
@@ -5564,7 +5802,7 @@ async function openModal(p,startShiny=false){
   if(hasMultiForms)loadForms(p);
   if(p.evoChainUrl){const chain=await fetchEvoChain(p.evoChainUrl);if(chain){const steps=await parseEvoChain(chain);renderEvoChain(steps,p.id);}else document.getElementById('evoChainArea').innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">단일 진화</div>';}
   else document.getElementById('evoChainArea').innerHTML='<div style="color:var(--muted);font-size:.75rem;text-align:center;padding:1rem">진화 정보 없음</div>';
-  _modalOpen=false;
+  // _modalOpen은 closeModal()에서만 false로 설정 (여기서 리셋하면 중복 오픈 방지 로직이 무효화됨)
 }
 async function loadForms(p){const grid=document.getElementById('formsGrid');if(!grid)return;const results=await Promise.all(p.forms.map(async f=>{try{const pk=await fetch(f.url).then(r=>r.json());const img=pk.sprites.other['official-artwork']?.front_default||pk.sprites.front_default;const shinyImg=pk.sprites.other['official-artwork']?.front_shiny||pk.sprites.front_shiny||null;const defaultFormName=p.forms.find(x=>x.isDefault)?.name||p.nameEn;const label=f.isDefault?p.name:(getFormLabel(f.name,defaultFormName)||f.name.replace(defaultFormName+'-','').replace(/-/g,' '));return{name:f.name,label,img,shinyImg,isDefault:f.isDefault};}catch(e){return null;}}));grid.innerHTML='';results.filter(Boolean).forEach(f=>{const card=document.createElement('div');card.className='form-card'+(f.isDefault?' active-form':'');card.innerHTML=`${f.img?`<img src="${f.img}" alt="${f.label}" style="width:58px;height:58px;image-rendering:pixelated"/>`:`<div style="width:58px;height:58px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.5rem">?</div>`}<div class="form-card-name">${f.label}</div>`;card.onclick=()=>{
     // window 공유 변수 사용 → 스코프 문제 해결
