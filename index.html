@@ -564,10 +564,10 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .bubble-main-row{display:flex;align-items:flex-end;gap:.35rem;}
 .bubble-main-row.me{flex-direction:row;justify-content:flex-end;}
 .bubble-main-row.them{flex-direction:row;justify-content:flex-start;}
-.bubble-content{display:flex;flex-direction:column;gap:.06rem;max-width:78%;}
+.bubble-content{display:flex;flex-direction:column;gap:.06rem;max-width:88%;}
 .bubble-time-row{display:flex;flex-direction:column;align-items:flex-end;gap:.1rem;flex-shrink:0;padding-bottom:.15rem;}
 .read-receipt.unread-count{font-family:'Galmuri11',monospace;font-size:.55rem;color:var(--accent);font-weight:700;}
-.chat-bubble{max-width:78%;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
+.chat-bubble{max-width:88%;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
 .chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
 .chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
 .chat-time{font-size:.56rem;color:var(--muted);padding:0 .15rem;}
@@ -1196,12 +1196,6 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       </div>
     </div>
 
-    <!-- 소셜 서브탭 -->
-    <div class="social-tab-bar">
-      <button class="social-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
-      <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
-    </div>
-
     <!-- 포켓몬 소개 피드 -->
     <div class="pokemon-spotlight" id="pokemonSpotlight">
       <div class="spotlight-header">
@@ -1231,6 +1225,12 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       <div id="spotlightFeed" style="display:flex;flex-direction:column;gap:.65rem;">
         <div style="text-align:center;padding:.8rem;font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);">불러오는 중...</div>
       </div>
+    </div>
+
+    <!-- 소셜 서브탭 -->
+    <div class="social-tab-bar">
+      <button class="social-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
+      <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
     </div>
 
     <!-- 친구 탭 -->
@@ -1357,7 +1357,11 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
         </div>
         <!-- 견학 포켓몬 선택 패널 -->
         <div class="tour-picker" id="tourPicker">
-          <div class="tour-picker-title">🎒 만난 포켓몬 중 견학 보낼 포켓몬을 선택하세요</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+            <div class="tour-picker-title" style="margin-bottom:0">🎒 견학 보낼 포켓몬 선택</div>
+            <button onclick="closeTourPicker()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:.1rem .3rem;line-height:1;">✕</button>
+          </div>
+          <input id="tourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
           <div class="tour-picker-grid" id="tourPickerGrid"></div>
         </div>
         <!-- 답장 미리보기 -->
@@ -2847,10 +2851,23 @@ window.toggleTourPicker = function() {
   const p = document.getElementById('tourPicker');
   if (!p) return;
   p.classList.toggle('open');
-  if (p.classList.contains('open')) buildTourPickerGrid();
+  if (p.classList.contains('open')) {
+    const searchInp = document.getElementById('tourPickerSearch');
+    if (searchInp) { searchInp.value = ''; }
+    buildTourPickerGrid();
+  }
 };
 
-function buildTourPickerGrid() {
+window.closeTourPicker = function() {
+  const p = document.getElementById('tourPicker');
+  if (p) p.classList.remove('open');
+};
+
+window.filterTourPicker = function(q) {
+  buildTourPickerGrid(q);
+};
+
+function buildTourPickerGrid(filterQuery) {
   const grid = document.getElementById('tourPickerGrid');
   if (!grid) return;
   // 만난 포켓몬 사용 (Firebase에서 가져온 met 목록)
@@ -2864,8 +2881,18 @@ function buildTourPickerGrid() {
     grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">만난 포켓몬이 없어요. 먼저 포켓몬과 만나보세요!</div>';
     return;
   }
+  // 번호순 정렬
+  const sorted = [...metList].sort((a, b) => (a.id||0) - (b.id||0));
+  // 검색 필터
+  const q = (filterQuery || '').trim().toLowerCase();
+  const filtered = q ? sorted.filter(p => (p.name||'').toLowerCase().includes(q) || String(p.id||'').includes(q)) : sorted;
+
   grid.innerHTML = '';
-  metList.forEach(p => {
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">검색 결과가 없어요</div>';
+    return;
+  }
+  filtered.forEach(p => {
     const item = document.createElement('div');
     item.className = 'tour-picker-item';
     item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
@@ -4274,7 +4301,24 @@ async function loadSiteNotice() {
       bar.classList.remove('show');
     }
     // popo만 편집 버튼 표시
-    const isPopo = (_myProfile?.uid === 'popo') || (_myProfile?.nickname === 'popo') || (currentUser?.nickname === 'popo');
+    let isPopo = false;
+    if (currentUser) {
+      const myUid = (_myProfile?.uid || '').toLowerCase();
+      const myNick = (_myProfile?.nickname || currentUser?.nickname || window._currentUser?.nickname || '').toLowerCase();
+      isPopo = myUid === 'popo' || myNick === 'popo';
+      // _myProfile이 아직 없으면 Firestore에서 직접 확인
+      if (!isPopo && !_myProfile) {
+        try {
+          const uSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          if (uSnap.exists()) {
+            const uData = uSnap.data();
+            const idSnap2 = await getDoc(doc(db, 'usernames', currentUser.uid));
+            const resolvedId = idSnap2.exists() ? (idSnap2.data().username || uData.username || '') : (uData.username || '');
+            isPopo = resolvedId.toLowerCase() === 'popo' || (uData.nickname||'').toLowerCase() === 'popo';
+          }
+        } catch(e2) {}
+      }
+    }
     if (editBtn) {
       editBtn.style.display = isPopo ? 'inline-block' : 'none';
       // popo는 공지가 없어도 배너 표시 (편집용)
@@ -4302,7 +4346,9 @@ window.toggleSiteNoticeEdit = function() {
 };
 
 window.saveSiteNotice = async function() {
-  const isPopo = (_myProfile?.uid === 'popo') || (_myProfile?.nickname === 'popo') || (currentUser?.nickname === 'popo');
+  const myUid2 = (_myProfile?.uid || '').toLowerCase();
+  const myNick2 = (_myProfile?.nickname || currentUser?.nickname || window._currentUser?.nickname || '').toLowerCase();
+  const isPopo = myUid2 === 'popo' || myNick2 === 'popo';
   if (!isPopo) { showSocialToast('권한이 없어요'); return; }
   const inp = document.getElementById('siteNoticeEditInp');
   const text = (inp?.value || '').trim();
@@ -4998,11 +5044,11 @@ async function startBattleCanvas(allPlayers, s) {
       hp: 100, maxHp: 100, radius: RADIUS,
       color: TEAM_COLORS[d.teamIdx % TEAM_COLORS.length],
       img: null, attackCooldown: 0, moveUsed: false, dead: false,
-      isMe: d.uid === currentUser.uid,
+      isMe: d.uid === (window._currentUser?.uid||''),
       hidden: false, // 풀숲에 있으면 상대에게 숨김
     };
   });
-  const me = players[currentUser.uid];
+  const me = players[window._currentUser?.uid||''];
   if (me) { cam.x = me.x - VW/2; cam.y = me.y - VH/2; }
 
   // 포켓몬 이미지 로드
@@ -5020,8 +5066,8 @@ async function startBattleCanvas(allPlayers, s) {
   let _uploadTimer = setInterval(async () => {
     if (!me || gameOver) return;
     try {
-      await setDoc(doc(stateCol, currentUser.uid), {
-        uid: currentUser.uid,
+      await setDoc(doc(stateCol, window._currentUser.uid), {
+        uid: window._currentUser.uid,
         x: Math.round(me.x), y: Math.round(me.y),
         hp: me.hp, dead: me.dead,
         pollMsgId: _battlePollMsgId,
@@ -5035,7 +5081,7 @@ async function startBattleCanvas(allPlayers, s) {
       snap.docs.forEach(d => {
         const data = d.data();
         const uid = data.uid;
-        if (!uid || uid === currentUser.uid) return;
+        if (!uid || uid === (window._currentUser?.uid||'')) return;
         const p = players[uid];
         if (!p) return;
         p._targetX = data.x; p._targetY = data.y;
@@ -5428,8 +5474,8 @@ async function showBattleResult(winTeamText, winTeamIdx, players) {
       ? `⚔️ 배틀 결과: ${detail} → 팀 ${winTeamText} 승리! 🏆`
       : `⚔️ 배틀 결과: ${detail} → 무승부!`;
     await addDoc(collection(db,'chats',_currentRoomId,'messages'), {
-      from: currentUser.uid, type:'system', text: resultMsg,
-      ts: serverTimestamp(), readBy:[currentUser.uid]
+      from: (window._currentUser?.uid||''), type:'system', text: resultMsg,
+      ts: serverTimestamp(), readBy:[(window._currentUser?.uid||'')]
     });
   } catch(e) {}
 
