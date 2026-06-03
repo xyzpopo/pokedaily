@@ -1610,13 +1610,14 @@ onAuthStateChanged(auth, async (user) => {
     updateMyOnlineStatus(true);
     const btn = document.getElementById('loginActionBtn');
     if (btn) { btn.textContent = '🎮 로그인'; btn.disabled = false; }
-    try { await loadSettingsFromServer(); } catch(e) { console.warn('loadSettings error', e); }
-    try { await getMetList(); } catch(e) { console.warn('getMetList error', e); } // met 캐시 초기화
-    try { await renderMetPage(); } catch(e) { console.warn('renderMetPage error', e); }
-    // UID 기반 오늘의 포켓몬 재로드 (로그인 후 시드 재계산)
+    // 오늘의 포켓몬 최우선 로드 — 다른 비동기 작업에 의존하지 않음
     document.getElementById('dex-loading').style.display='flex';
     document.getElementById('dex-content').style.display='none';
-    if (typeof init === 'function') await init();
+    if (typeof init === 'function') init();  // await 없이 병렬 실행
+    // 나머지는 포켓몬 로드와 병렬로 처리
+    try { await loadSettingsFromServer(); } catch(e) { console.warn('loadSettings error', e); }
+    try { await getMetList(); } catch(e) { console.warn('getMetList error', e); }
+    try { renderMetPage(); } catch(e) { console.warn('renderMetPage error', e); }
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
     // 전체 공지 로드 — _myProfile이 필요하므로 loadMyProfile 후 실행
@@ -5672,7 +5673,7 @@ async function init(){
     }
     renderDex();
   }catch(e){
-    if(loadingEl)loadingEl.innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">오류가 발생했어요. 새로고침 해보세요.</p>';
+    if(loadingEl)loadingEl.innerHTML='<p style="color:var(--muted);font-family:Galmuri11,monospace;font-size:.82rem">오류: '+e.message+'</p>';
   }
 }
 function makeBallSVG(isLegendary){
