@@ -1609,10 +1609,10 @@ onAuthStateChanged(auth, async (user) => {
     if (notifBtn) notifBtn.style.display = 'flex';
     updateMyOnlineStatus(true);
     const btn = document.getElementById('loginActionBtn');
-    btn.textContent = '🎮 로그인'; btn.disabled = false;
-    await loadSettingsFromServer();
-    await getMetList(); // met 캐시 초기화
-    renderMetPage();
+    if (btn) { btn.textContent = '🎮 로그인'; btn.disabled = false; }
+    try { await loadSettingsFromServer(); } catch(e) { console.warn('loadSettings error', e); }
+    try { await getMetList(); } catch(e) { console.warn('getMetList error', e); } // met 캐시 초기화
+    try { await renderMetPage(); } catch(e) { console.warn('renderMetPage error', e); }
     // UID 기반 오늘의 포켓몬 재로드 (로그인 후 시드 재계산)
     document.getElementById('dex-loading').style.display='flex';
     document.getElementById('dex-content').style.display='none';
@@ -1628,7 +1628,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     currentUser = null;
     window._currentUser = null;
-    _socialPageInited = false; // 로그아웃 시 소셜 초기화 플래그 리셋
+    if (typeof window._socialPageInited !== 'undefined') window._socialPageInited = false; // 로그아웃 시 소셜 초기화 플래그 리셋
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('userBadge').style.display = 'none';
     document.getElementById('dateDisplay').style.display = 'none';
@@ -1663,6 +1663,7 @@ async function markMet(pokemon) {
   const d = new Date();
   list.unshift({ id: pokemon.id, name: pokemon.name, image: pokemon.image, types: pokemon.types || ['normal'], date: `${d.getMonth()+1}/${d.getDate()}` });
   _metIdSet.add(pokemon.id);
+  window._metPokemonCache = list;
   await updateDoc(doc(db, 'users', currentUser.uid), { met: list });
   renderMetPage();
 }
@@ -1898,10 +1899,8 @@ async function saveSettingToServer(key, val) {
   localStorage.setItem('pkdex_cfg_'+key, JSON.stringify(val));
   if (!currentUser) return;
   try {
-    const snap = await getDoc(doc(db, 'users', currentUser.uid));
-    const cfg = snap.exists() ? (snap.data().settings || {}) : {};
-    cfg[key] = val;
-    await updateDoc(doc(db, 'users', currentUser.uid), { settings: cfg });
+    // setDoc merge로 단일 write (getDoc 불필요)
+    await setDoc(doc(db, 'users', currentUser.uid), { settings: { [key]: val } }, { merge: true });
   } catch(e) {}
 }
 
@@ -1958,7 +1957,7 @@ async function loadMyProfile() {
     : (d.username || '');
   _myProfile = {
     nickname: d.nickname || currentUser.nickname || '트레이너',
-    uid: resolvedUid,
+    uid: resolvedUid || d.username || d.nickname || '',
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
     profileImage: d.profileImage || null,
@@ -4229,7 +4228,7 @@ window.handleRefresh = async function() {
   try {
     if (activeTab === 'dex') {
       // 오늘의 도감 재로드
-      if (typeof init === 'function') init();
+      if (typeof init === 'function') await init();
     } else if (activeTab === 'ndex') {
       if (typeof initNdex === 'function') initNdex();
     } else if (activeTab === 'met') {
@@ -4274,7 +4273,7 @@ async function loadSiteNotice() {
       bar.classList.remove('show');
     }
     // popo만 편집 버튼 표시
-    const isPopo = (_myProfile?.uid === 'popo');
+    const isPopo = (_myProfile?.uid === 'popo') || (_myProfile?.nickname === 'popo') || (currentUser?.nickname === 'popo');
     if (editBtn) {
       editBtn.style.display = isPopo ? 'inline-block' : 'none';
       // popo는 공지가 없어도 배너 표시 (편집용)
@@ -4302,7 +4301,7 @@ window.toggleSiteNoticeEdit = function() {
 };
 
 window.saveSiteNotice = async function() {
-  const isPopo = (_myProfile?.uid === 'popo');
+  const isPopo = (_myProfile?.uid === 'popo') || (_myProfile?.nickname === 'popo') || (currentUser?.nickname === 'popo');
   if (!isPopo) { showSocialToast('권한이 없어요'); return; }
   const inp = document.getElementById('siteNoticeEditInp');
   const text = (inp?.value || '').trim();
@@ -5973,7 +5972,9 @@ function buildRetryQuiz(wrongList){
       while(opts.length<4)opts.push(EXTRA_NAMES[opts.length]||'???');
       quizQuestions.push({type:w.type,pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(opts)});
     } else if(w.type==='type'){
-      quizQuestions.push({type:'type',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,...wrongTypes.map(t=>TYPE_KO[t]).slice(0,3)])});
+      const typeOpts=[w.answer,...wrongTypes.map(t=>TYPE_KO[t]).filter(t=>t!==w.answer)];
+      while(typeOpts.length<4){const t=Object.values(TYPE_KO).find(t=>!typeOpts.includes(t));if(t)typeOpts.push(t);else break;}
+      quizQuestions.push({type:'type',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle(typeOpts.slice(0,4))});
     } else if(w.type==='gen'){
       const wrongGens=shuffle(Object.values(GEN_INFO).map(g=>g.name).filter(g=>g!==w.answer)).slice(0,3);
       quizQuestions.push({type:'gen',pokemon,question:w.question,hint:w.hint,answer:w.answer,options:shuffle([w.answer,...wrongGens])});
@@ -5997,12 +5998,12 @@ function buildRetryQuiz(wrongList){
 window.retryWrong = function(wrongList){ buildRetryQuiz(wrongList); showTab('quiz'); };
 function backToDiffSelect(){document.getElementById('quiz-content').style.display='none';document.getElementById('quiz-difficulty').style.display='block';document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));document.getElementById('diffStartBtn').classList.remove('show');selectedDiff=null;}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-let _socialPageInited = false;
+window._socialPageInited = false;
 function showTab(tab){
   document.querySelectorAll('.tabs .tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')===`showTab('${tab}')`));
   // 소셜탭: 최초 1회만 전체 초기화, 이후엔 badges만 갱신
   if(tab==='social'){
-    if(!_socialPageInited && window.initSocialPage){ _socialPageInited=true; window.initSocialPage(); }
+    if(!window._socialPageInited && window.initSocialPage){ window._socialPageInited=true; window.initSocialPage(); }
     else {
       if(window.initSocialBadges) window.initSocialBadges();
       if(window.loadSpotlight) window.loadSpotlight();
