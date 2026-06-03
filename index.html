@@ -439,6 +439,57 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .site-notice-edit:hover{background:rgba(59,76,202,.15);}
 .site-notice-edit-panel{display:none;background:rgba(59,76,202,.06);border-bottom:1px solid rgba(59,76,202,.2);padding:.55rem 1rem;gap:.4rem;flex-direction:column;}
 .site-notice-edit-panel.show{display:flex;}
+
+/* ═══════════ 투표 CSS ═══════════ */
+.poll-mode-btn{font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .7rem;cursor:pointer;transition:all .15s;}
+.poll-mode-btn.active{background:rgba(255,203,5,.15);border-color:var(--accent);color:var(--accent);}
+.poll-option-row{display:flex;align-items:center;gap:.35rem;}
+.poll-option-inp{flex:1;font-family:'Galmuri11',monospace;font-size:.75rem;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.35rem .6rem;outline:none;}
+.poll-option-inp:focus{border-color:var(--accent);}
+.poll-option-poke{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;font-size:.8rem;transition:border-color .15s;}
+.poll-option-poke:hover{border-color:var(--accent);}
+.poll-option-del{background:transparent;border:none;color:var(--muted);font-size:.9rem;cursor:pointer;padding:.15rem .3rem;border-radius:6px;transition:color .15s;}
+.poll-option-del:hover{color:#ff6b6b;}
+
+/* 투표 메시지 카드 */
+.poll-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:.7rem .9rem;max-width:280px;display:flex;flex-direction:column;gap:.45rem;}
+.poll-card-q{font-family:'Galmuri11',monospace;font-size:.8rem;color:var(--text);font-weight:700;}
+.poll-card-meta{font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;display:flex;gap:.5rem;align-items:center;}
+.poll-option-btn{display:flex;align-items:center;gap:.45rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.38rem .6rem;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
+.poll-option-btn:hover{border-color:var(--accent);}
+.poll-option-btn.voted{border-color:var(--accent);background:rgba(255,203,5,.1);}
+.poll-option-btn.voted-me{border-color:var(--accent);background:rgba(255,203,5,.18);}
+.poll-option-bar{position:absolute;left:0;top:0;height:100%;background:rgba(255,203,5,.13);border-radius:10px;transition:width .5s ease;pointer-events:none;}
+.poll-option-poke-sm{width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.poll-option-label{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--text);flex:1;z-index:1;}
+.poll-option-count{font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);z-index:1;}
+.poll-option-pct{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--accent);z-index:1;}
+.poll-closed-badge{font-family:'Galmuri11',monospace;font-size:.6rem;background:rgba(255,203,5,.15);border:1px solid rgba(255,203,5,.3);color:var(--accent);border-radius:6px;padding:.1rem .4rem;}
+.poll-battle-btn{width:100%;font-family:'Galmuri11',monospace;font-size:.72rem;background:linear-gradient(90deg,#c03028,#7038f8);color:#fff;border:none;border-radius:10px;padding:.42rem;cursor:pointer;margin-top:.2rem;transition:opacity .15s;}
+.poll-battle-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* 배틀 UI */
+.battle-arena{background:linear-gradient(160deg,var(--surface),var(--card));border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:.75rem;}
+.battle-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.5rem;}
+.battle-team{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.battle-poke-img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));}
+.battle-poke-img.enemy{transform:scaleX(-1);}
+.battle-hp-bar-wrap{width:100%;background:var(--surface);border-radius:20px;height:7px;overflow:hidden;}
+.battle-hp-bar{height:100%;border-radius:20px;transition:width .5s ease;}
+.battle-hp-bar.high{background:#78C850;}
+.battle-hp-bar.mid{background:#F8D030;}
+.battle-hp-bar.low{background:#F08030;}
+.battle-hp-bar.crit{background:#C03028;}
+.battle-vs{font-family:'Galmuri11',monospace;font-size:1.3rem;font-weight:700;color:var(--accent);text-shadow:0 0 12px var(--accent);}
+.battle-poke-name{font-family:'Galmuri11',monospace;font-size:.7rem;color:var(--text);text-align:center;}
+.battle-poke-hp{font-family:'Galmuri11',monospace;font-size:.62rem;color:var(--muted);}
+.battle-log{background:rgba(0,0,0,.25);border-radius:10px;padding:.5rem .7rem;min-height:52px;font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--text);line-height:1.6;}
+.battle-move-btns{display:flex;flex-direction:column;gap:.3rem;}
+.battle-move-btn{width:100%;font-family:'Galmuri11',monospace;font-size:.72rem;border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:.42rem .6rem;cursor:pointer;transition:all .15s;text-align:left;}
+.battle-move-btn:hover{border-color:var(--accent);background:rgba(255,203,5,.08);}
+.battle-move-btn:disabled{opacity:.4;cursor:not-allowed;}
+.battle-result-banner{text-align:center;font-family:'Galmuri11',monospace;font-size:1rem;font-weight:700;padding:.6rem;border-radius:12px;margin-top:.3rem;}
+
 /* ===== 프로필/친구/메시지 CSS ===== */
 /* 프로필 페이지 */
 .profile-hero{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.8rem 1rem 1.2rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:22px;position:relative;overflow:hidden;}
@@ -520,6 +571,16 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
 .chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
 .chat-time{font-size:.56rem;color:var(--muted);padding:0 .15rem;}
+
+/* ── 채팅 + 버튼 ── */
+.chat-plus-btn{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);color:var(--accent);font-size:1.3rem;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;padding:0;}
+.chat-plus-btn:hover,.chat-plus-btn.open{background:rgba(255,203,5,.12);border-color:var(--accent);}
+.chat-plus-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.28rem;padding:.7rem .3rem;background:transparent;border:none;cursor:pointer;transition:background .15s;width:100%;}
+.chat-plus-opt:hover{background:rgba(255,203,5,.07);}
+.chat-plus-opt:not(:last-child){border-right:1px solid var(--border);}
+.chat-plus-opt-icon{font-size:1.45rem;line-height:1;}
+.chat-plus-opt-label{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--muted);}
+
 .chat-input-row{display:flex;gap:.45rem;padding-top:.6rem;border-top:1px solid var(--border);}
 .chat-input{flex:1;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.5rem .75rem;color:var(--text);outline:none;resize:none;height:40px;transition:border-color .2s;}
 .chat-input:focus{border-color:var(--accent);}
@@ -1306,10 +1367,30 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           <button class="reply-preview-close" onclick="cancelReply()">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
+        <!-- 채팅 첨부 옵션 패널 -->
+        <div id="chatPlusPanel" style="display:none;position:absolute;bottom:54px;left:.6rem;right:.6rem;background:var(--card);border:1.5px solid var(--border);border-radius:16px;z-index:60;box-shadow:0 -4px 24px rgba(0,0,0,.35);overflow:hidden;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
+            <button class="chat-plus-opt" onclick="closeChatPlus();document.getElementById('chatImgInput').click()">
+              <span class="chat-plus-opt-icon">🖼️</span>
+              <span class="chat-plus-opt-label">이미지</span>
+            </button>
+            <button class="chat-plus-opt" id="tourSendBtn" onclick="closeChatPlus();toggleTourPicker()">
+              <span class="chat-plus-opt-icon">🎒</span>
+              <span class="chat-plus-opt-label">견학</span>
+            </button>
+            <button class="chat-plus-opt" onclick="closeChatPlus();openPollCreator()">
+              <span class="chat-plus-opt-icon">📊</span>
+              <span class="chat-plus-opt-label">투표</span>
+            </button>
+            <button class="chat-plus-opt" onclick="closeChatPlus();openNoticeEdit()">
+              <span class="chat-plus-opt-icon">📢</span>
+              <span class="chat-plus-opt-label">공지</span>
+            </button>
+          </div>
+        </div>
         <div class="chat-input-row">
           <input type="file" id="chatImgInput" accept="image/*" style="display:none" onchange="sendImageMessage(this)"/>
-          <button class="img-upload-btn" onclick="document.getElementById('chatImgInput').click()" title="이미지 전송">🖼️</button>
-          <button class="tour-send-btn" id="tourSendBtn" onclick="toggleTourPicker()" title="견학 보내기">🎒</button>
+          <button class="chat-plus-btn" id="chatPlusBtn" onclick="toggleChatPlus()" title="첨부">+</button>
           <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
             oninput="handleMentionInput(this)"></textarea>
@@ -1321,6 +1402,63 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     </div>
   </div>
 
+
+<!-- ═══════════ 투표 생성 모달 ═══════════ -->
+<div class="group-profile-modal" id="pollCreatorModal" onclick="closePollCreator(event)">
+  <div class="group-profile-sheet" onclick="event.stopPropagation()" style="max-height:90vh;overflow-y:auto;">
+    <div class="gp-header">
+      <div class="gp-avatar">📊</div>
+      <div class="gp-name">투표 만들기</div>
+      <div class="gp-count" style="font-size:.7rem;color:var(--muted);">채팅방에 투표를 전송해요</div>
+    </div>
+    <div style="padding:.6rem 1.2rem;display:flex;flex-direction:column;gap:.65rem;">
+      <div>
+        <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.25rem;">투표 질문</div>
+        <input class="add-friend-inp" id="pollQuestionInp" placeholder="질문을 입력하세요..." maxlength="100" style="width:100%;"/>
+      </div>
+      <div>
+        <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.25rem;">투표 항목 <span style="color:var(--accent)">(항목 클릭으로 나의 대표 포켓몬 연결 가능)</span></div>
+        <div id="pollOptionsList" style="display:flex;flex-direction:column;gap:.3rem;"></div>
+        <button onclick="addPollOption()" style="margin-top:.35rem;width:100%;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:8px;padding:.38rem;cursor:pointer;transition:all .15s;">+ 항목 추가</button>
+      </div>
+      <div>
+        <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.25rem;">결과 방식</div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+          <button class="poll-mode-btn active" data-mode="majority" onclick="selectPollMode(this)">👑 다수결</button>
+          <button class="poll-mode-btn" data-mode="minority" onclick="selectPollMode(this)">🥀 소수결</button>
+          <button class="poll-mode-btn" data-mode="battle" onclick="selectPollMode(this)">⚔️ 배틀</button>
+        </div>
+        <div id="pollBattleModeNote" style="display:none;margin-top:.35rem;font-size:.62rem;color:var(--accent);font-family:'Galmuri11',monospace;background:rgba(255,203,5,.06);border-radius:8px;padding:.35rem .5rem;line-height:1.5;">
+          ⚔️ 배틀 모드: 각 항목 팀으로 나뉘어 대표 포켓몬끼리 전투! 항목마다 포켓몬을 연결하면 그 포켓몬이 출전해요. 연결하지 않으면 랜덤 포켓몬이 배정돼요.
+        </div>
+      </div>
+    </div>
+    <div style="padding:.3rem 1.2rem 1.5rem;display:flex;gap:.5rem;">
+      <button onclick="closePollCreator()" style="flex:1;font-family:'Galmuri11',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;cursor:pointer;">취소</button>
+      <button onclick="sendPoll()" style="flex:2;font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.5rem;cursor:pointer;font-weight:700;">📊 투표 전송</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 배틀 전체화면 오버레이 ═══════════ -->
+<div id="battleOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;flex-direction:column;">
+  <div id="battlePickPhase" style="display:none;width:100%;height:100%;overflow-y:auto;background:var(--bg);padding:1rem;box-sizing:border-box;"></div>
+  <div id="battleRevealPhase" style="display:none;width:100%;height:100%;overflow-y:auto;background:var(--bg);padding:1rem;box-sizing:border-box;"></div>
+  <canvas id="battleCanvas" style="display:none;width:100%;height:100%;"></canvas>
+  <div id="battleControls" style="display:none;position:fixed;inset:0;pointer-events:none;z-index:10000;">
+    <div id="joyMoveWrap" style="position:absolute;bottom:32px;left:32px;pointer-events:all;">
+      <div id="joyMoveBase" style="width:100px;height:100px;border-radius:50%;background:rgba(30,100,255,.25);border:2.5px solid rgba(30,100,255,.5);position:relative;touch-action:none;">
+        <div id="joyMoveKnob" style="width:44px;height:44px;border-radius:50%;background:rgba(30,100,255,.6);border:2px solid rgba(100,160,255,.8);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(30,100,255,.4);"></div>
+      </div>
+    </div>
+    <div id="joyAttackWrap" style="position:absolute;bottom:32px;right:32px;pointer-events:all;">
+      <div id="joyAttackBase" style="width:100px;height:100px;border-radius:50%;background:rgba(255,40,40,.25);border:2.5px solid rgba(255,40,40,.5);position:relative;touch-action:none;">
+        <div id="joyAttackKnob" style="width:44px;height:44px;border-radius:50%;background:rgba(255,60,60,.6);border:2px solid rgba(255,120,120,.8);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(255,40,40,.4);"></div>
+      </div>
+    </div>
+    <div id="battleHUD" style="position:absolute;top:12px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px;pointer-events:none;gap:.4rem;flex-wrap:wrap;"></div>
+  </div>
+</div>
 </main>
 <div class="settings-toast" id="settingsToast">설정이 저장됐어요 ✓</div>
 <!-- 채팅방 내 초대 모달 -->
@@ -1474,6 +1612,10 @@ onAuthStateChanged(auth, async (user) => {
     await loadSettingsFromServer();
     await getMetList(); // met 캐시 초기화
     renderMetPage();
+    // UID 기반 오늘의 포켓몬 재로드 (로그인 후 시드 재계산)
+    document.getElementById('dex-loading').style.display='flex';
+    document.getElementById('dex-content').style.display='none';
+    if (typeof init === 'function') init();
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
     // 전체 공지 로드 — _myProfile이 필요하므로 loadMyProfile 후 실행
@@ -2393,7 +2535,9 @@ function subscribeMessages(roomId, isGroup) {
 
       // 내용
       let bodyHtml = '';
-      if (data.type === 'tour') {
+      if (data.type === 'poll') {
+        bodyHtml = renderPollCard(data, msgId);
+      } else if (data.type === 'tour') {
         bodyHtml = renderTourCard(data, isMe, msgId);
       } else if (data.type === 'image') {
         bodyHtml = `<div class="chat-img-bubble" onclick="openImgPreview('${escapeHtml(data.imageUrl||'')}')"><img src="${escapeHtml(data.imageUrl||'')}" alt="이미지" loading="lazy"/></div>`;
@@ -4173,6 +4317,925 @@ window.clearSiteNotice = async function() {
   await window.saveSiteNotice();
 };
 
+
+// ── 채팅 + 버튼 (첨부 메뉴) ─────────────────────────────────
+window.toggleChatPlus = function() {
+  const panel = document.getElementById('chatPlusPanel');
+  const btn = document.getElementById('chatPlusBtn');
+  if (!panel || !btn) return;
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    // 바깥 클릭 시 닫기
+    setTimeout(() => document.addEventListener('click', closeChatPlusOutside, {once:true}), 50);
+  }
+};
+
+function closeChatPlusOutside(e) {
+  const panel = document.getElementById('chatPlusPanel');
+  const btn = document.getElementById('chatPlusBtn');
+  if (panel && !panel.contains(e.target) && e.target !== btn) {
+    panel.style.display = 'none';
+    btn?.classList.remove('open');
+  }
+}
+
+window.closeChatPlus = function() {
+  const panel = document.getElementById('chatPlusPanel');
+  const btn = document.getElementById('chatPlusBtn');
+  if (panel) panel.style.display = 'none';
+  btn?.classList.remove('open');
+};
+
+window.openNoticeEdit = function() {
+  const panel = document.getElementById('noticeEditPanel');
+  if (panel) {
+    panel.classList.add('open');
+    document.getElementById('noticeEditInp')?.focus();
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// 📊 투표 시스템
+// ═══════════════════════════════════════════════════════
+
+let _pollMode = 'majority';
+let _pollOptionPokemons = {}; // optionIndex -> {id, name, image, types}
+let _pollOptionCount = 0;
+
+// 타입별 대표 기술
+const TYPE_MOVE = {
+  fire:     { name:'불꽃방사',     power:90,  emoji:'🔥' },
+  water:    { name:'파도타기',     power:90,  emoji:'🌊' },
+  electric: { name:'10만볼트',    power:95,  emoji:'⚡' },
+  grass:    { name:'솔라빔',      power:120, emoji:'🌿' },
+  ice:      { name:'눈보라',      power:110, emoji:'❄️' },
+  fighting: { name:'격투',       power:120, emoji:'👊' },
+  poison:   { name:'헤비봄버',    power:100, emoji:'☠️' },
+  ground:   { name:'지진',        power:100, emoji:'🌍' },
+  flying:   { name:'에어슬래시',  power:75,  emoji:'🌪️' },
+  psychic:  { name:'사이코키네시스',power:90, emoji:'🔮' },
+  bug:      { name:'버그버즈',    power:90,  emoji:'🐛' },
+  rock:     { name:'스톤에지',    power:100, emoji:'🪨' },
+  ghost:    { name:'섀도볼',      power:80,  emoji:'👻' },
+  dragon:   { name:'드래곤크로',   power:140, emoji:'🐉' },
+  dark:     { name:'악의파동',    power:80,  emoji:'🌑' },
+  steel:    { name:'아이언헤드',   power:80,  emoji:'⚙️' },
+  fairy:    { name:'문포스',      power:95,  emoji:'✨' },
+  normal:   { name:'하이퍼빔',    power:150, emoji:'💥' },
+};
+
+// 전설/환상 전용기 (ID → 기술)
+const LEGENDARY_MOVE = {
+  144:{ name:'빙결폭풍',    power:140, emoji:'🌨️' }, // 프리져
+  145:{ name:'썬더',        power:120, emoji:'⚡' }, // 선더
+  146:{ name:'화염방사',    power:150, emoji:'🔥' }, // 파이어
+  150:{ name:'사이코브레이크',power:150,emoji:'🔮' }, // 뮤츠
+  151:{ name:'변환',        power:80,  emoji:'🌀' }, // 뮤
+  249:{ name:'에어로블라스트',power:140,emoji:'💫' }, // 루기아
+  250:{ name:'성스러운불꽃', power:140, emoji:'🌟' }, // 칠색조
+  251:{ name:'리프스톰',    power:130, emoji:'🌿' }, // 세레비
+  382:{ name:'원시의힘',    power:160, emoji:'🌊' }, // 가이오가
+  383:{ name:'마그마폭풍',  power:160, emoji:'🌋' }, // 그란돈
+  384:{ name:'역린',        power:160, emoji:'🐉' }, // 레쿠쟈
+  385:{ name:'치유의소원',  power:100, emoji:'⭐' }, // 지라치
+  386:{ name:'사이코부스트',power:140, emoji:'🔮' }, // 데옥시스
+  483:{ name:'시간의포효',  power:150, emoji:'⏰' }, // 디아루가
+  484:{ name:'공간절단',    power:150, emoji:'🌌' }, // 펄기아
+  487:{ name:'다크홀',      power:140, emoji:'🕳️' }, // 기라티나
+  491:{ name:'다크보이드',  power:140, emoji:'🌑' }, // 다크라이
+  492:{ name:'시드플레어',  power:140, emoji:'🌸' }, // 쉐이미
+  493:{ name:'심판',        power:160, emoji:'⚡' }, // 아르세우스
+  643:{ name:'화염폭풍',    power:160, emoji:'🔥' }, // 레시라무
+  644:{ name:'크로스썬더',  power:160, emoji:'⚡' }, // 제크로무
+  646:{ name:'빙결지배',    power:150, emoji:'❄️' }, // 큐레무
+  716:{ name:'맹독의입길질',power:150, emoji:'✨' }, // 제르네아스
+  717:{ name:'죽음날개',    power:140, emoji:'🦅' }, // 이벨타르
+  800:{ name:'서틀라이트빔',power:150, emoji:'🌙' }, // 네크로즈마
+  888:{ name:'왕검격돌',    power:150, emoji:'⚔️' }, // 자시안
+  889:{ name:'스텝웨이브',  power:150, emoji:'🛡️' }, // 자마젠타
+};
+
+// ── 투표 생성 UI ──────────────────────────────────────────
+window.openPollCreator = function() {
+  _pollMode = 'majority';
+  _pollOptionPokemons = {};
+  _pollOptionCount = 0;
+  // 초기 항목 2개
+  const list = document.getElementById('pollOptionsList');
+  if (!list) return;
+  list.innerHTML = '';
+  document.getElementById('pollQuestionInp').value = '';
+  document.querySelectorAll('.poll-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'majority'));
+  document.getElementById('pollBattleModeNote').style.display = 'none';
+  addPollOption(); addPollOption();
+  document.getElementById('pollCreatorModal').classList.add('open');
+};
+
+window.closePollCreator = function(e) {
+  if (!e || e.target === document.getElementById('pollCreatorModal'))
+    document.getElementById('pollCreatorModal').classList.remove('open');
+};
+
+window.addPollOption = function() {
+  const list = document.getElementById('pollOptionsList');
+  const idx = _pollOptionCount++;
+  const row = document.createElement('div');
+  row.className = 'poll-option-row';
+  row.dataset.idx = idx;
+  row.innerHTML = `
+    <div class="poll-option-poke" id="pollOptPoke_${idx}" onclick="pickPokeForOption(${idx})" title="포켓몬 연결">🎯</div>
+    <input class="poll-option-inp" id="pollOptInp_${idx}" placeholder="항목 ${idx+1}" maxlength="40"/>
+    <button class="poll-option-del" onclick="removePollOption(this)" title="삭제">✕</button>`;
+  list.appendChild(row);
+};
+
+window.removePollOption = function(btn) {
+  const rows = document.querySelectorAll('#pollOptionsList .poll-option-row');
+  if (rows.length <= 2) { showSocialToast('최소 2개 항목이 필요해요'); return; }
+  btn.closest('.poll-option-row').remove();
+};
+
+window.selectPollMode = function(btn) {
+  _pollMode = btn.dataset.mode;
+  document.querySelectorAll('.poll-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.getElementById('pollBattleModeNote').style.display = _pollMode === 'battle' ? 'block' : 'none';
+};
+
+window.pickPokeForOption = function(idx) {
+  // 만난 포켓몬 중 선택
+  let metList = window._metPokemonCache || [];
+  try { if (!metList.length) metList = JSON.parse(localStorage.getItem('metPokemon')||'[]'); } catch(e){}
+  if (!metList.length) { showSocialToast('만난 포켓몬이 없어요'); return; }
+
+  // 간단한 선택 팝업
+  const existing = _pollOptionPokemons[idx];
+  const opts = metList.slice(0, 30).map((p, i) =>
+    `<div onclick="assignPokeToOption(${idx},${i})" style="display:flex;align-items:center;gap:.4rem;padding:.35rem .5rem;cursor:pointer;border-radius:8px;background:${(existing&&existing.id===p.id)?'rgba(255,203,5,.15)':'transparent'};border:1px solid ${(existing&&existing.id===p.id)?'var(--accent)':'transparent'};">
+      <img src="${p.image||''}" style="width:28px;height:28px;object-fit:contain;" alt=""/>
+      <span style="font-family:Galmuri11,monospace;font-size:.7rem;color:var(--text);">${escapeHtml(p.name||'')}</span>
+    </div>`).join('');
+
+  const popup = document.createElement('div');
+  popup.id = 'pokePickPopup';
+  popup.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;';
+  popup.innerHTML = `<div onclick="event.stopPropagation()" style="background:var(--card);border-radius:16px 16px 0 0;padding:1rem;width:100%;max-width:440px;max-height:60vh;overflow-y:auto;">
+    <div style="font-family:Galmuri11,monospace;font-size:.75rem;color:var(--accent);margin-bottom:.5rem;">포켓몬 선택 (항목 ${idx+1})</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem;">${opts}</div>
+    ${existing ? `<button onclick="assignPokeToOption(${idx},-1)" style="width:100%;margin-top:.5rem;font-family:Galmuri11,monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.35rem;cursor:pointer;">연결 해제</button>` : ''}
+    <button onclick="document.getElementById('pokePickPopup').remove()" style="width:100%;margin-top:.3rem;font-family:Galmuri11,monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.35rem;cursor:pointer;">취소</button>
+  </div>`;
+  popup.onclick = () => popup.remove();
+  document.body.appendChild(popup);
+  window._metListForPick = metList;
+};
+
+window.assignPokeToOption = function(optIdx, pokeIdx) {
+  document.getElementById('pokePickPopup')?.remove();
+  const el = document.getElementById(`pollOptPoke_${optIdx}`);
+  if (pokeIdx < 0) {
+    delete _pollOptionPokemons[optIdx];
+    if (el) el.innerHTML = '🎯';
+    return;
+  }
+  const p = (window._metListForPick || [])[pokeIdx];
+  if (!p || !el) return;
+  _pollOptionPokemons[optIdx] = p;
+  el.innerHTML = `<img src="${p.image||''}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;" alt=""/>`;
+};
+
+window.sendPoll = async function() {
+  if (!currentUser || !_currentRoomId) return;
+  const q = document.getElementById('pollQuestionInp').value.trim();
+  if (!q) { showSocialToast('질문을 입력해주세요'); return; }
+  const rows = document.querySelectorAll('#pollOptionsList .poll-option-row');
+  const options = [];
+  for (const row of rows) {
+    const idx = parseInt(row.dataset.idx);
+    const text = document.getElementById(`pollOptInp_${idx}`)?.value.trim();
+    if (!text) { showSocialToast('모든 항목에 내용을 입력해주세요'); return; }
+    const poke = _pollOptionPokemons[idx] || null;
+    options.push({ text, pokemon: poke ? { id: poke.id, name: poke.name, image: poke.image||'', types: poke.types||['normal'] } : null });
+  }
+  if (options.length < 2) { showSocialToast('항목을 2개 이상 추가해주세요'); return; }
+
+  const pollData = {
+    from: currentUser.uid,
+    type: 'poll',
+    poll: { question: q, options, mode: _pollMode, votes: {}, closed: false },
+    ts: serverTimestamp(),
+    readBy: [currentUser.uid],
+  };
+  try {
+    await addDoc(collection(db,'chats',_currentRoomId,'messages'), pollData);
+    await updateRoomMeta(_currentRoomId, `📊 투표: ${q}`);
+    document.getElementById('pollCreatorModal').classList.remove('open');
+    showSocialToast('투표가 전송됐어요 📊');
+  } catch(e) { showSocialToast('전송 실패: '+e.message); }
+};
+
+// ── 투표 카드 렌더링 ────────────────────────────────────────
+function renderPollCard(data, msgId) {
+  const poll = data.poll || {};
+  const opts = poll.options || [];
+  const votes = poll.votes || {};       // { uid: optionIndex }
+  const myVote = votes[currentUser.uid];
+  const hasVoted = myVote !== undefined;
+  const totalVotes = Object.keys(votes).length;
+  const closed = poll.closed || false;
+  const mode = poll.mode || 'majority';
+
+  const modeLabel = { majority:'👑 다수결', minority:'🥀 소수결', battle:'⚔️ 배틀' }[mode] || '';
+  const modeColor = { majority:'var(--accent)', minority:'#a890f0', battle:'#f08030' }[mode] || 'var(--accent)';
+
+  const optHtml = opts.map((opt, i) => {
+    const cnt = Object.values(votes).filter(v => v === i).length;
+    const pct = totalVotes ? Math.round(cnt/totalVotes*100) : 0;
+    const isMyVote = myVote === i;
+    const poke = opt.pokemon;
+    const pokeHtml = poke ? `<img src="${poke.image||''}" class="poll-option-poke-sm" alt=""/>` : '';
+    return `<div class="poll-option-btn${isMyVote?' voted-me':hasVoted?' voted':''}"
+      onclick="${!closed ? `castVote('${msgId}',${i})` : ''}"
+      style="cursor:${closed?'default':'pointer'}">
+      <div class="poll-option-bar" style="width:${hasVoted||closed?pct:0}%"></div>
+      ${pokeHtml}
+      <span class="poll-option-label">${escapeHtml(opt.text)}</span>
+      ${hasVoted||closed ? `<span class="poll-option-pct">${pct}%</span>
+      <span class="poll-option-count">${cnt}표</span>` : ''}
+      ${isMyVote ? '<span style="font-size:.6rem;color:var(--accent)">✓</span>' : ''}
+    </div>`;
+  }).join('');
+
+  const isCreator = data.from === currentUser.uid;
+  const battleBtnDisabled = !hasVoted || closed;
+
+  return `<div class="poll-card">
+    <div class="poll-card-q">${escapeHtml(poll.question||'')}</div>
+    <div class="poll-card-meta">
+      <span style="color:${modeColor}">${modeLabel}</span>
+      <span>·</span><span>${totalVotes}명 참여</span>
+      ${closed ? '<span class="poll-closed-badge">마감</span>' : ''}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.3rem;">${optHtml}</div>
+    ${mode==='battle' ? `<button class="poll-battle-btn" onclick="startBattle('${msgId}')" ${!hasVoted?'disabled':''}>
+      ⚔️ ${hasVoted?'배틀 참전!':'먼저 투표하세요'}
+    </button>` : ''}
+    ${isCreator && !closed ? `<button onclick="closePoll('${msgId}')" style="width:100%;font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem;cursor:pointer;margin-top:.15rem;">마감하기</button>` : ''}
+  </div>`;
+}
+
+window.castVote = async function(msgId, optIdx) {
+  if (!currentUser || !_currentRoomId) return;
+  try {
+    const ref = doc(db,'chats',_currentRoomId,'messages',msgId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
+    const poll = snap.data().poll || {};
+    if (poll.closed) { showSocialToast('이미 마감된 투표예요'); return; }
+    const votes = poll.votes || {};
+    if (votes[currentUser.uid] === optIdx) {
+      delete votes[currentUser.uid]; // 취소
+    } else {
+      votes[currentUser.uid] = optIdx;
+    }
+    await updateDoc(ref, { 'poll.votes': votes });
+  } catch(e) { showSocialToast('투표 실패: '+e.message); }
+};
+
+window.closePoll = async function(msgId) {
+  if (!confirm('투표를 마감할까요?')) return;
+  try {
+    await updateDoc(doc(db,'chats',_currentRoomId,'messages',msgId), { 'poll.closed': true });
+    showSocialToast('투표가 마감됐어요');
+  } catch(e) {}
+};
+
+// ── ⚔️ 배틀 시스템 ─────────────────────────────────────────
+// 기술 목록 생성
+function getBattleMoves(pokemon) {
+  const moves = [];
+  // 1. 할퀴기 (기본기)
+  moves.push({ name:'할퀴기', power:40, emoji:'💢', type:'normal', desc:'기본 할퀴기 공격' });
+  // 2. 타입 전용기
+  const primaryType = (pokemon.types||['normal'])[0];
+  const typeMove = TYPE_MOVE[primaryType];
+  if (typeMove) moves.push({ ...typeMove, type: primaryType, desc: `${TYPE_KO[primaryType]||primaryType} 타입 기술` });
+  // 3. 전설/환상 전용기
+  if (LEGENDARY_IDS.has(pokemon.id) && LEGENDARY_MOVE[pokemon.id]) {
+    moves.push({ ...LEGENDARY_MOVE[pokemon.id], type:'master', desc:'마스터볼 전용 전설기' });
+  } else if (LEGENDARY_IDS.has(pokemon.id)) {
+    moves.push({ name:'초월의힘', power:160, emoji:'🌟', type:'master', desc:'마스터볼 전용 전설기' });
+  }
+  return moves;
+}
+
+// 랜덤 포켓몬 (만난 포켓몬에서)
+function getRandomPokemon() {
+  let metList = window._metPokemonCache || [];
+  try { if (!metList.length) metList = JSON.parse(localStorage.getItem('metPokemon')||'[]'); } catch(e){}
+  if (!metList.length) return { id:25, name:'피카츄', image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/other/official-artwork/25.png', types:['electric'] };
+  return metList[Math.floor(Math.random()*metList.length)];
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// ⚔️ 배틀 시스템 v2 — 전원 참여, 조이스틱 이동/공격, 캔버스 맵
+// ═══════════════════════════════════════════════════════════════
+
+let _battleRunning = false;
+let _battlePollMsgId = null;
+let _battleAnimFrame = null;
+let _myBattleChoice = null;   // { pokemon, move, team }
+let _joyMove  = { x:0, y:0, active:false };
+let _joyAttack = { active:false };
+
+// ── 1. 배틀 시작 (투표 마감 후 버튼 클릭) ───────────────────
+window.startBattle = async function(msgId) {
+  if (_battleRunning) return;
+  try {
+    const ref = doc(db,'chats',_currentRoomId,'messages',msgId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
+    const poll = snap.data().poll || {};
+    const votes = poll.votes || {};
+    const opts  = poll.options || [];
+    if (opts.length < 2) { showSocialToast('항목이 2개 이상 필요해요'); return; }
+
+    // 팀 편성: 각 투표 항목 = 한 팀
+    const teams = opts.map((opt, i) => ({
+      idx: i,
+      text: opt.text,
+      pokemon: opt.pokemon || null,
+      voters: Object.entries(votes).filter(([,v])=>v===i).map(([uid])=>uid),
+    }));
+
+    // 내가 투표한 팀
+    const myTeamIdx = votes[currentUser.uid];
+    if (myTeamIdx === undefined) { showSocialToast('먼저 투표하고 배틀에 참여하세요'); return; }
+    const myTeam = teams[myTeamIdx];
+
+    _battlePollMsgId = msgId;
+    _battleRunning = true;
+    openBattlePickPhase(myTeam, teams, poll);
+  } catch(e) { showSocialToast('배틀 준비 실패: '+e.message); _battleRunning = false; }
+};
+
+// ── 2. 포켓몬 & 기술 선택 화면 ──────────────────────────────
+function openBattlePickPhase(myTeam, allTeams, poll) {
+  const overlay = document.getElementById('battleOverlay');
+  const pick    = document.getElementById('battlePickPhase');
+  if (!overlay || !pick) return;
+
+  // 만난 포켓몬 목록
+  let metList = window._metPokemonCache || [];
+  try { if (!metList.length) metList = JSON.parse(localStorage.getItem('metPokemon')||'[]'); } catch(e){}
+  if (!metList.length) metList = [{ id:25, name:'피카츄', image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/other/official-artwork/25.png', types:['electric'] }];
+
+  // 팀 항목에 연결된 포켓몬이 있으면 우선 선택
+  let defaultPoke = myTeam.pokemon || metList[0];
+
+  window._battlePickState = { selectedPoke: defaultPoke, selectedMoveIdx: 0, myTeam, allTeams, poll };
+
+  function renderPick() {
+    const s = window._battlePickState;
+    const moves = getBattleMoves(s.selectedPoke);
+    pick.innerHTML = `
+      <div style="font-family:'Galmuri11',monospace;padding:.5rem 0 .8rem;text-align:center;">
+        <div style="font-size:.68rem;color:var(--muted);">⚔️ 배틀 준비 — 팀 <span style="color:var(--accent)">${escapeHtml(s.myTeam.text)}</span></div>
+        <div style="font-size:.78rem;color:var(--text);margin-top:.2rem;">출전 포켓몬과 기술을 선택하세요</div>
+      </div>
+
+      <!-- 팀 구성 보기 -->
+      <div style="display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.3rem;margin-bottom:.7rem;">
+        ${allTeams.map(t=>`
+          <div style="flex-shrink:0;background:${t.idx===s.myTeam.idx?'rgba(255,203,5,.12)':'var(--surface)'};border:1.5px solid ${t.idx===s.myTeam.idx?'var(--accent)':'var(--border)'};border-radius:10px;padding:.35rem .6rem;font-family:Galmuri11,monospace;font-size:.62rem;color:${t.idx===s.myTeam.idx?'var(--accent)':'var(--muted)'};">
+            ${t.idx===s.myTeam.idx?'🫵 ':''}${escapeHtml(t.text)} ${t.voters.length}표
+          </div>`).join('')}
+      </div>
+
+      <!-- 포켓몬 선택 -->
+      <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.35rem;">출전 포켓몬 선택</div>
+      <div id="battlePokeGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;max-height:160px;overflow-y:auto;margin-bottom:.7rem;">
+        ${metList.slice(0,24).map((p,i)=>`
+          <div onclick="selectBattlePoke(${i})" style="cursor:pointer;border-radius:10px;border:2px solid ${p.id===s.selectedPoke.id?'var(--accent)':'var(--border)'};background:${p.id===s.selectedPoke.id?'rgba(255,203,5,.1)':'var(--surface)'};padding:.3rem;text-align:center;transition:all .12s;">
+            <img src="${p.image||''}" style="width:100%;aspect-ratio:1;object-fit:contain;" alt=""/>
+            <div style="font-family:Galmuri11,monospace;font-size:.52rem;color:var(--muted);margin-top:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(p.name||'')}</div>
+          </div>`).join('')}
+      </div>
+
+      <!-- 기술 선택 -->
+      <div style="font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.3rem;">사용할 기술 선택</div>
+      <div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem;">
+        ${moves.map((m,i)=>`
+          <button onclick="selectBattleMove(${i})" class="battle-move-btn" style="border-color:${i===s.selectedMoveIdx?(m.type==='master'?'#7038f8':TYPE_COLOR[m.type]||'var(--accent)'):'var(--border)'};background:${i===s.selectedMoveIdx?'rgba(255,203,5,.08)':'transparent'};">
+            ${m.emoji} ${m.name}
+            <span style="float:right;font-size:.6rem;color:var(--muted);">위력 ${m.power} · ${m.type==='master'?'전설기':m.type==='normal'?'노말':TYPE_KO[m.type]||m.type}</span>
+          </button>`).join('')}
+      </div>
+
+      <button onclick="confirmBattlePick()" style="width:100%;font-family:'Galmuri11',monospace;font-size:.78rem;background:var(--accent);color:var(--bg);border:none;border-radius:12px;padding:.6rem;cursor:pointer;font-weight:700;">
+        ⚔️ 참전 준비 완료!
+      </button>
+      <button onclick="exitBattle()" style="width:100%;margin-top:.4rem;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.4rem;cursor:pointer;">취소</button>
+    `;
+  }
+
+  window._battleMetList = metList;
+  window.selectBattlePoke = function(i) {
+    window._battlePickState.selectedPoke = metList[i];
+    window._battlePickState.selectedMoveIdx = 0;
+    renderPick();
+  };
+  window.selectBattleMove = function(i) {
+    window._battlePickState.selectedMoveIdx = i;
+    renderPick();
+  };
+
+  overlay.style.display = 'flex';
+  pick.style.display    = 'block';
+  document.getElementById('battleRevealPhase').style.display = 'none';
+  document.getElementById('battleCanvas').style.display      = 'none';
+  document.getElementById('battleControls').style.display    = 'none';
+  renderPick();
+
+  // 가로 모드 고려: 세로면 landscape 힌트
+  if (screen.orientation?.lock) screen.orientation.lock('landscape').catch(()=>{});
+}
+
+window.confirmBattlePick = async function() {
+  const s = window._battlePickState;
+  if (!s) return;
+  const moves = getBattleMoves(s.selectedPoke);
+  const chosenMove = moves[s.selectedMoveIdx];
+  _myBattleChoice = { pokemon: s.selectedPoke, move: chosenMove, team: s.myTeam };
+
+  // Firestore에 내 선택 저장
+  try {
+    await setDoc(doc(db,'chats',_currentRoomId,'battleReady',currentUser.uid), {
+      uid: currentUser.uid,
+      nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+      avatar: _myProfile?.avatar || '🎒',
+      profileImage: _myProfile?.profileImage || null,
+      teamIdx: s.myTeam.idx,
+      teamText: s.myTeam.text,
+      pokemonId: s.selectedPoke.id,
+      pokemonName: s.selectedPoke.name,
+      pokemonImage: s.selectedPoke.image || '',
+      pokemonTypes: s.selectedPoke.types || ['normal'],
+      moveName: chosenMove.name,
+      moveEmoji: chosenMove.emoji,
+      movePower: chosenMove.power,
+      moveType: chosenMove.type,
+      pollMsgId: _battlePollMsgId,
+      ts: serverTimestamp(),
+    });
+  } catch(e) {}
+
+  showRevealPhase(s);
+};
+
+// ── 3. 선택 공개 화면 (5초 카운트다운) ─────────────────────
+function showRevealPhase(s) {
+  const pick   = document.getElementById('battlePickPhase');
+  const reveal = document.getElementById('battleRevealPhase');
+  pick.style.display   = 'none';
+  reveal.style.display = 'block';
+
+  let countdown = 5;
+  let unsubReady = null;
+
+  function renderReveal(readyDocs) {
+    const cards = readyDocs.map(d => `
+      <div style="background:var(--surface);border:1.5px solid ${d.teamIdx===s.myTeam.idx?'var(--accent)':'var(--border)'};border-radius:12px;padding:.5rem .65rem;display:flex;align-items:center;gap:.5rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
+          ${d.profileImage?`<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt=""/>`:`<span style="font-size:.9rem;">${escapeHtml(d.avatar||'🎒')}</span>`}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--text);">${escapeHtml(d.nickname||'트레이너')}</div>
+          <div style="font-size:.58rem;color:var(--muted);font-family:Galmuri11,monospace;">팀 ${escapeHtml(d.teamText||'')}</div>
+        </div>
+        <img src="${d.pokemonImage||''}" style="width:36px;height:36px;object-fit:contain;" alt=""/>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:Galmuri11,monospace;font-size:.68rem;color:var(--accent);">${escapeHtml(d.pokemonName||'')}</div>
+          <div style="font-size:.6rem;color:var(--muted);font-family:Galmuri11,monospace;">${d.moveEmoji||''} ${escapeHtml(d.moveName||'')}</div>
+        </div>
+      </div>`).join('');
+
+    reveal.innerHTML = `
+      <div style="font-family:'Galmuri11',monospace;text-align:center;padding:.6rem 0 .8rem;">
+        <div style="font-size:.68rem;color:var(--muted);">⚔️ 참전 선언!</div>
+        <div style="font-size:1.6rem;color:var(--accent);font-weight:700;margin:.2rem 0;">${countdown}</div>
+        <div style="font-size:.68rem;color:var(--muted);">초 후 배틀 시작</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.35rem;">${cards}</div>
+    `;
+  }
+
+  // Firestore 리얼타임 구독
+  try {
+    const readyRef = collection(db,'chats',_currentRoomId,'battleReady');
+    unsubReady = onSnapshot(query(readyRef, where('pollMsgId','==',_battlePollMsgId)), snap => {
+      const docs = snap.docs.map(d=>d.data());
+      renderReveal(docs);
+    });
+  } catch(e) { renderReveal([]); }
+
+  const timer = setInterval(async () => {
+    countdown--;
+    const docs = [];
+    try {
+      const snap = await getDocs(query(collection(db,'chats',_currentRoomId,'battleReady'), where('pollMsgId','==',_battlePollMsgId)));
+      snap.docs.forEach(d => docs.push(d.data()));
+    } catch(e) {}
+    renderReveal(docs);
+    if (countdown <= 0) {
+      clearInterval(timer);
+      if (unsubReady) unsubReady();
+      startBattleCanvas(docs, s);
+    }
+  }, 1000);
+}
+
+// ── 4. 캔버스 배틀 (실시간 멀티플레이어) ─────────────────────
+async function startBattleCanvas(allPlayers, s) {
+  const reveal   = document.getElementById('battleRevealPhase');
+  const canvas   = document.getElementById('battleCanvas');
+  const controls = document.getElementById('battleControls');
+  reveal.style.display   = 'none';
+  canvas.style.display   = 'block';
+  controls.style.display = 'block';
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const TEAM_COLORS = ['#ffcb05','#a890f0','#78C850','#F08030','#6890F0','#F85888'];
+  const MAP_W = canvas.width, MAP_H = canvas.height;
+  const RADIUS = 26, SPEED = 2.8, ATK_RANGE = 58, ATK_CD = 45, ATK_CD2 = 60;
+
+  // ── 로컬 플레이어 맵 { uid → playerObj } ──
+  const players = {};
+  allPlayers.forEach((d, i) => {
+    const angle = (i / allPlayers.length) * Math.PI * 2;
+    const r = Math.min(MAP_W, MAP_H) * 0.3;
+    players[d.uid] = {
+      uid: d.uid, nickname: d.nickname,
+      teamIdx: d.teamIdx, teamText: d.teamText,
+      pokemonImage: d.pokemonImage, pokemonName: d.pokemonName,
+      move: { name:d.moveName, emoji:d.moveEmoji, power:d.movePower, type:d.moveType },
+      x: MAP_W/2 + Math.cos(angle)*r,
+      y: MAP_H/2 + Math.sin(angle)*r,
+      hp: 100, maxHp: 100, radius: RADIUS,
+      color: TEAM_COLORS[d.teamIdx % TEAM_COLORS.length],
+      img: null, attackCooldown: 0, moveUsed: false, dead: false,
+      isMe: d.uid === currentUser.uid,
+    };
+  });
+  const me = players[currentUser.uid];
+
+  // 포켓몬 이미지 로드
+  await Promise.all(Object.values(players).map(p => new Promise(res => {
+    if (!p.pokemonImage) { res(); return; }
+    const img = new Image();
+    img.onload = img.onerror = () => { p.img = img; res(); };
+    img.crossOrigin = 'anonymous';
+    img.src = p.pokemonImage;
+  })));
+
+  // ── Firestore 실시간 동기화 ──────────────────────────
+  const stateCol = collection(db,'chats',_currentRoomId,'battleState');
+  let _unsubState = null;
+
+  // 내 상태 업로드 (10fps)
+  let _uploadTimer = setInterval(async () => {
+    if (!me || gameOver) return;
+    try {
+      await setDoc(doc(stateCol, currentUser.uid), {
+        uid: currentUser.uid,
+        x: Math.round(me.x), y: Math.round(me.y),
+        hp: me.hp, dead: me.dead,
+        pollMsgId: _battlePollMsgId,
+        ts: Date.now(),
+      }, { merge: true });
+    } catch(e) {}
+  }, 100);
+
+  // 다른 플레이어 상태 수신
+  try {
+    _unsubState = onSnapshot(query(stateCol, where('pollMsgId','==',_battlePollMsgId)), snap => {
+      snap.docs.forEach(d => {
+        const data = d.data();
+        const uid = data.uid;
+        if (!uid || uid === currentUser.uid) return;
+        const p = players[uid];
+        if (!p) return;
+        // 부드럽게 보간 (이전 위치 → 새 위치)
+        p._targetX = data.x; p._targetY = data.y;
+        p.hp   = data.hp ?? p.hp;
+        p.dead = data.dead ?? p.dead;
+      });
+    });
+  } catch(e) {}
+
+  // ── 이펙트 ──
+  const effects = [];
+  function spawnEffect(x, y, color, text) {
+    effects.push({ x, y, color, text, life:40, maxLife:40 });
+  }
+
+  // ── HUD ──
+  function renderHUD() {
+    const hud = document.getElementById('battleHUD');
+    if (!hud) return;
+    const tg = {};
+    Object.values(players).forEach(p => {
+      if (!tg[p.teamIdx]) tg[p.teamIdx] = { text:p.teamText, color:p.color, alive:0, total:0 };
+      tg[p.teamIdx].total++;
+      if (!p.dead) tg[p.teamIdx].alive++;
+    });
+    hud.innerHTML = Object.values(tg).map(t=>
+      `<div style="background:rgba(0,0,0,.6);border:1.5px solid ${t.color};border-radius:8px;padding:.18rem .45rem;font-family:Galmuri11,monospace;font-size:.6rem;color:${t.color};">
+        팀 ${escapeHtml(t.text)} ${t.alive}/${t.total}
+      </div>`
+    ).join('');
+    // 내 HP 표시
+    if (me) {
+      hud.innerHTML += `<div style="background:rgba(0,0,0,.6);border:1.5px solid ${me.color};border-radius:8px;padding:.18rem .55rem;font-family:Galmuri11,monospace;font-size:.6rem;color:#fff;">
+        HP ${me.hp}/${me.maxHp}
+      </div>`;
+    }
+  }
+
+  // ── 맵 ──
+  function drawMap() {
+    ctx.fillStyle = '#152015';
+    ctx.fillRect(0, 0, MAP_W, MAP_H);
+    ctx.strokeStyle = 'rgba(255,255,255,.035)';
+    ctx.lineWidth = 1;
+    for (let x=0;x<MAP_W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,MAP_H);ctx.stroke();}
+    for (let y=0;y<MAP_H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(MAP_W,y);ctx.stroke();}
+    ctx.beginPath();
+    ctx.arc(MAP_W/2,MAP_H/2,Math.min(MAP_W,MAP_H)*.46,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,203,5,.15)'; ctx.lineWidth=3; ctx.stroke();
+  }
+
+  // ── 플레이어 ──
+  function drawPlayer(p) {
+    if (p.dead) return;
+    ctx.save(); ctx.translate(p.x, p.y);
+    // 링
+    ctx.beginPath(); ctx.arc(0,0,p.radius+3,0,Math.PI*2);
+    ctx.strokeStyle = p.color; ctx.lineWidth = p.isMe ? 3 : 2;
+    if (p.isMe) { ctx.fillStyle='rgba(255,255,255,.15)'; ctx.fill(); }
+    ctx.stroke();
+    // 포켓몬
+    const sz = p.radius*2;
+    ctx.beginPath(); ctx.arc(0,0,p.radius,0,Math.PI*2); ctx.clip();
+    if (p.img) {
+      ctx.drawImage(p.img,-p.radius,-p.radius,sz,sz);
+    } else {
+      ctx.fillStyle=p.color+'44'; ctx.fillRect(-p.radius,-p.radius,sz,sz);
+      ctx.fillStyle='#fff'; ctx.font=`${p.radius*.9}px sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🎒',0,0);
+    }
+    ctx.restore();
+    // HP 바
+    const bw=p.radius*2.2, bh=4, bx=p.x-bw/2, by=p.y+p.radius+5;
+    ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(bx,by,bw,bh);
+    const r=p.hp/p.maxHp;
+    ctx.fillStyle=r>.5?'#78C850':r>.25?'#F8D030':'#C03028';
+    ctx.fillRect(bx,by,bw*Math.max(0,r),bh);
+    // 닉네임
+    ctx.font='9px Galmuri11,monospace'; ctx.textAlign='center';
+    const nick=(p.nickname||'').slice(0,6);
+    const tw=ctx.measureText(nick).width;
+    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(p.x-tw/2-2,by+bh+2,tw+4,11);
+    ctx.fillStyle=p.isMe?'#ffcb05':'#ddd'; ctx.fillText(nick,p.x,by+bh+11);
+  }
+
+  function drawEffects() {
+    for (let i=effects.length-1;i>=0;i--) {
+      const e=effects[i]; const a=e.life/e.maxLife;
+      ctx.globalAlpha=a; ctx.fillStyle=e.color;
+      ctx.font=`bold ${Math.floor(10*a+8)}px Galmuri11,monospace`;
+      ctx.textAlign='center';
+      ctx.fillText(e.text, e.x, e.y-(1-a)*28);
+      e.life--; if(e.life<=0) effects.splice(i,1);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // ── 공격 (내 클라이언트에서 판정 → Firestore에 결과 기록) ──
+  async function tryAttack() {
+    if (!me || me.dead || me.attackCooldown > 0) return;
+    const move = me.moveUsed
+      ? { name:'할퀴기', power:40, type:'normal', emoji:'💢' }
+      : me.move;
+    me.attackCooldown = me.moveUsed ? ATK_CD2 : ATK_CD;
+    if (!me.moveUsed) me.moveUsed = true;
+
+    Object.values(players).forEach(async target => {
+      if (target.dead || target.teamIdx === me.teamIdx) return;
+      const dist = Math.hypot(target.x-me.x, target.y-me.y);
+      if (dist < me.radius + target.radius + ATK_RANGE) {
+        const dmg = Math.max(1, Math.round(move.power*(0.85+Math.random()*.15)/10));
+        const newHp = Math.max(0, target.hp - dmg);
+        target.hp = newHp;
+        const newDead = newHp <= 0;
+        if (newDead) { target.dead = true; spawnEffect(target.x, target.y,'#fff','💫 KO!'); }
+        spawnEffect(target.x, target.y-target.radius-12, me.color, `${move.emoji}${dmg}`);
+        renderHUD();
+        // 상대 HP를 Firestore에 기록
+        try {
+          await setDoc(doc(stateCol, target.uid), {
+            uid: target.uid, hp: newHp, dead: newDead,
+            pollMsgId: _battlePollMsgId, ts: Date.now(),
+          }, { merge: true });
+        } catch(e) {}
+      }
+    });
+  }
+
+  // ── 조이스틱 연결 ──
+  setupJoystick('joyMoveBase','joyMoveKnob',_joyMove);
+  setupJoystick('joyAttackBase','joyAttackKnob',_joyAttack, tryAttack);
+
+  // ── 게임 루프 ──
+  let frame=0, gameOver=false;
+  function gameLoop() {
+    frame++;
+    if (!gameOver) _battleAnimFrame = requestAnimationFrame(gameLoop);
+
+    // 내 이동
+    if (me && !me.dead) {
+      me.x = Math.max(me.radius, Math.min(MAP_W-me.radius, me.x+_joyMove.x*SPEED));
+      me.y = Math.max(me.radius, Math.min(MAP_H-me.radius, me.y+_joyMove.y*SPEED));
+      // 공격 조이스틱 홀드 시 자동 공격 (30프레임마다)
+      if (_joyAttack.active && frame%30===0) tryAttack();
+      if (me.attackCooldown>0) me.attackCooldown--;
+    }
+
+    // 다른 플레이어 보간
+    Object.values(players).forEach(p => {
+      if (p.isMe || p.dead) return;
+      if (p._targetX !== undefined) {
+        p.x += (p._targetX - p.x) * 0.25;
+        p.y += (p._targetY - p.y) * 0.25;
+      }
+    });
+
+    // 렌더
+    drawMap();
+    Object.values(players).forEach(p => drawPlayer(p));
+    drawEffects();
+
+    // 승패 판정
+    const aliveTeams = new Set(Object.values(players).filter(p=>!p.dead).map(p=>p.teamIdx));
+    if (aliveTeams.size <= 1 && Object.keys(players).length > 1) {
+      gameOver = true;
+      clearInterval(_uploadTimer);
+      if (_unsubState) _unsubState();
+      const winTeam = aliveTeams.size===1 ? [...aliveTeams][0] : -1;
+      const winTeamText = winTeam>=0 ? Object.values(players).find(p=>p.teamIdx===winTeam)?.teamText||'' : '';
+      setTimeout(() => showBattleResult(winTeamText, winTeam, Object.values(players)), 800);
+    }
+  }
+  renderHUD();
+  gameLoop();
+}
+// ── 조이스틱 셋업 ──────────────────────────────────────────
+function setupJoystick(baseId, knobId, state, onFire) {
+  const base = document.getElementById(baseId);
+  const knob = document.getElementById(knobId);
+  if (!base || !knob) return;
+
+  const R = 50; // base 반지름
+  let startId = null;
+
+  function getPos(touch, rect) {
+    return { x: touch.clientX - rect.left - R, y: touch.clientY - rect.top - R };
+  }
+
+  base.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.changedTouches[0];
+    startId = t.identifier;
+    state.active = true;
+    const rect = base.getBoundingClientRect();
+    const p = getPos(t, rect);
+    const d = Math.hypot(p.x, p.y);
+    const nx = d > R ? p.x/d : p.x/R;
+    const ny = d > R ? p.y/d : p.y/R;
+    state.x = nx; state.y = ny;
+    const cx = Math.min(Math.max(p.x, -R), R);
+    const cy = Math.min(Math.max(p.y, -R), R);
+    knob.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
+    if (onFire) onFire();
+  }, { passive:false });
+
+  base.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const t = [...e.changedTouches].find(t=>t.identifier===startId);
+    if (!t) return;
+    const rect = base.getBoundingClientRect();
+    const p = getPos(t, rect);
+    const d = Math.hypot(p.x, p.y);
+    state.x = d > R ? p.x/d : p.x/R;
+    state.y = d > R ? p.y/d : p.y/R;
+    const cx = Math.min(Math.max(p.x, -R), R);
+    const cy = Math.min(Math.max(p.y, -R), R);
+    knob.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
+  }, { passive:false });
+
+  base.addEventListener('touchend', e => {
+    const t = [...e.changedTouches].find(t=>t.identifier===startId);
+    if (!t) return;
+    state.x = 0; state.y = 0; state.active = false;
+    knob.style.transform = 'translate(-50%,-50%)';
+    startId = null;
+  }, { passive:false });
+
+  // 마우스 지원 (데스크탑 테스트용)
+  let mouseDown = false;
+  base.addEventListener('mousedown', e => {
+    mouseDown = true; state.active = true;
+    if (onFire) onFire();
+    const rect = base.getBoundingClientRect();
+    const p = { x: e.clientX-rect.left-R, y: e.clientY-rect.top-R };
+    const d = Math.hypot(p.x,p.y);
+    state.x = d>R?p.x/d:p.x/R; state.y = d>R?p.y/d:p.y/R;
+  });
+  document.addEventListener('mousemove', e => {
+    if (!mouseDown) return;
+    const rect = base.getBoundingClientRect();
+    const p = { x:e.clientX-rect.left-R, y:e.clientY-rect.top-R };
+    const d = Math.hypot(p.x,p.y);
+    state.x = d>R?p.x/d:p.x/R; state.y = d>R?p.y/d:p.y/R;
+    const cx = Math.min(Math.max(p.x,-R),R), cy = Math.min(Math.max(p.y,-R),R);
+    knob.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
+  });
+  document.addEventListener('mouseup', () => {
+    mouseDown=false; state.x=0; state.y=0; state.active=false;
+    knob.style.transform='translate(-50%,-50%)';
+  });
+}
+
+// ── 5. 결과 화면 ────────────────────────────────────────────
+async function showBattleResult(winTeamText, winTeamIdx, players) {
+  if (_battleAnimFrame) { cancelAnimationFrame(_battleAnimFrame); _battleAnimFrame=null; }
+  const canvas   = document.getElementById('battleCanvas');
+  const controls = document.getElementById('battleControls');
+  controls.style.display = 'none';
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(0,0,0,.75)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const cx=canvas.width/2, cy=canvas.height/2;
+  const msg = winTeamIdx>=0 ? `🏆 팀 ${winTeamText} 승리!` : '⚖️ 무승부!';
+  ctx.fillStyle = winTeamIdx>=0 ? '#ffcb05' : '#aaa';
+  ctx.font = 'bold 28px Galmuri11, sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(msg, cx, cy-20);
+  ctx.fillStyle = '#aaa'; ctx.font='14px Galmuri11, sans-serif';
+  ctx.fillText('5초 후 종료...', cx, cy+16);
+
+  // 시스템 메시지 전송
+  try {
+    const teamCounts = {};
+    players.forEach(p=>{ if(!teamCounts[p.teamText]) teamCounts[p.teamText]=0; if(!p.dead) teamCounts[p.teamText]++; });
+    const detail = Object.entries(teamCounts).map(([t,n])=>`${t}(${n}명 생존)`).join(' vs ');
+    const resultMsg = winTeamIdx>=0
+      ? `⚔️ 배틀 결과: ${detail} → 팀 ${winTeamText} 승리! 🏆`
+      : `⚔️ 배틀 결과: ${detail} → 무승부!`;
+    await addDoc(collection(db,'chats',_currentRoomId,'messages'), {
+      from: currentUser.uid, type:'system', text: resultMsg,
+      ts: serverTimestamp(), readBy:[currentUser.uid]
+    });
+  } catch(e) {}
+
+  setTimeout(() => exitBattle(), 5000);
+}
+
+// ── 6. 배틀 종료 ────────────────────────────────────────────
+window.exitBattle = function() {
+  if (_battleAnimFrame) { cancelAnimationFrame(_battleAnimFrame); _battleAnimFrame=null; }
+  _battleRunning = false;
+  _myBattleChoice = null;
+  _joyMove  = { x:0, y:0, active:false };
+  _joyAttack = { active:false };
+  const overlay = document.getElementById('battleOverlay');
+  if (overlay) overlay.style.display = 'none';
+  document.getElementById('battleCanvas').style.display    = 'none';
+  document.getElementById('battleControls').style.display  = 'none';
+  document.getElementById('battlePickPhase').style.display = 'none';
+  document.getElementById('battleRevealPhase').style.display = 'none';
+  // 화면 방향 복원
+  if (screen.orientation?.unlock) screen.orientation.unlock();
+};
+
+
+
+
 window.loadSpotlight = loadSpotlight;
 window.loadSiteNotice = loadSiteNotice;
 </script>
@@ -4329,12 +5392,19 @@ function evoMethodKo(d){if(!d)return '';
   return p.join(' ');
 }
 function seededRand(seed){let s=seed>>>0;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/0x100000000;};}
-function getDailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+function getDailySeed(){
+  const d=new Date();
+  const datePart=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  // 사용자 UID를 숫자로 변환해 시드에 섞음 → 사람마다 다른 포켓몬
+  const uid=currentUser?.uid||window._currentUser?.uid||'guest';
+  let uidHash=0;
+  for(let i=0;i<uid.length;i++) uidHash=(uidHash*31+uid.charCodeAt(i))>>>0;
+  return (datePart^uidHash)>>>0;
+}
 const MAX_ID=1025;
 function pickDailyIds(){
   const count=Math.min(Math.max(1,getUserSetting('dailyCount',3)),10);
   const rand=seededRand(getDailySeed());
-  // Fisher-Yates partial shuffle on a seeded pool → 항상 정확히 count개 보장
   const pool=Array.from({length:MAX_ID},(_,i)=>i+1);
   for(let i=0;i<count;i++){
     const j=i+Math.floor(rand()*(MAX_ID-i));
@@ -4720,7 +5790,6 @@ function showTab(tab){
     }
   }
 }
-init();
 </script>
 </body>
 </html>
