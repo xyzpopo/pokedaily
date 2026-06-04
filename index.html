@@ -564,10 +564,10 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .bubble-main-row{display:flex;align-items:flex-end;gap:.35rem;}
 .bubble-main-row.me{flex-direction:row;justify-content:flex-end;}
 .bubble-main-row.them{flex-direction:row;justify-content:flex-start;}
-.bubble-content{display:flex;flex-direction:column;gap:.06rem;max-width:88%;}
+.bubble-content{display:flex;flex-direction:column;gap:.06rem;max-width:min(82vw,340px);}
 .bubble-time-row{display:flex;flex-direction:column;align-items:flex-end;gap:.1rem;flex-shrink:0;padding-bottom:.15rem;}
 .read-receipt.unread-count{font-family:'Galmuri11',monospace;font-size:.55rem;color:var(--accent);font-weight:700;}
-.chat-bubble{max-width:88%;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
+.chat-bubble{width:100%;box-sizing:border-box;padding:.5rem .8rem;border-radius:16px;font-size:.82rem;line-height:1.55;word-break:break-word;}
 .chat-bubble.me{background:var(--accent);color:var(--bg);border-bottom-right-radius:4px;}
 .chat-bubble.them{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
 .chat-time{font-size:.56rem;color:var(--muted);padding:0 .15rem;}
@@ -848,6 +848,48 @@ body.light-mode .tour-card{background:var(--surface);}
 .spotlight-feed-addBtn.added{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3);}
 .spotlight-mine-badge{font-size:.55rem;background:rgba(255,203,5,.15);color:var(--accent);border:1px solid rgba(255,203,5,.25);border-radius:20px;padding:.1rem .4rem;font-family:'Galmuri11',monospace;margin-left:.25rem;}
 .spotlight-del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:.1rem .3rem;border-radius:6px;transition:color .15s;}
+/* 댓글 */
+.spotlight-comment-section{margin-top:.55rem;border-top:1px solid var(--border);padding-top:.45rem;}
+.spotlight-comment-toggle{background:transparent;border:none;color:var(--muted);font-family:'Galmuri11',monospace;font-size:.65rem;cursor:pointer;padding:.15rem 0;transition:color .15s;}
+.spotlight-comment-toggle:hover{color:var(--accent);}
+.spotlight-comments-wrap{margin-top:.4rem;display:flex;flex-direction:column;gap:.35rem;}
+.spotlight-comment-list{display:flex;flex-direction:column;gap:.3rem;max-height:200px;overflow-y:auto;}
+.spotlight-comment-item{display:flex;gap:.45rem;align-items:flex-start;}
+.spotlight-comment-avatar{font-size:.85rem;flex-shrink:0;margin-top:.05rem;}
+.spotlight-comment-body{flex:1;min-width:0;}
+.spotlight-comment-nick{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--accent);margin-bottom:.08rem;cursor:pointer;}
+.spotlight-comment-nick:hover{text-decoration:underline;}
+.spotlight-comment-text{font-size:.7rem;color:var(--text);line-height:1.5;word-break:break-word;}
+.spotlight-comment-time{font-size:.55rem;color:var(--muted);margin-top:.05rem;}
+.spotlight-comment-del{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.6rem;padding:.05rem .25rem;margin-left:.2rem;}
+.spotlight-comment-input-row{display:flex;gap:.35rem;align-items:flex-end;margin-top:.4rem;}
+.spotlight-comment-inp{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Galmuri11',monospace;font-size:.72rem;padding:.4rem .6rem;resize:none;outline:none;line-height:1.5;max-height:60px;}
+.spotlight-comment-send{background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .7rem;font-size:.78rem;cursor:pointer;flex-shrink:0;}
+/* 자유채팅 */
+.free-msg-row{display:flex;gap:.4rem;align-items:flex-start;}
+.free-msg-row.me{flex-direction:row-reverse;}
+.free-msg-avatar{font-size:1rem;flex-shrink:0;cursor:pointer;}
+.free-msg-body{max-width:min(80vw,300px);}
+.free-msg-nick{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--accent);margin-bottom:.1rem;cursor:pointer;}
+.free-msg-nick:hover,.free-msg-nick:hover+.free-msg-bubble{text-decoration:none;}
+.free-msg-nick.me-nick{text-align:right;color:var(--muted);}
+.free-msg-bubble{background:var(--surface);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:.45rem .75rem;font-size:.8rem;color:var(--text);line-height:1.55;word-break:break-word;width:100%;box-sizing:border-box;}
+.free-msg-bubble.me{background:var(--accent);color:var(--bg);border:none;border-radius:14px;border-bottom-right-radius:4px;}
+.free-msg-time{font-size:.54rem;color:var(--muted);margin-top:.12rem;text-align:right;}
+.free-msg-time.me{text-align:right;}
+.free-chat-date-sep{text-align:center;font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--muted);margin:.4rem 0;position:relative;}
+.free-chat-date-sep::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);z-index:0;}
+.free-chat-date-sep span{background:var(--bg);padding:0 .6rem;position:relative;z-index:1;}
+/* 유저 프로필 모달 */
+.user-profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
+.user-profile-sheet{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:1.4rem 1.2rem 2rem;animation:slideUp .25s ease;}
+.user-profile-sheet .up-avatar{font-size:2.8rem;text-align:center;margin-bottom:.4rem;}
+.user-profile-sheet .up-name{font-family:'Galmuri11',monospace;font-size:1.05rem;color:var(--text);text-align:center;font-weight:700;}
+.user-profile-sheet .up-id{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--muted);text-align:center;margin-top:.15rem;}
+.user-profile-sheet .up-actions{display:flex;gap:.6rem;justify-content:center;margin-top:1rem;}
+.up-add-btn{font-family:'Galmuri11',monospace;font-size:.78rem;background:var(--accent);color:var(--bg);border:none;border-radius:12px;padding:.5rem 1.2rem;cursor:pointer;font-weight:700;}
+.up-msg-btn{font-family:'Galmuri11',monospace;font-size:.78rem;background:transparent;color:var(--text);border:1.5px solid var(--border);border-radius:12px;padding:.5rem 1.2rem;cursor:pointer;}
+.up-close-btn{position:absolute;top:.9rem;right:1rem;background:transparent;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;}
 .spotlight-del-btn:hover{color:#ff6b6b;}
 .pokemon-spotlight{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.1rem;margin-bottom:1rem;position:relative;overflow:hidden;}
 .pokemon-spotlight::before{content:'';position:absolute;inset:0;opacity:.05;background:radial-gradient(circle at 70% 20%,var(--sp-color,var(--accent)),transparent 65%);pointer-events:none;}
@@ -1231,6 +1273,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     <div class="social-tab-bar">
       <button class="social-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
       <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
+      <button class="social-tab-btn" id="ptab-free" onclick="showSocialTab('free')">🌐 자유</button>
     </div>
 
     <!-- 친구 탭 -->
@@ -1406,8 +1449,33 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     </div>
   </div>
 
+  <!-- 자유 채팅 패널 -->
+  <div id="socialFreePanel" style="display:none;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;">
+      <span style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">🌐 자유 채팅</span>
+      <span style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;">— 모두가 참여하는 채팅방</span>
+    </div>
+    <div id="freeChatMessages" style="height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:.4rem;padding:.5rem .2rem;margin-bottom:.5rem;"></div>
+    <div style="display:flex;gap:.4rem;align-items:flex-end;">
+      <textarea id="freeChatInput" placeholder="메시지를 입력하세요..." rows="1"
+        style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Galmuri11',monospace;font-size:.8rem;padding:.5rem .75rem;resize:none;outline:none;line-height:1.5;max-height:80px;"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFreeChat();}"></textarea>
+      <button onclick="sendFreeChat()" style="background:var(--accent);color:var(--bg);border:none;border-radius:12px;padding:.5rem .85rem;font-family:'Galmuri11',monospace;font-size:.82rem;cursor:pointer;font-weight:700;flex-shrink:0;">➤</button>
+    </div>
+  </div>
 
-<!-- ═══════════ 투표 생성 모달 ═══════════ -->
+<!-- ═══════════ 유저 프로필 모달 ═══════════ -->
+<div id="userProfileModal" style="display:none;" class="user-profile-modal" onclick="closeUserProfileModal(event)">
+  <div class="user-profile-sheet" style="position:relative;" onclick="event.stopPropagation()">
+    <button class="up-close-btn" onclick="closeUserProfileModal()">✕</button>
+    <div class="up-avatar" id="upAvatar">🎒</div>
+    <div class="up-name" id="upName">트레이너</div>
+    <div class="up-id" id="upId">@?</div>
+    <div id="upBio" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:.35rem;font-family:'Galmuri11',monospace;line-height:1.5;max-width:280px;margin-left:auto;margin-right:auto;"></div>
+    <div class="up-actions" id="upActions"></div>
+  </div>
+</div>
+
 <div class="group-profile-modal" id="pollCreatorModal" onclick="closePollCreator(event)">
   <div class="group-profile-sheet" onclick="event.stopPropagation()" style="max-height:90vh;overflow-y:auto;">
     <div class="gp-header">
@@ -1519,7 +1587,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, addDoc, onSnapshot, getDocs, serverTimestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, limitToLast, addDoc, onSnapshot, getDocs, serverTimestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Firestore 복합 인덱스 필요:
 // chats 컬렉션: participants (Array) ASC + lastTs (Timestamp) DESC
@@ -1625,11 +1693,16 @@ onAuthStateChanged(auth, async (user) => {
     // 소셜: uid 로드 및 친구 요청 뱃지 체크
     if (window.initSocialBadges) window.initSocialBadges();
     // 전체 공지 로드 — _myProfile이 필요하므로 loadMyProfile 후 실행
-    if (window._loadMyProfile) {
-      window._loadMyProfile().then(() => {
-        if (window.loadSiteNotice) window.loadSiteNotice();
-      });
-    } else if (window.loadSiteNotice) window.loadSiteNotice();
+    const waitForLoadMyProfile = async () => {
+      // 모듈 스크립트가 평가되기를 최대 2초 대기
+      for (let i = 0; i < 20; i++) {
+        if (window._loadMyProfile) break;
+        await new Promise(r => setTimeout(r, 100));
+      }
+      if (window._loadMyProfile) await window._loadMyProfile();
+      if (window.loadSiteNotice) window.loadSiteNotice();
+    };
+    waitForLoadMyProfile();
   } else {
     currentUser = null;
     window._currentUser = null;
@@ -2373,7 +2446,7 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
   document.getElementById('replyPreview').classList.remove('show');
 
   document.getElementById('chatFriendName').textContent    = friendName;
-  document.getElementById('chatFriendStatus').textContent  = '...';
+  document.getElementById('chatFriendStatus').textContent  = '@' + (friendUsername || '...');
   // 프로필 이미지가 있으면 img, 없으면 이모지
   const avatarHtml = friendProfileImage
     ? `<img src="${friendProfileImage}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" alt=""/>`
@@ -2405,13 +2478,14 @@ window.openChat = async function(friendUid, friendName, friendAvatar, friendUser
     const dot = document.getElementById('chatOnlineDot');
     const statusEl = document.getElementById('chatFriendStatus');
     if (!dot || !statusEl) return;
+    const idPart = friendUsername ? `@${friendUsername} · ` : '';
     if (d.online) {
       dot.className = 'online-dot online';
-      statusEl.textContent = '온라인';
+      statusEl.textContent = idPart + '온라인';
     } else {
       dot.className = 'online-dot offline';
       const last = d.lastSeen?.toDate ? d.lastSeen.toDate() : null;
-      statusEl.textContent = last ? '마지막 접속 ' + formatRelTime(last) : '오프라인';
+      statusEl.textContent = idPart + (last ? '마지막 접속 ' + formatRelTime(last) : '오프라인');
     }
   });
 
@@ -3139,7 +3213,7 @@ async function loadDmList() {
           : escapeHtml(fData.avatar || '🎒');
         avatar = `<div class="dm-avatar">${avatarContent}</div>`;
         name = fData.nickname || '트레이너';
-        previewSub = '';
+        previewSub = fData.username ? '@' + fData.username : '';
       }
 
       const lastMsgText = isMuted ? '🔕 알림 꺼짐' : escapeHtml(data.lastMsg||'');
@@ -3766,6 +3840,7 @@ window.submitSpotlight = async function() {
     await addDoc(collection(db,'spotlights'), {
       uid: currentUser.uid,
       nickname, avatar,
+      username: _myProfile?.uid || '',
       date: today,
       pokemon: { id: p.id, name: p.name, image: p.image||'', types: p.types||['normal'] },
       desc,
@@ -3844,8 +3919,7 @@ async function loadSpotlight() {
     feed.innerHTML = '';
     validDocs.forEach(d => {
       const data = d.data();
-      const isMe = data.uid === currentUser.uid;
-      const p = data.pokemon || {};
+      const isMe = data.uid === currentUser.uid;      const p = data.pokemon || {};
       const color = (typeof TYPE_COLOR !== 'undefined' ? TYPE_COLOR[p.types?.[0]] : null) || '#ffcb05';
       const alreadyMet = isMetPokemon ? isMetPokemon(p.id) : false;
       const tsDate = data.ts?.toDate ? data.ts.toDate() : null;
@@ -3857,7 +3931,7 @@ async function loadSpotlight() {
       item.innerHTML = `
         <div class="spotlight-feed-header">
           <span style="font-size:.95rem">${data.avatar||'🎒'}</span>
-          <span class="spotlight-feed-trainer">${escapeHtml(data.nickname||'트레이너')}${isMe?'<span class="spotlight-mine-badge">나</span>':''}</span>
+          <span class="spotlight-feed-trainer">${escapeHtml(data.nickname||'트레이너')}${isMe?'<span class="spotlight-mine-badge">나</span>':''}<span style="font-size:.58rem;color:var(--muted);margin-left:.3rem">@${escapeHtml(data.username||data.nickname||'?')}</span></span>
           <span class="spotlight-feed-time">${timeStr}</span>
           ${isMe?`<button class="spotlight-del-btn" onclick="deleteSpotlight('${d.id}')" title="삭제">🗑</button>`:''}
         </div>
@@ -3870,9 +3944,25 @@ async function loadSpotlight() {
             <div class="spotlight-feed-desc">${escapeHtml(data.desc||'')}</div>
             ${!isMe?`<button class="spotlight-feed-addBtn${alreadyMet?' added':''}" id="sfAdd_${d.id}" ${alreadyMet?'disabled':''} onclick="addFromSpotlight(${JSON.stringify(p).replace(/"/g,'&quot;')},'${d.id}')">${alreadyMet?'✅ 이미 만난 포켓몬':'👋 만난 포켓몬에 추가'}</button>`:''}
           </div>
+        </div>
+        <!-- 댓글 영역 -->
+        <div class="spotlight-comment-section" id="sc_${d.id}">
+          <button class="spotlight-comment-toggle" onclick="toggleSpotlightComments('${d.id}')">
+            💬 댓글 <span id="scc_${d.id}">...</span>
+          </button>
+          <div class="spotlight-comments-wrap" id="scw_${d.id}" style="display:none;">
+            <div class="spotlight-comment-list" id="scl_${d.id}"></div>
+            <div class="spotlight-comment-input-row">
+              <textarea class="spotlight-comment-inp" id="sci_${d.id}" placeholder="댓글을 입력하세요..." maxlength="100" rows="1"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitSpotlightComment('${d.id}');}"></textarea>
+              <button class="spotlight-comment-send" onclick="submitSpotlightComment('${d.id}')">➤</button>
+            </div>
+          </div>
         </div>`;
       feed.appendChild(item);
     });
+    // 댓글 수 비동기 로드
+    loadCommentCounts(validDocs.map(d => d.id));
   } catch(e) {
     feed.innerHTML = `<div style="text-align:center;padding:.8rem;font-family:'Galmuri11',monospace;font-size:.72rem;color:#ff6b6b;">불러오기 실패</div>`;
   }
@@ -4192,12 +4282,14 @@ window.showSocialTab = function(tab) {
   _socialTab = tab;
   document.getElementById('socialFriendsPanel').style.display = tab === 'friends' ? 'block' : 'none';
   document.getElementById('socialMessagesPanel').style.display = tab === 'messages' ? 'block' : 'none';
-  ['friends','messages'].forEach(t => {
+  document.getElementById('socialFreePanel').style.display = tab === 'free' ? 'block' : 'none';
+  ['friends','messages','free'].forEach(t => {
     const el = document.getElementById('ptab-' + t);
     if (el) el.classList.toggle('active', t === tab);
   });
   if (tab === 'messages') loadDmList();
   if (tab === 'friends') loadFriends();
+  if (tab === 'free') initFreeChat();
 };
 
 window._loadMyProfile = loadMyProfile;
@@ -4281,6 +4373,322 @@ window.handleRefresh = async function() {
 };
 
 // loadSpotlight를 모듈 외부에서도 접근 가능하도록 노출
+
+// ═══════════════════════════════════════════════
+// 🌐 자유 채팅
+// ═══════════════════════════════════════════════
+let _freeChatUnsub = null;
+let _freeChatInited = false;
+
+function initFreeChat() {
+  if (_freeChatInited) return;
+  _freeChatInited = true;
+  const container = document.getElementById('freeChatMessages');
+  if (!container) return;
+  container.innerHTML = '<div style="text-align:center;padding:1rem;font-family:\'Galmuri11\',monospace;font-size:.72rem;color:var(--muted);">불러오는 중...</div>';
+
+  if (_freeChatUnsub) _freeChatUnsub();
+  _freeChatUnsub = onSnapshot(
+    query(collection(db,'freeChat'), orderBy('ts','asc'), limitToLast(80)),
+    (snap) => {
+      const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderFreeChatMessages(msgs);
+    }
+  );
+}
+
+function renderFreeChatMessages(msgs) {
+  const container = document.getElementById('freeChatMessages');
+  if (!container) return;
+  const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+  container.innerHTML = '';
+  let lastDateStr = '';
+  msgs.forEach(msg => {
+    const isMe = msg.uid === currentUser?.uid;
+    const ts = msg.ts?.toDate ? msg.ts.toDate() : new Date();
+    const dateStr = ts.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+    if (dateStr !== lastDateStr) {
+      lastDateStr = dateStr;
+      const sep = document.createElement('div');
+      sep.className = 'free-chat-date-sep';
+      sep.innerHTML = `<span>${dateStr}</span>`;
+      container.appendChild(sep);
+    }
+    const row = document.createElement('div');
+    row.className = 'free-msg-row' + (isMe ? ' me' : '');
+    const timeStr = ts.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+
+    // 아바타
+    const avatarEl = document.createElement(msg.profileImage ? 'img' : 'span');
+    avatarEl.className = 'free-msg-avatar';
+    avatarEl.style.cursor = 'pointer';
+    if (msg.profileImage) {
+      avatarEl.src = msg.profileImage;
+      avatarEl.alt = '';
+      avatarEl.style.cssText = 'width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;cursor:pointer;';
+    } else {
+      avatarEl.textContent = msg.avatar || '🎒';
+    }
+    avatarEl.onclick = () => openUserProfile(msg.uid, msg.nickname, msg.avatar, msg.username, msg.bio, msg.profileImage);
+
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'free-msg-body';
+
+    if (!isMe) {
+      const nickEl = document.createElement('div');
+      nickEl.className = 'free-msg-nick';
+      nickEl.innerHTML = `${escapeHtml(msg.nickname||'트레이너')} <span style="font-size:.55rem;color:var(--muted)">@${escapeHtml(msg.username||'?')}</span>`;
+      nickEl.onclick = () => openUserProfile(msg.uid, msg.nickname, msg.avatar, msg.username, msg.bio, msg.profileImage);
+      bodyEl.appendChild(nickEl);
+    }
+    const bubbleEl = document.createElement('div');
+    bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '');
+    bubbleEl.textContent = msg.text || '';
+    const timeEl = document.createElement('div');
+    timeEl.className = 'free-msg-time' + (isMe ? ' me' : '');
+    timeEl.textContent = timeStr;
+    bodyEl.appendChild(bubbleEl);
+    bodyEl.appendChild(timeEl);
+
+    row.appendChild(avatarEl);
+    row.appendChild(bodyEl);
+    container.appendChild(row);
+  });
+  if (wasAtBottom || msgs.length < 5) container.scrollTop = container.scrollHeight;
+}
+
+window.sendFreeChat = async function() {
+  if (!currentUser) return;
+  const inp = document.getElementById('freeChatInput');
+  const text = (inp?.value || '').trim();
+  if (!text) return;
+  inp.value = '';
+  try {
+    await addDoc(collection(db,'freeChat'), {
+      uid: currentUser.uid,
+      nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+      avatar: _myProfile?.avatar || '🎒',
+      username: _myProfile?.uid || '',
+      bio: _myProfile?.bio || '',
+      profileImage: _myProfile?.profileImage || null,
+      text,
+      ts: serverTimestamp()
+    });
+    // 오래된 메시지 정리 (100개 초과 시)
+    try {
+      const old = await getDocs(query(collection(db,'freeChat'), orderBy('ts','asc'), limit(1)));
+      const total = await getDocs(query(collection(db,'freeChat'), orderBy('ts','desc'), limit(101)));
+      if (total.size > 100) {
+        const toDelete = total.docs.slice(100);
+        toDelete.forEach(d => deleteDoc(doc(db,'freeChat',d.id)).catch(()=>{}));
+      }
+    } catch(e) {}
+  } catch(e) { showSocialToast('전송 실패'); }
+};
+
+// ═══════════════════════════════════════════════
+// 💬 스포트라이트 댓글
+// ═══════════════════════════════════════════════
+const _commentCache = {};
+
+window.toggleSpotlightComments = async function(docId) {
+  const wrap = document.getElementById('scw_' + docId);
+  if (!wrap) return;
+  const isOpen = wrap.style.display !== 'none';
+  if (isOpen) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  await loadSpotlightComments(docId);
+};
+
+async function loadSpotlightComments(docId) {
+  const list = document.getElementById('scl_' + docId);
+  const countEl = document.getElementById('scc_' + docId);
+  if (!list) return;
+  list.innerHTML = '<div style="font-size:.65rem;color:var(--muted);padding:.3rem;font-family:\'Galmuri11\',monospace;">불러오는 중...</div>';
+  try {
+    const snap = await getDocs(query(
+      collection(db,'spotlights',docId,'comments'),
+      orderBy('ts','asc'),
+      limit(50)
+    ));
+    if (countEl) countEl.textContent = snap.size + '개';
+    list.innerHTML = '';
+    if (snap.empty) {
+      list.innerHTML = '<div style="font-size:.65rem;color:var(--muted);padding:.3rem;font-family:\'Galmuri11\',monospace;">아직 댓글이 없어요</div>';
+      return;
+    }
+    snap.docs.forEach(d => {
+      const data = d.data();
+      const isMe = data.uid === currentUser?.uid;
+      const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
+      const timeStr = formatSmartTime(ts);
+      const item = document.createElement('div');
+      item.className = 'spotlight-comment-item';
+      item.innerHTML = `
+        <span class="spotlight-comment-avatar">${escapeHtml(data.avatar||'🎒')}</span>
+        <div class="spotlight-comment-body">
+          <div class="spotlight-comment-nick">
+            ${escapeHtml(data.nickname||'트레이너')}<span style="font-size:.52rem;color:var(--muted);margin-left:.25rem">@${escapeHtml(data.username||'?')}</span>
+            ${isMe?`<button class="spotlight-comment-del" data-docid="${docId}" data-cid="${d.id}">🗑</button>`:''}
+          </div>
+          <div class="spotlight-comment-text">${escapeHtml(data.text||'')}</div>
+          <div class="spotlight-comment-time">${timeStr}</div>
+        </div>`;
+      // 닉네임 클릭
+      item.querySelector('.spotlight-comment-nick').onclick = () =>
+        openUserProfile(data.uid, data.nickname, data.avatar, data.username, '', null);
+      // 삭제 버튼
+      const delBtn = item.querySelector('.spotlight-comment-del');
+      if (delBtn) delBtn.onclick = (e) => { e.stopPropagation(); deleteSpotlightComment(docId, d.id); };
+      list.appendChild(item);
+    });
+  } catch(e) {
+    list.innerHTML = '<div style="font-size:.65rem;color:#ff6b6b;padding:.3rem;font-family:\'Galmuri11\',monospace;">불러오기 실패</div>';
+  }
+}
+
+window.submitSpotlightComment = async function(docId) {
+  if (!currentUser) return;
+  const inp = document.getElementById('sci_' + docId);
+  const text = (inp?.value || '').trim();
+  if (!text) return;
+  inp.value = '';
+  try {
+    await addDoc(collection(db,'spotlights',docId,'comments'), {
+      uid: currentUser.uid,
+      nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+      avatar: _myProfile?.avatar || '🎒',
+      username: _myProfile?.uid || '',
+      text,
+      ts: serverTimestamp()
+    });
+    await loadSpotlightComments(docId);
+    // 카운트 버튼도 갱신
+    const snap = await getDocs(collection(db,'spotlights',docId,'comments'));
+    const countEl = document.getElementById('scc_' + docId);
+    if (countEl) countEl.textContent = snap.size + '개';
+  } catch(e) { showSocialToast('댓글 등록 실패'); }
+};
+
+window.deleteSpotlightComment = async function(docId, commentId) {
+  if (!confirm('댓글을 삭제할까요?')) return;
+  try {
+    await deleteDoc(doc(db,'spotlights',docId,'comments',commentId));
+    await loadSpotlightComments(docId);
+  } catch(e) { showSocialToast('삭제 실패'); }
+};
+
+// 스포트라이트 피드 로드 시 댓글 수 미리 표시
+async function loadCommentCounts(docIds) {
+  for (const docId of docIds) {
+    try {
+      const snap = await getDocs(query(collection(db,'spotlights',docId,'comments'), limit(99)));
+      const el = document.getElementById('scc_' + docId);
+      if (el) el.textContent = snap.size + '개';
+    } catch(e) {}
+  }
+}
+
+// ═══════════════════════════════════════════════
+// 👤 유저 프로필 모달
+// ═══════════════════════════════════════════════
+window.openUserProfile = async function(uid, nickname, avatar, username, bio, profileImage) {
+  if (!uid) return;
+  const modal = document.getElementById('userProfileModal');
+  if (!modal) return;
+
+  // 아바타
+  const avatarEl = document.getElementById('upAvatar');
+  if (profileImage && typeof profileImage === 'string' && profileImage.length > 5) {
+    avatarEl.innerHTML = `<img src="${escapeHtml(profileImage)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;margin:0 auto .4rem;" alt=""/>`;
+  } else {
+    avatarEl.textContent = avatar || '🎒';
+    avatarEl.style.fontSize = '2.8rem';
+  }
+  document.getElementById('upName').textContent = nickname || '트레이너';
+  document.getElementById('upId').textContent = '@' + (username || '?');
+  document.getElementById('upBio').textContent = bio || '';
+
+  const actions = document.getElementById('upActions');
+  actions.innerHTML = '';
+
+  const isMe = uid === currentUser?.uid;
+  if (!isMe) {
+    // 친구 여부 확인
+    const isFriend = _friends?.includes(uid);
+    // 친구 요청 보냈는지 확인
+    let sentReq = false;
+    try {
+      const tSnap = await getDoc(doc(db,'users',uid));
+      if (tSnap.exists()) sentReq = (tSnap.data().friendRequests||[]).includes(currentUser.uid);
+    } catch(e) {}
+
+    if (!isFriend) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'up-add-btn';
+      addBtn.textContent = sentReq ? '✅ 요청 보냄' : '👤 친구 추가';
+      addBtn.disabled = sentReq;
+      if (!sentReq) {
+        addBtn.onclick = async () => {
+          addBtn.disabled = true;
+          addBtn.textContent = '요청 중...';
+          try {
+            await (window.sendFriendRequest || sendFriendRequest)(uid, username);
+            addBtn.textContent = '✅ 요청 보냄';
+          } catch(e) { addBtn.textContent = '👤 친구 추가'; addBtn.disabled = false; }
+        };
+      }
+      actions.appendChild(addBtn);
+    }
+
+    const dmBtn = document.createElement('button');
+    dmBtn.className = 'up-msg-btn';
+    dmBtn.textContent = '💬 메시지';
+    dmBtn.onclick = () => {
+      closeUserProfileModal();
+      openChat(uid, nickname, avatar, username, profileImage||'');
+    };
+    actions.appendChild(dmBtn);
+  }
+
+  modal.style.display = 'flex';
+  // Firestore에서 최신 정보 가져오기
+  try {
+    const snap = await getDoc(doc(db,'users',uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      const idSnap = await getDoc(doc(db,'usernames',uid));
+      const resolvedId = idSnap.exists() ? (idSnap.data().username||d.username||username) : (d.username||username);
+      document.getElementById('upName').textContent = d.nickname || nickname;
+      document.getElementById('upId').textContent = '@' + resolvedId;
+      document.getElementById('upBio').textContent = d.bio || '';
+      if (d.profileImage) {
+        avatarEl.innerHTML = `<img src="${escapeHtml(d.profileImage)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;margin:0 auto .4rem;" alt=""/>`;
+      } else if (d.avatar) {
+        avatarEl.textContent = d.avatar;
+      }
+    }
+  } catch(e) {}
+};
+
+window.closeUserProfileModal = function(e) {
+  if (e && e.target !== document.getElementById('userProfileModal')) return;
+  document.getElementById('userProfileModal').style.display = 'none';
+};
+
+// sendFriendRequest를 window에 노출 (이미 있으면 skip)
+if (!window.sendFriendRequest) {
+  window.sendFriendRequest = async function(targetUid) {
+    if (!currentUser) return;
+    const targetSnap = await getDoc(doc(db,'users',targetUid));
+    if (!targetSnap.exists()) throw new Error('유저 없음');
+    const tData = targetSnap.data();
+    if ((tData.friends||[]).includes(currentUser.uid)) throw new Error('이미 친구');
+    if ((tData.friendRequests||[]).includes(currentUser.uid)) throw new Error('이미 요청');
+    await updateDoc(doc(db,'users',targetUid), { friendRequests: arrayUnion(currentUser.uid) });
+    showSocialToast('친구 요청을 보냈어요 👋');
+  };
+}
 
 // ═══════════════════════════════════════════════
 // 사이트 전체 공지 (popo 전용 작성, 전체 표시)
@@ -5662,7 +6070,7 @@ function getDailySeed(){
   const d=new Date();
   const datePart=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
   // 사용자 UID를 숫자로 변환해 시드에 섞음 → 사람마다 다른 포켓몬
-  const uid=currentUser?.uid||window._currentUser?.uid||'guest';
+  const uid=window._currentUser?.uid||'guest';
   let uidHash=0;
   for(let i=0;i<uid.length;i++) uidHash=(uidHash*31+uid.charCodeAt(i))>>>0;
   return (datePart^uidHash)>>>0;
