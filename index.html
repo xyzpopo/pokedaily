@@ -1,8 +1,86 @@
 <!DOCTYPE html>
+<!--
+=============================================================================
+  📱 반응형 UI 개발 가이드라인 (Responsive UI Development Guidelines)
+=============================================================================
+
+  이 파일은 모든 환경에서 최적의 화면 구성을 제공하기 위해
+  완전한 반응형 UI를 고려하여 개발되었습니다.
+
+  ✅ 지원 환경 (Supported Environments):
+  ─────────────────────────────────────────────────────────────────────────
+  1. 모바일 세로 (Mobile Portrait)
+     - 기준: max-width 480px / max-width 360px (소형 기기)
+     - 하단 고정 탭 네비게이션 (fixed bottom tab bar)
+     - 2열 포켓몬 그리드 레이아웃
+     - 모달: 바텀시트 형태 (하단에서 슬라이드업)
+     - 터치 친화적 버튼 크기 (최소 44px 높이)
+     - safe-area-inset 지원 (iPhone 노치/홈바 대응)
+
+  2. 모바일 가로 (Mobile Landscape)
+     - 기준: max-height 500px AND orientation: landscape
+     - 헤더 높이 최소화 (.3rem 패딩)
+     - 탭바 높이 축소 (44px)
+     - 콘텐츠 영역 패딩 감소
+     - 채팅 영역 높이 동적 조정 (35vh)
+
+  3. 태블릿 (Tablet)
+     - 기준: min-width 768px
+     - 탭 네비게이션 → 상단 sticky 헤더 형태로 전환
+     - 포켓몬 그리드 2열 유지, ndex 그리드 확대
+     - 모달 최대폭 520px, 화면 중앙 정렬
+     - 콘텐츠 최대폭 700px
+
+  4. 데스크톱 (Desktop)
+     - 기준: min-width 1024px / min-width 1400px
+     - 포켓몬 그리드 3~4열
+     - 콘텐츠 최대폭 900px → 1100px
+     - 퀴즈 컨테이너 최대폭 560px 중앙 정렬
+
+  ─────────────────────────────────────────────────────────────────────────
+  🎯 핵심 반응형 설계 원칙 (Core Responsive Design Principles):
+
+  • Mobile-First: 모바일 기준 스타일 우선, 미디어 쿼리로 확장
+  • Fluid Grid: CSS Grid + auto-fill/minmax로 유연한 열 수 자동 조정
+  • CSS Custom Properties: :root 변수로 테마·색상 일관성 유지
+  • Safe Area: env(safe-area-inset-*) 로 iPhone 노치/홈 인디케이터 대응
+  • Touch Friendly: -webkit-tap-highlight-color, touch-action 처리
+  • Dynamic Viewport: dvh 단위 사용으로 모바일 주소창 대응
+  • Backdrop Filter: blur 효과 헤더/탭바에 적용 (성능 고려)
+
+  ─────────────────────────────────────────────────────────────────────────
+  📐 미디어 쿼리 브레이크포인트 (Media Query Breakpoints):
+
+  max-width: 360px   → 초소형 모바일 (로고 텍스트 숨김 등)
+  max-width: 400px   → 소형 모바일 (ndex 그리드 축소)
+  max-width: 480px   → 모바일 기본
+  max-width: 560px   → 모바일 ~ 소형 태블릿 (모달 바텀시트, 퀴즈 옵션 1열)
+  max-width: 800px   → 중간 크기 (포켓몬 그리드 2열)
+  min-width: 600px   → 소형 이상 (탭 아이콘/레이블 크기 증가)
+  min-width: 768px   → 태블릿 (탭 상단 이동, 콘텐츠 확장)
+  min-width: 1024px  → 데스크톱 (3열 그리드, 넓은 레이아웃)
+  min-width: 1400px  → 대형 화면 (4열 그리드, 최대 콘텐츠 폭)
+
+  max-height: 500px AND orientation: landscape
+               → 모바일 가로 모드 전용 최적화
+
+  ─────────────────────────────────────────────────────────────────────────
+  ⚠️  개발 시 주의사항 (Development Notes):
+
+  - 새 UI 컴포넌트 추가 시 반드시 위 브레이크포인트 기준으로
+    모든 환경에서 테스트할 것
+  - 고정 px 값 대신 rem/em/%/dvh/clamp() 활용 권장
+  - 터치 영역은 최소 44×44px 보장 (Apple HIG 기준)
+  - 애니메이션은 prefers-reduced-motion 미디어 쿼리 고려
+  - 폰트 크기는 최소 0.6rem (약 9.6px) 이상 유지
+  - z-index 레이어 관리: body::before(0) < main(5) < header(30)
+    < tabs(100) < notif-dropdown(500) < modal(1000)
+=============================================================================
+-->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>포켓몬 데일리 도감</title>
 <link href="https://fonts.googleapis.com/css2?family=Galmuri11&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -373,63 +451,288 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 /* 오답 재풀이 버튼 */
 .retry-wrong-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:#ff6b6b;background:rgba(255,0,0,.07);border:1px solid rgba(255,0,0,.25);padding:.7rem 1.4rem;border-radius:30px;cursor:pointer;transition:all .2s;}
 .retry-wrong-btn:hover{background:rgba(255,0,0,.13);}
+/* ── 퀴즈 옵션 1열 배치 및 카드 패딩 축소 (≤560px) ── */
 @media(max-width:560px){
   .options-grid{grid-template-columns:1fr;}
   .quiz-card{padding:1.35rem 1rem;}
 }
+/* ── 소형 모바일 모달 세로 배치 (≤380px) ── */
 @media(max-width:380px){
   .modal-header-inner{flex-direction:column;text-align:center;}
   .modal-types{justify-content:center;}
   .modal-info-grid{grid-template-columns:repeat(2,1fr);}
 }
-/* 모달 드래그 핸들 (모바일 바텀시트) */
+/* ── 모달 드래그 핸들 (모바일 바텀시트 전용) ──
+   560px 이하에서 모달 상단에 드래그 핸들 표시 */
 @media(max-width:560px){
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
 }
-/* ===== 반응형 ===== */
+/* ============================================================
+   📱 반응형 UI — 모바일·태블릿·데스크톱 전 환경 대응
+   (Responsive UI — supports all environments:
+    mobile portrait, mobile landscape, tablet, desktop)
+   ============================================================ */
+
+/* ── 초소형 모바일 (≤360px): 최소한의 레이아웃 보장 ── */
+@media(max-width:360px){
+  main{padding-left:.6rem;padding-right:.6rem;}
+  .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.5rem;}
+  .ball-card{padding:1rem .7rem;}
+  .ball-svg-wrap{width:90px;height:90px;}
+  .section-title{font-size:.85rem;}
+  .tab-label{display:none;}               /* 탭 레이블 숨김, 아이콘만 표시 */
+  .quiz-card{padding:1rem .75rem;}
+  .result-btns{flex-direction:column;gap:.5rem;}
+  .settings-group{padding:.85rem .9rem;}
+}
+
+/* ── 소형 모바일 (≤400px): ndex 그리드 최소 크기 조정 ── */
+@media(max-width:400px){
+  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr));}
+  .met-grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr));}
+  .modal-info-grid{grid-template-columns:repeat(2,1fr);}
+  .card-image{width:72px;height:72px;}
+  .diff-cards{gap:.5rem;}
+  .history-row{flex-wrap:wrap;gap:.3rem;}
+}
+
+/* ── 일반 모바일 세로 (≤560px): 바텀시트 모달, 2열 그리드 ── */
 @media(max-width:560px){
+  /* 포켓몬 카드 그리드: 2열 */
   .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.65rem;}
-  .modal{border-radius:20px 20px 0 0;width:100%;max-width:100%;}
+
+  /* 모달: 바텀시트 스타일 (하단에서 슬라이드업) */
+  .modal{
+    border-radius:20px 20px 0 0;
+    width:100%;
+    max-width:100%;
+    max-height:90dvh;
+    max-height:90vh;
+  }
   .modal-header{padding:1.2rem 1rem .8rem;}
   .modal-header-inner{gap:.8rem;}
   .modal-image{width:90px;height:90px;}
   .modal-name{font-size:1.3rem;}
   .modal-body{padding:0 1rem 1.2rem;}
   .modal-info-grid{grid-template-columns:repeat(3,1fr);}
+  .modal-stats{grid-template-columns:1fr 1fr;}
+
+  /* 퀴즈 옵션 1열 세로 배치 */
+  .options-grid{grid-template-columns:1fr;}
+  .quiz-card{padding:1.35rem 1rem;}
+  .quiz-hint{font-size:.75rem;}
+  .progress-dots{gap:.3rem;}
+
+  /* 섹션 헤더 */
+  .section-header{margin-bottom:.8rem;}
+
+  /* 결과 버튼 세로 배치 */
+  .result-btns{flex-direction:column;align-items:stretch;gap:.55rem;}
+  .restart-btn,.change-diff-btn,.retry-wrong-btn{width:100%;text-align:center;}
+
+  /* 검색 컨트롤 */
+  .ndex-controls{gap:.4rem;}
+  .search-wrap{min-width:120px;}
+
+  /* 소셜탭 내부 탭바 */
+  .social-tab-btn{font-size:.62rem;padding:.42rem .2rem;}
+
+  /* 채팅 입력폼 */
+  .chat-input-wrap{padding:.5rem .7rem;}
 }
+
+/* ── 모바일 세로 (≤380px): 초소형 모달 추가 조정 ── */
 @media(max-width:380px){
   .modal-header-inner{flex-direction:column;text-align:center;}
   .modal-types{justify-content:center;}
   .modal-info-grid{grid-template-columns:repeat(2,1fr);}
+  .modal-name{font-size:1.15rem;}
+  .card-name{font-size:.88rem;}
+  .ball-card-hint{font-size:.6rem;}
 }
-@media(min-width:768px){
-  main{max-width:700px;padding:1.25rem 1rem 1.5rem;}
+
+/* ── 소형 ~ 중간 모바일 (max-width:800px): 2열 유지 ── */
+@media(max-width:800px){
   .pokemon-grid{grid-template-columns:repeat(2,1fr);}
-  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
-  .met-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
-  .modal{max-width:520px;border-radius:24px;}
-  header{padding:.75rem 1.5rem;}
 }
-@media(min-width:1024px){
-  main{max-width:900px;}
-  .pokemon-grid{grid-template-columns:repeat(3,1fr);}
-  .quiz-container{max-width:560px;margin:0 auto;}
-  .modal{max-width:600px;}
-  .settings-group{padding:1.3rem 1.4rem;}
-}
-@media(min-width:1400px){
-  main{max-width:1100px;}
-  .pokemon-grid{grid-template-columns:repeat(4,1fr);}
-  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
-}
-/* 가로 모드 (폰) */
+
+/* ─────────────────────────────────────────────────────────
+   📱 모바일 가로 모드 (Mobile Landscape)
+   가로로 기울였을 때 헤더/탭바 최소화, 콘텐츠 최대 활용
+   ───────────────────────────────────────────────────────── */
 @media(max-height:500px)and(orientation:landscape){
-  header{padding:.3rem 1rem;}
+  /* 헤더 최소화 */
+  header{padding:.3rem 1rem;min-height:40px;}
+
+  /* 콘텐츠 상하 패딩 감소 */
   main{padding:.5rem .8rem calc(50px + env(safe-area-inset-bottom,0px));}
-  .pokemon-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;}
+
+  /* 포켓몬 그리드: 세로 스크롤보다 넓게 */
+  .pokemon-grid{grid-template-columns:repeat(3,1fr);gap:.5rem;}
+  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));}
+
+  /* 탭바 높이 축소 */
   .tabs{min-height:44px;}
   .tab-btn{min-height:44px;padding:.3rem .1rem;}
+  .tab-icon{font-size:1rem;}
+  .tab-label{font-size:.48rem;}
+
+  /* 카드 이미지 축소 */
+  .card-image{width:65px;height:65px;}
+  .ball-svg-wrap{width:80px;height:80px;}
+
+  /* 모달: 가로 모드에서 사이드 여백 확보 */
+  .modal-overlay{align-items:center;padding:.5rem 2rem;}
+  .modal{max-height:96dvh;max-height:96vh;border-radius:20px;}
+
+  /* 채팅 영역 높이 조정 */
   #freeChatMessages{height:clamp(120px,35vh,240px);}
+  .chat-messages{height:clamp(100px,32vh,220px);}
+
+  /* 섹션 헤더 마진 감소 */
+  .section-header{margin-bottom:.6rem;}
+
+  /* 볼 카드 가로 배치에 유리하게 */
+  .ball-card{padding:1rem .7rem;}
+}
+
+/* ─────────────────────────────────────────────────────────
+   📟 태블릿 (Tablet: ≥768px)
+   탭 네비게이션 상단 이동, 콘텐츠 확장
+   ───────────────────────────────────────────────────────── */
+@media(min-width:768px){
+  /* 탭 네비게이션: 하단 고정 → 상단 sticky 전환 */
+  .tabs{
+    position:sticky;
+    top:0;
+    bottom:auto;
+    border-top:none;
+    border-bottom:1px solid var(--border);
+    flex-direction:row;
+    height:auto;
+    background:rgba(13,13,26,.92);
+    z-index:50;
+  }
+  body.light-mode .tabs{background:rgba(240,244,255,.92);}
+
+  /* 탭 버튼: 가로 배치 */
+  .tab-btn{
+    flex-direction:row;
+    gap:.4rem;
+    padding:.75rem 1rem;
+    min-height:48px;
+    font-size:.78rem;
+  }
+  .tab-btn.active::before{display:none;}
+  .tab-btn.active::after{
+    content:'';
+    position:absolute;
+    bottom:0;left:0;right:0;
+    height:2px;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--glow);
+  }
+  .tab-icon{font-size:1rem;}
+  .tab-label{font-size:.78rem;}
+
+  /* 콘텐츠 영역 */
+  main{
+    max-width:700px;
+    padding:1.25rem 1rem 2.5rem;
+  }
+
+  /* 포켓몬 그리드: 2열 */
+  .pokemon-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* ndex / met 그리드 확장 */
+  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
+  .met-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
+
+  /* 모달: 화면 중앙 표시 */
+  .modal{max-width:520px;border-radius:24px;}
+
+  /* 헤더 패딩 확장 */
+  header{padding:.75rem 1.5rem;}
+
+  /* 채팅 높이 확장 */
+  .chat-messages{height:calc(100dvh - 280px);}
+  #freeChatMessages{height:clamp(260px,45vh,500px);}
+
+  /* 퀴즈 옵션 2열 복원 */
+  .options-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* 결과 버튼 가로 배치 */
+  .result-btns{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+
+  /* 소셜탭 탭바 */
+  .social-tab-btn{font-size:.72rem;padding:.5rem .5rem;}
+
+  /* 카드 이미지 크기 복원 */
+  .card-image{width:85px;height:85px;}
+}
+
+/* ─────────────────────────────────────────────────────────
+   🖥️ 데스크톱 (Desktop: ≥1024px)
+   넓은 레이아웃, 3열 그리드
+   ───────────────────────────────────────────────────────── */
+@media(min-width:1024px){
+  main{max-width:900px;}
+
+  /* 포켓몬 그리드: 3열 */
+  .pokemon-grid{grid-template-columns:repeat(3,1fr);}
+
+  /* 퀴즈: 중앙 정렬 최대폭 */
+  .quiz-container{max-width:560px;margin:0 auto;}
+
+  /* 모달 최대폭 확장 */
+  .modal{max-width:600px;}
+
+  /* 설정 그룹 패딩 확장 */
+  .settings-group{padding:1.3rem 1.4rem;}
+
+  /* ndex 카드 크기 확장 */
+  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));}
+
+  /* 헤더 로고 여백 */
+  .logo h1{font-size:1rem;}
+
+  /* 볼 카드 호버 효과 강화 */
+  .ball-card:hover{transform:translateY(-6px) scale(1.03);}
+}
+
+/* ─────────────────────────────────────────────────────────
+   🖥️ 대형 화면 (Large Desktop: ≥1400px)
+   4열 그리드, 최대 콘텐츠 폭
+   ───────────────────────────────────────────────────────── */
+@media(min-width:1400px){
+  main{max-width:1100px;}
+
+  /* 포켓몬 그리드: 4열 */
+  .pokemon-grid{grid-template-columns:repeat(4,1fr);}
+
+  /* ndex 그리드 확장 */
+  .ndex-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
+  .met-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
+
+  /* 퀴즈 컨테이너 확장 */
+  .quiz-container{max-width:640px;}
+
+  /* 모달 최대폭 확장 */
+  .modal{max-width:680px;}
+}
+
+/* ─────────────────────────────────────────────────────────
+   ♿ 접근성: 모션 감소 선호 사용자 대응
+   (Accessibility: prefers-reduced-motion)
+   ───────────────────────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .pokeball-loader{animation:none;}
+  .pokeball-icon{animation:none;}
 }
 
 /* ===== 전체 공지 배너 ===== */
@@ -627,12 +930,13 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .add-friend-inp:focus{border-color:var(--accent);}
 .add-friend-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.5rem .85rem;cursor:pointer;font-weight:700;white-space:nowrap;min-height:38px;}
 .add-friend-result{margin-top:.55rem;font-size:.73rem;font-family:'Galmuri11',monospace;}
-/* 반응형 media queries */
+/* ── 소형 이상: 채팅 높이·탭 아이콘 크기 확장 (≥600px) ── */
 @media(min-width:600px){
   .chat-messages{height:calc(100dvh - 320px);}
   .tab-label{font-size:.58rem;}
   .tab-icon{font-size:1.3rem;}
 }
+/* ── 태블릿: 탭 네비게이션 상단 전환 및 레이아웃 확장 (≥768px) ── */
 @media(min-width:768px){
   .tabs{position:sticky;top:0;bottom:auto;border-top:none;border-bottom:1px solid var(--border);flex-direction:row;height:auto;background:rgba(13,13,26,.92);}
   body.light-mode .tabs{background:rgba(240,244,255,.92);}
@@ -710,21 +1014,10 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
 .tour-picker.open{display:block;animation:fadeIn .2s ease;}
 .tour-picker-title{font-family:'Galmuri11',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.55rem;}
 .tour-picker-grid{display:flex;flex-wrap:wrap;gap:.4rem;}
-.tour-picker-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .5rem;cursor:pointer;transition:border-color .15s,transform .15s;position:relative;}
+.tour-picker-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .5rem;cursor:pointer;transition:border-color .15s,transform .15s;}
 .tour-picker-item:hover{border-color:var(--accent);transform:scale(1.05);}
-.tour-picker-item.selected{border-color:var(--accent);background:rgba(255,203,5,.14);transform:scale(1.05);}
-.tour-picker-item.selected::after{content:'✓';position:absolute;top:2px;right:4px;font-size:.6rem;color:var(--accent);font-family:'Galmuri11',monospace;font-weight:700;}
 .tour-picker-item img{width:44px;height:44px;image-rendering:pixelated;}
 .tour-picker-item span{font-size:.55rem;color:var(--text);font-family:'Galmuri11',monospace;}
-/* 견학 다수 선택 전송 바 */
-.tour-send-bar{display:none;align-items:center;justify-content:space-between;margin-top:.55rem;padding-top:.5rem;border-top:1px solid var(--border);}
-.tour-send-bar.show{display:flex;}
-.tour-selected-count{font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--accent);}
-.tour-send-multi-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.38rem .9rem;cursor:pointer;font-weight:700;transition:opacity .15s;}
-.tour-send-multi-btn:hover{opacity:.85;}
-/* 자유채팅 견학 패널 */
-.free-tour-picker{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.75rem .9rem;margin-bottom:.5rem;display:none;}
-.free-tour-picker.open{display:block;animation:fadeIn .2s ease;}
 /* ===== 단체 채팅 ===== */
 .group-create-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:0 .75rem;height:34px;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;}
 .group-create-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -1157,12 +1450,12 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
     <div class="settings-group">
       <div class="settings-group-title">📖 오늘의 도감</div>
       <div class="settings-row">
-        <div><div class="settings-label">일일 포켓몬 수</div><div class="settings-desc">하루에 몇 마리를 뽑을지 설정해요 (1~10)</div></div>
+        <div><div class="settings-label">일일 포켓몬 수</div><div class="settings-desc">하루에 몇 마리를 뽑을지 설정해요 (1~1025) · 견학을 보내면 하루 1회 +1 보너스!</div></div>
         <div style="display:flex;align-items:center;gap:.5rem">
           <div class="s-stepper">
-            <button onclick="stepSetting('dailyCount',-1,1,10)">−</button>
+            <button onclick="stepSetting('dailyCount',-1,1,1025)">−</button>
             <span id="s-dailyCount">3</span>
-            <button onclick="stepSetting('dailyCount',1,1,10)">+</button>
+            <button onclick="stepSetting('dailyCount',1,1,1025)">+</button>
           </div>
           <button id="dexReinitBtn" style="display:none;font-family:'Galmuri11',monospace;font-size:.65rem;color:var(--bg);background:var(--accent);border:none;padding:.3rem .7rem;border-radius:20px;cursor:pointer" onclick="document.getElementById('dexReinitBtn').style.display='none';showTab('dex');document.getElementById('dex-loading').style.display='flex';document.getElementById('dex-content').style.display='none';init()">적용 →</button>
         </div>
@@ -1484,10 +1777,6 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           </div>
           <input id="tourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
           <div class="tour-picker-grid" id="tourPickerGrid"></div>
-          <div class="tour-send-bar" id="tourSendBar">
-            <span class="tour-selected-count" id="tourSelectedCount">0마리 선택됨</span>
-            <button class="tour-send-multi-btn" onclick="sendTourSelected()">🎒 견학 보내기</button>
-          </div>
         </div>
         <!-- 답장 미리보기 -->
         <div class="reply-preview" id="replyPreview">
@@ -1537,22 +1826,8 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       <span style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">🌐 자유 채팅</span>
       <span style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;">— 모두가 참여하는 채팅방</span>
     </div>
-    <!-- 자유채팅 견학 피커 -->
-    <div class="free-tour-picker" id="freeTourPicker">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
-        <div class="tour-picker-title" style="margin-bottom:0">🎒 견학 보낼 포켓몬 선택</div>
-        <button onclick="closeFreeTourPicker()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:.1rem .3rem;line-height:1;">✕</button>
-      </div>
-      <input id="freeTourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterFreeTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
-      <div class="tour-picker-grid" id="freeTourPickerGrid"></div>
-      <div class="tour-send-bar" id="freeTourSendBar">
-        <span class="tour-selected-count" id="freeTourSelectedCount">0마리 선택됨</span>
-        <button class="tour-send-multi-btn" onclick="sendFreeTourSelected()">🎒 견학 보내기</button>
-      </div>
-    </div>
     <div id="freeChatMessages" style="height:clamp(200px,40vh,420px);overflow-y:auto;display:flex;flex-direction:column;gap:.4rem;padding:.5rem .2rem;margin-bottom:.5rem;scroll-behavior:smooth;"></div>
     <div style="display:flex;gap:.4rem;align-items:flex-end;">
-      <button onclick="toggleFreeTourPicker()" class="tour-send-btn" title="견학" style="width:36px;height:36px;flex-shrink:0;">🎒</button>
       <textarea id="freeChatInput" placeholder="메시지를 입력하세요..." rows="1"
         style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Galmuri11',monospace;font-size:.8rem;padding:.5rem .75rem;resize:none;outline:none;line-height:1.5;max-height:80px;"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFreeChat();}"></textarea>
@@ -2131,9 +2406,12 @@ async function loadMyProfile() {
   const resolvedUid = idSnap.exists()
     ? (idSnap.data().username || d.username || '')
     : (d.username || '');
+  // rawUsername: 순수 아이디만 (닉네임 폴백 없이)
+  const rawUsername = (resolvedUid || d.username || '').toLowerCase();
   _myProfile = {
     nickname: d.nickname || currentUser.nickname || '트레이너',
-    uid: resolvedUid || d.username || d.nickname || '',
+    uid: rawUsername || d.nickname || '',  // 기존 uid 필드 유지
+    rawUsername,                            // 아이디 전용 — 닉네임 섞이지 않음
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
     profileImage: d.profileImage || null,
@@ -2148,7 +2426,7 @@ function renderMyProfile() {
   if (!_myProfile) return;
   const el = n => document.getElementById(n);
   if (el('profileNicknameDisplay')) el('profileNicknameDisplay').textContent = _myProfile.nickname;
-  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + _myProfile.uid;
+  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid); // ← 아이디 표시 (rawUsername = 닉네임 폴백 없는 순수 아이디)
   if (el('profileAvatarEmoji')) {
     if (_myProfile.profileImage) {
       el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
@@ -3019,60 +3297,44 @@ async function updateRoomMeta(roomId, lastMsg) {
   await setDoc(roomRef, { participants, ...updates }, {merge:true});
 }
 
-// ── 견학 보내기 (다중 선택 지원) ─────────────────
-let _tourSelectedIds = new Set(); // 선택된 포켓몬 id 목록
-
+// ── 견학 보내기 ───────────────────────────────
 window.toggleTourPicker = function() {
   const p = document.getElementById('tourPicker');
   if (!p) return;
-  const isOpening = !p.classList.contains('open');
   p.classList.toggle('open');
-  if (isOpening) {
-    _tourSelectedIds = new Set();
+  if (p.classList.contains('open')) {
     const searchInp = document.getElementById('tourPickerSearch');
     if (searchInp) { searchInp.value = ''; }
     buildTourPickerGrid();
-    updateTourSendBar();
   }
 };
 
 window.closeTourPicker = function() {
   const p = document.getElementById('tourPicker');
   if (p) p.classList.remove('open');
-  _tourSelectedIds = new Set();
 };
 
 window.filterTourPicker = function(q) {
   buildTourPickerGrid(q);
 };
 
-function _getMetList() {
+function buildTourPickerGrid(filterQuery) {
+  const grid = document.getElementById('tourPickerGrid');
+  if (!grid) return;
+  // 만난 포켓몬 사용 (Firebase에서 가져온 met 목록)
   let metList = [];
   if (window._metPokemonCache && window._metPokemonCache.length) {
     metList = window._metPokemonCache;
   } else {
     try { metList = JSON.parse(localStorage.getItem('metPokemon')||'[]'); } catch(e) {}
   }
-  return metList;
-}
-
-function updateTourSendBar() {
-  const bar = document.getElementById('tourSendBar');
-  const count = document.getElementById('tourSelectedCount');
-  const n = _tourSelectedIds.size;
-  if (bar) bar.classList.toggle('show', n > 0);
-  if (count) count.textContent = `${n}마리 선택됨`;
-}
-
-function buildTourPickerGrid(filterQuery) {
-  const grid = document.getElementById('tourPickerGrid');
-  if (!grid) return;
-  const metList = _getMetList();
   if (!metList.length) {
     grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">만난 포켓몬이 없어요. 먼저 포켓몬과 만나보세요!</div>';
     return;
   }
+  // 번호순 정렬
   const sorted = [...metList].sort((a, b) => (a.id||0) - (b.id||0));
+  // 검색 필터
   const q = (filterQuery || '').trim().toLowerCase();
   const filtered = q ? sorted.filter(p => (p.name||'').toLowerCase().includes(q) || String(p.id||'').includes(q)) : sorted;
 
@@ -3083,49 +3345,13 @@ function buildTourPickerGrid(filterQuery) {
   }
   filtered.forEach(p => {
     const item = document.createElement('div');
-    item.className = 'tour-picker-item' + (_tourSelectedIds.has(p.id) ? ' selected' : '');
-    item.dataset.pid = p.id;
+    item.className = 'tour-picker-item';
     item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
-    item.onclick = () => {
-      if (_tourSelectedIds.has(p.id)) {
-        _tourSelectedIds.delete(p.id);
-        item.classList.remove('selected');
-      } else {
-        _tourSelectedIds.add(p.id);
-        item.classList.add('selected');
-      }
-      updateTourSendBar();
-    };
+    item.onclick = () => sendTourPokemon(p);
     grid.appendChild(item);
   });
 }
 
-// 다중 전송 버튼 클릭
-window.sendTourSelected = async function() {
-  if (!currentUser || !_currentRoomId || !_tourSelectedIds.size) return;
-  const metList = _getMetList();
-  const toSend = metList.filter(p => _tourSelectedIds.has(p.id));
-  document.getElementById('tourPicker')?.classList.remove('open');
-  _tourSelectedIds = new Set();
-  for (const p of toSend) {
-    try {
-      const msgsRef = collection(db,'chats',_currentRoomId,'messages');
-      await addDoc(msgsRef, {
-        from: currentUser.uid,
-        type: 'tour',
-        pokemon: { id:p.id, name:p.name, image:p.image||'' },
-        ts: serverTimestamp(),
-        readBy: [currentUser.uid]
-      });
-    } catch(e) { showSocialToast('견학 전송 실패: '+e.message); }
-  }
-  if (toSend.length > 0) {
-    await updateRoomMeta(_currentRoomId, `🎒 ${toSend.map(p=>p.name).join(', ')} 견학`).catch(()=>{});
-    showSocialToast(`🎒 ${toSend.length}마리 견학 전송 완료!`);
-  }
-};
-
-// 단일 전송 (하위 호환)
 window.sendTourPokemon = async function(p) {
   if (!currentUser || !_currentRoomId) return;
   document.getElementById('tourPicker')?.classList.remove('open');
@@ -3139,6 +3365,23 @@ window.sendTourPokemon = async function(p) {
       readBy: [currentUser.uid]
     });
     await updateRoomMeta(_currentRoomId, `🎒 ${p.name} 견학`);
+    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 (최대 1025)
+    const today = new Date().toISOString().slice(0,10);
+    const lastTourDate = localStorage.getItem('pkdex_lastTourBonusDate');
+    if (lastTourDate !== today) {
+      const cur = getUserSetting('dailyCount', 3);
+      const next = Math.min(1025, cur + 1);
+      if (next > cur) {
+        saveSetting('dailyCount', next);
+        localStorage.setItem('pkdex_lastTourBonusDate', today);
+        // 설정 UI가 열려 있으면 갱신
+        const el = document.getElementById('s-dailyCount');
+        if (el) el.textContent = next;
+        const reinitBtn = document.getElementById('dexReinitBtn');
+        if (reinitBtn) reinitBtn.style.display = 'inline-flex';
+        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 늘었어요!`);
+      }
+    }
   } catch(e){ showSocialToast('견학 전송 실패: '+e.message); }
 };
 
@@ -3154,8 +3397,7 @@ window.registerTourPokemon = function(p, msgId) {
       localStorage.setItem('metPokemon', JSON.stringify(met));
     }
   }
-  // 일반 채팅 버튼 또는 자유채팅 버튼 모두 처리
-  const btn = document.getElementById('tourMeet_'+msgId) || document.getElementById('freeTourMeet_'+msgId);
+  const btn = document.getElementById('tourMeet_'+msgId);
   if (btn) { btn.disabled = true; btn.textContent = '만난 포켓몬에 추가됨 ✓'; }
   showSocialToast(`${p.name}을(를) 만난 포켓몬에 추가했어요! 🎉`);
 };
@@ -4595,23 +4837,7 @@ function renderFreeChatMessages(msgs) {
     }
     const bubbleEl = document.createElement('div');
     bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '');
-    if (msg.type === 'tour' && msg.pokemon) {
-      const pk = msg.pokemon;
-      bubbleEl.style.cssText = 'background:transparent;padding:0;';
-      bubbleEl.innerHTML = `<div class="tour-card${isMe?' me':''}">
-        <div class="tour-card-label">🎒 견학 포켓몬</div>
-        <div class="tour-card-body">
-          <img class="tour-card-img" src="${pk.image||''}" alt="${pk.name||''}"/>
-          <div class="tour-card-info">
-            <div class="tour-card-name">${pk.name||''}</div>
-            <div class="tour-card-num">#${String(pk.id||'').padStart(4,'0')}</div>
-          </div>
-        </div>
-        ${!isMe?`<button class="tour-meet-btn" id="freeTourMeet_${msg.id}" onclick="registerTourPokemon(${JSON.stringify(pk).replace(/"/g,"'")}, '${msg.id}')">만난 포켓몬에 추가</button>`:''}
-      </div>`;
-    } else {
-      bubbleEl.textContent = msg.text || '';
-    }
+    bubbleEl.textContent = msg.text || '';
     const timeEl = document.createElement('div');
     timeEl.className = 'free-msg-time' + (isMe ? ' me' : '');
     timeEl.textContent = timeStr;
@@ -4652,98 +4878,6 @@ window.sendFreeChat = async function() {
       }
     } catch(e) {}
   } catch(e) { showSocialToast('전송 실패'); }
-};
-
-// ── 자유채팅 견학 ──────────────────────────────
-let _freeTourSelectedIds = new Set();
-
-window.toggleFreeTourPicker = function() {
-  const p = document.getElementById('freeTourPicker');
-  if (!p) return;
-  const isOpening = !p.classList.contains('open');
-  p.classList.toggle('open');
-  if (isOpening) {
-    _freeTourSelectedIds = new Set();
-    const si = document.getElementById('freeTourPickerSearch');
-    if (si) si.value = '';
-    buildFreeTourPickerGrid();
-    updateFreeTourSendBar();
-  }
-};
-
-window.closeFreeTourPicker = function() {
-  const p = document.getElementById('freeTourPicker');
-  if (p) p.classList.remove('open');
-  _freeTourSelectedIds = new Set();
-};
-
-window.filterFreeTourPicker = function(q) {
-  buildFreeTourPickerGrid(q);
-};
-
-function updateFreeTourSendBar() {
-  const bar = document.getElementById('freeTourSendBar');
-  const count = document.getElementById('freeTourSelectedCount');
-  const n = _freeTourSelectedIds.size;
-  if (bar) bar.classList.toggle('show', n > 0);
-  if (count) count.textContent = `${n}마리 선택됨`;
-}
-
-function buildFreeTourPickerGrid(filterQuery) {
-  const grid = document.getElementById('freeTourPickerGrid');
-  if (!grid) return;
-  const metList = _getMetList ? _getMetList() : [];
-  if (!metList.length) {
-    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">만난 포켓몬이 없어요. 먼저 포켓몬과 만나보세요!</div>';
-    return;
-  }
-  const sorted = [...metList].sort((a, b) => (a.id||0) - (b.id||0));
-  const q = (filterQuery || '').trim().toLowerCase();
-  const filtered = q ? sorted.filter(p => (p.name||'').toLowerCase().includes(q) || String(p.id||'').includes(q)) : sorted;
-  grid.innerHTML = '';
-  if (!filtered.length) {
-    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">검색 결과가 없어요</div>';
-    return;
-  }
-  filtered.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'tour-picker-item' + (_freeTourSelectedIds.has(p.id) ? ' selected' : '');
-    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
-    item.onclick = () => {
-      if (_freeTourSelectedIds.has(p.id)) {
-        _freeTourSelectedIds.delete(p.id);
-        item.classList.remove('selected');
-      } else {
-        _freeTourSelectedIds.add(p.id);
-        item.classList.add('selected');
-      }
-      updateFreeTourSendBar();
-    };
-    grid.appendChild(item);
-  });
-}
-
-window.sendFreeTourSelected = async function() {
-  if (!currentUser || !_freeTourSelectedIds.size) return;
-  const metList = _getMetList ? _getMetList() : [];
-  const toSend = metList.filter(p => _freeTourSelectedIds.has(p.id));
-  closeFreeTourPicker();
-  for (const p of toSend) {
-    try {
-      await addDoc(collection(db,'freeChat'), {
-        uid: currentUser.uid,
-        nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
-        avatar: _myProfile?.avatar || '🎒',
-        username: _myProfile?.uid || '',
-        bio: _myProfile?.bio || '',
-        profileImage: _myProfile?.profileImage || null,
-        type: 'tour',
-        pokemon: { id: p.id, name: p.name, image: p.image||'' },
-        ts: serverTimestamp()
-      });
-    } catch(e) { showSocialToast('견학 전송 실패: '+e.message); }
-  }
-  if (toSend.length > 0) showSocialToast(`🎒 ${toSend.length}마리 견학 전송 완료!`);
 };
 
 // ═══════════════════════════════════════════════
@@ -4968,25 +5102,8 @@ async function loadSiteNotice() {
     } else {
       bar.classList.remove('show');
     }
-    // popo만 편집 버튼 표시
-    let isPopo = false;
-    if (currentUser) {
-      const myUid = (_myProfile?.uid || '').toLowerCase();
-      const myNick = (_myProfile?.nickname || currentUser?.nickname || window._currentUser?.nickname || '').toLowerCase();
-      isPopo = myUid === 'popo' || myNick === 'popo';
-      // _myProfile이 아직 없으면 Firestore에서 직접 확인
-      if (!isPopo && !_myProfile) {
-        try {
-          const uSnap = await getDoc(doc(db, 'users', currentUser.uid));
-          if (uSnap.exists()) {
-            const uData = uSnap.data();
-            const idSnap2 = await getDoc(doc(db, 'usernames', currentUser.uid));
-            const resolvedId = idSnap2.exists() ? (idSnap2.data().username || uData.username || '') : (uData.username || '');
-            isPopo = resolvedId.toLowerCase() === 'popo' || (uData.nickname||'').toLowerCase() === 'popo';
-          }
-        } catch(e2) {}
-      }
-    }
+    // popo만 편집 버튼 표시 — isPopoUser() 재사용 (rawUsername 기반)
+    const isPopo = !!(currentUser && isPopoUser());
     if (editBtn) {
       editBtn.style.display = isPopo ? 'inline-block' : 'none';
       // popo는 공지가 없어도 배너 표시 (편집용)
@@ -5014,9 +5131,7 @@ window.toggleSiteNoticeEdit = function() {
 };
 
 window.saveSiteNotice = async function() {
-  const myUid2 = (_myProfile?.uid || '').toLowerCase();
-  const myNick2 = (_myProfile?.nickname || currentUser?.nickname || window._currentUser?.nickname || '').toLowerCase();
-  const isPopo = myUid2 === 'popo' || myNick2 === 'popo';
+  const isPopo = isPopoUser();
   if (!isPopo) { showSocialToast('권한이 없어요'); return; }
   const inp = document.getElementById('siteNoticeEditInp');
   const text = (inp?.value || '').trim();
@@ -6279,9 +6394,12 @@ async function checkUnreadNotifs() {
 // 📢 공지 등록 (popo 전용)
 // ═══════════════════════════════════════════════
 function isPopoUser() {
+  // rawUsername 우선 사용 (닉네임 폴백 없는 순수 아이디)
+  const myRaw = (_myProfile?.rawUsername || '').toLowerCase();
+  if (myRaw) return myRaw === 'popo';
+  // rawUsername 없을 때 (구버전 _myProfile): uid 필드 사용
   const myUid = (_myProfile?.uid || '').toLowerCase();
-  const myNick = (_myProfile?.nickname || currentUser?.nickname || window._currentUser?.nickname || '').toLowerCase();
-  return myUid === 'popo' || myNick === 'popo';
+  return myUid === 'popo';
 }
 
 // 공지 버튼 표시 여부 설정
@@ -6535,7 +6653,7 @@ function getDailySeed(){
 }
 const MAX_ID=1025;
 function pickDailyIds(){
-  const count=Math.min(Math.max(1,getUserSetting('dailyCount',3)),10);
+  const count=Math.min(Math.max(1,getUserSetting('dailyCount',3)),1025);
   const rand=seededRand(getDailySeed());
   const pool=Array.from({length:MAX_ID},(_,i)=>i+1);
   for(let i=0;i<count;i++){
