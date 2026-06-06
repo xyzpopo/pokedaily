@@ -3003,7 +3003,8 @@ function subscribeMessages(roomId, isGroup) {
           : `<div class="bubble-main-row them">${avatarHtml}<div class="bubble-content">${deletedBubble}</div>${timeReadHtml2}</div>`;
         msgs.appendChild(wrap);
         return;
-      } (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
+      }
+      // 상대 아바타 (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
       let theirAvatarHtml = '';
       if (!isMe) {
         if (isGroup) {
@@ -6753,12 +6754,21 @@ window.switchAddFriendTab = function(tab) {
 };
 
 window.doLogin = async function() {
-  // Firebase가 아직 로드 안 됐으면 잠깐 기다렸다가 재시도
+  // module 스크립트는 defer 실행이라 일반 스크립트보다 늦게 로드됨
+  // _doLoginFirebase가 아직 없으면 최대 3초간 50ms 간격으로 재시도
   if (!window._doLoginFirebase) {
     const err = document.getElementById('loginErr');
-    err.textContent = '초기화 중... 잠시 후 다시 시도해주세요.';
-    setTimeout(() => { err.textContent = ''; }, 2000);
-    return;
+    err.textContent = '잠시만요...';
+    let waited = 0;
+    while (!window._doLoginFirebase && waited < 3000) {
+      await new Promise(r => setTimeout(r, 50));
+      waited += 50;
+    }
+    err.textContent = '';
+    if (!window._doLoginFirebase) {
+      err.textContent = '로드에 실패했어요. 페이지를 새로고침해 주세요.';
+      return;
+    }
   }
   return window._doLoginFirebase();
 };
