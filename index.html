@@ -995,7 +995,11 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
 .notif-text{font-size:.75rem;color:var(--text);line-height:1.4;}
 .notif-time{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--muted);margin-top:.15rem;}
 .notif-empty{padding:1.5rem;text-align:center;font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);}
-/* ===== 견학 카드 (채팅 내) ===== */
+/* ===== 삭제된 메시지 ===== */
+.deleted-msg{font-style:italic;opacity:.45;font-size:.78rem;display:flex;align-items:center;gap:.35rem;pointer-events:none;padding:.4rem .7rem;}
+.chat-bubble.deleted{background:transparent!important;border:1px dashed var(--border)!important;color:var(--muted)!important;}
+.free-msg-bubble.deleted{background:transparent!important;border:1px dashed var(--border)!important;color:var(--muted)!important;}
+
 .tour-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.75rem .9rem;max-width:200px;cursor:default;}
 .tour-card.me{background:rgba(255,203,5,.12);border-color:rgba(255,203,5,.35);}
 .tour-card-label{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--accent);margin-bottom:.4rem;display:flex;align-items:center;gap:.3rem;}
@@ -1286,13 +1290,14 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
   <div class="logo">
     <div class="pokeball-icon"></div>
     <h1>포켓몬 데일리 도감</h1>
-    <button class="refresh-btn" id="refreshBtn" onclick="handleRefresh()" title="새로고침">↻</button>
   </div>
   <div style="display:flex;align-items:center;gap:.5rem">
-    <button class="announce-btn" id="announceBtn" onclick="toggleAnnounceModal()" title="공지 등록" style="display:none">📢</button>
+    <button class="refresh-btn" id="refreshBtn" onclick="handleRefresh()" title="새로고침">↻</button>
     <button class="notif-btn" id="notifBtn" onclick="toggleNotifDropdown()">
       🔔<div class="notif-dot" id="notifDot"></div>
     </button>
+    <!-- 공지 버튼: 알림과 뱃지 사이에 위치, popo 아이디일 때만 표시 (기본 display:none) -->
+    <button class="announce-btn" id="announceBtn" onclick="toggleAnnounceModal()" title="공지 등록" style="display:none">📢</button>
     <div class="user-badge" id="userBadge" style="display:none;cursor:pointer" onclick="showTab('social')">
       <span id="headerAvatar" style="font-size:1.2rem;line-height:1">🎒</span>
       <span class="user-name" id="userNameDisplay"></span>
@@ -1826,8 +1831,21 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       <span style="font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--muted);">🌐 자유 채팅</span>
       <span style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;">— 모두가 참여하는 채팅방</span>
     </div>
+    <!-- ▼ 견학 기능: 자유 채팅용 견학 피커 패널 -->
+    <div class="tour-picker" id="freeTourPicker">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+        <div class="tour-picker-title" style="margin-bottom:0">🎒 견학 보낼 포켓몬 선택</div>
+        <button onclick="closeFreeTourPicker()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:.1rem .3rem;line-height:1;">✕</button>
+      </div>
+      <input id="freeTourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterFreeTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
+      <div class="tour-picker-grid" id="freeTourPickerGrid"></div>
+    </div>
+    <!-- ▲ 견학 기능 끝 -->
     <div id="freeChatMessages" style="height:clamp(200px,40vh,420px);overflow-y:auto;display:flex;flex-direction:column;gap:.4rem;padding:.5rem .2rem;margin-bottom:.5rem;scroll-behavior:smooth;"></div>
     <div style="display:flex;gap:.4rem;align-items:flex-end;">
+      <!-- ▼ 견학 기능: 자유 채팅 견학 보내기 버튼 -->
+      <button class="tour-send-btn" onclick="toggleFreeTourPicker()" title="견학 보내기">🎒</button>
+      <!-- ▲ 견학 기능 끝 -->
       <textarea id="freeChatInput" placeholder="메시지를 입력하세요..." rows="1"
         style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Galmuri11',monospace;font-size:.8rem;padding:.5rem .75rem;resize:none;outline:none;line-height:1.5;max-height:80px;"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFreeChat();}"></textarea>
@@ -2041,7 +2059,9 @@ onAuthStateChanged(auth, async (user) => {
     const snap = await getDoc(doc(db, 'users', user.uid));
     const fallbackName = (user.email || '').replace('@pkdex.com','') || '트레이너';
     const nickname = snap.exists() ? (snap.data().nickname || fallbackName) : fallbackName;
-    currentUser = { uid: user.uid, nickname };
+    // loginId: 이메일에서 @pkdex.com을 제거한 순수 아이디 — rawUsername 로드 전 폴백용
+    const loginId = (user.email || '').replace('@pkdex.com','').toLowerCase() || '';
+    currentUser = { uid: user.uid, nickname, loginId };
     window._currentUser = currentUser;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('userNameDisplay').textContent = nickname + ' 트레이너';
@@ -2050,6 +2070,10 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('dateDisplay').style.display = 'block';
     const notifBtn = document.getElementById('notifBtn');
     if (notifBtn) notifBtn.style.display = 'flex';
+    // 공지 버튼: loginId 기준으로 즉시 표시 여부 결정 (loadMyProfile 완료 전 선제 처리)
+    // loadMyProfile 완료 후 updateAnnounceBtn()이 다시 호출되어 최종 확정됨
+    const announceBtn = document.getElementById('announceBtn');
+    if (announceBtn && loginId === 'popo') announceBtn.style.display = 'flex';
     updateMyOnlineStatus(true);
     const btn = document.getElementById('loginActionBtn');
     if (btn) { btn.textContent = '🎮 로그인'; btn.disabled = false; }
@@ -2407,10 +2431,11 @@ async function loadMyProfile() {
     ? (idSnap.data().username || d.username || '')
     : (d.username || '');
   // rawUsername: 순수 아이디만 (닉네임 폴백 없이)
-  const rawUsername = (resolvedUid || d.username || '').toLowerCase();
+  // 우선순위: usernames 컬렉션 > users.username 필드 > 로그인 시 입력한 아이디(loginId)
+  const rawUsername = (resolvedUid || d.username || currentUser.loginId || '').toLowerCase();
   _myProfile = {
     nickname: d.nickname || currentUser.nickname || '트레이너',
-    uid: rawUsername || d.username || '',  // 아이디 전용 (닉네임 폴백 제거 — 닉네임이 섞이면 popo 권한 체크 오동작)
+    uid: rawUsername || currentUser.loginId || '',  // 아이디 전용 (닉네임 폴백 제거 — 닉네임이 섞이면 popo 권한 체크 오동작)
     rawUsername,                            // 아이디 전용 — 닉네임 섞이지 않음
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
@@ -2429,7 +2454,8 @@ function renderMyProfile() {
   // profileUidDisplay: 닉네임이 아닌 아이디(@아이디)를 표시
   // rawUsername = usernames 컬렉션에서 가져온 순수 아이디 (닉네임 폴백 없음)
   // uid 필드도 동일하게 아이디만 담고 있으므로 둘 다 아이디 기준
-  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid);
+  // 최종 폴백: currentUser.loginId (로그인 시 입력한 아이디, @pkdex.com 제거한 값)
+  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid || currentUser?.loginId || '');
   if (el('profileAvatarEmoji')) {
     if (_myProfile.profileImage) {
       el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
@@ -2963,7 +2989,21 @@ function subscribeMessages(roomId, isGroup) {
         return;
       }
 
-      // 상대 아바타 (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
+      // 삭제된 메시지 처리 — deleted:true 이면 내용 대신 안내 문구 표시
+      if (data.deleted) {
+        const avatarHtml = isMe
+          ? makeBubbleAvatar(_myProfile?.profileImage||null, _myProfile?.avatar||'🎒')
+          : (isGroup
+              ? makeBubbleAvatar((_groupMembers[data.from]||{}).profileImage||null, (_groupMembers[data.from]||{}).avatar||'🎒')
+              : makeBubbleAvatar(window._chatFriendProfileImage||null, _currentChatAvatar));
+        const deletedBubble = `<div class="chat-bubble ${isMe?'me':'them'} deleted"><span>🚫</span> 삭제된 메시지예요</div>`;
+        const timeReadHtml2 = `<div class="bubble-time-row"><div class="chat-time">${timeStr}</div></div>`;
+        wrap.innerHTML = isMe
+          ? `<div class="bubble-main-row me">${timeReadHtml2}${deletedBubble}${avatarHtml}</div>`
+          : `<div class="bubble-main-row them">${avatarHtml}<div class="bubble-content">${deletedBubble}</div>${timeReadHtml2}</div>`;
+        msgs.appendChild(wrap);
+        return;
+      } (them: 그룹이면 멤버 정보, DM이면 _currentChatAvatar)
       let theirAvatarHtml = '';
       if (!isMe) {
         if (isGroup) {
@@ -3254,9 +3294,16 @@ async function pinMsg(roomId, msgId, text, pin) {
 }
 
 // ── 삭제 ─────────────────────────────────────
+// 메시지를 완전히 제거하지 않고 deleted:true 로 표시 (소프트 삭제)
+// 렌더링 시 deleted 필드를 감지해 "삭제된 메시지" 문구로 대체함
 async function deleteMsg(roomId, msgId) {
   if (!confirm('메시지를 삭제할까요?')) return;
-  try { await deleteDoc(doc(db,'chats',roomId,'messages',msgId)); } catch(e){ showSocialToast('삭제 실패'); }
+  try {
+    await updateDoc(doc(db,'chats',roomId,'messages',msgId), {
+      deleted: true,
+      deletedAt: serverTimestamp()
+    });
+  } catch(e) { showSocialToast('삭제 실패'); }
 }
 
 // ── 메시지 보내기 ─────────────────────────────
@@ -4838,9 +4885,37 @@ function renderFreeChatMessages(msgs) {
       nickEl.onclick = () => openUserProfile(msg.uid, msg.nickname, msg.avatar, msg.username, msg.bio, msg.profileImage);
       bodyEl.appendChild(nickEl);
     }
+
     const bubbleEl = document.createElement('div');
-    bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '');
-    bubbleEl.textContent = msg.text || '';
+
+    // ▼ 삭제된 메시지 처리 — deleted:true 이면 내용 대신 안내 문구 표시
+    if (msg.deleted) {
+      bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '') + ' deleted';
+      bubbleEl.innerHTML = '<span>🚫</span> 삭제된 메시지예요';
+    }
+    // ▼ 견학 기능: type이 'tour'이면 견학 카드로 렌더링
+    else if (msg.type === 'tour' && msg.pokemon) {
+      const p = msg.pokemon;
+      const alreadyMet = (window._metPokemonCache || []).find(m => m.id === p.id);
+      bubbleEl.className = 'tour-card' + (isMe ? ' me' : '');
+      bubbleEl.innerHTML = `
+        <div class="tour-card-label">🎒 견학 포켓몬</div>
+        <div class="tour-card-body">
+          <img class="tour-card-img" src="${p.image||''}" alt="${p.name||''}" onerror="this.src=''"/>
+          <div class="tour-card-info">
+            <div class="tour-card-name">${escapeHtml(p.name||'')}</div>
+            <div class="tour-card-num">#${String(p.id||0).padStart(3,'0')}</div>
+          </div>
+        </div>
+        ${!isMe ? `<button class="tour-meet-btn" ${alreadyMet?'disabled':''} onclick="registerFreeTourPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')},this)">${alreadyMet?'이미 만남 ✓':'만난 포켓몬에 추가 🤝'}</button>` : ''}
+      `;
+    }
+    // ▲ 견학 기능 끝
+    else {
+      bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '');
+      bubbleEl.textContent = msg.text || '';
+    }
+
     const timeEl = document.createElement('div');
     timeEl.className = 'free-msg-time' + (isMe ? ' me' : '');
     timeEl.textContent = timeStr;
@@ -4849,6 +4924,13 @@ function renderFreeChatMessages(msgs) {
 
     row.appendChild(avatarEl);
     row.appendChild(bodyEl);
+
+    // ▼ 삭제 기능: 롱프레스/우클릭으로 내 메시지 삭제 메뉴 표시
+    if (isMe && !msg.deleted) {
+      attachFreeMsgContextMenu(row, msg.id);
+    }
+    // ▲ 삭제 기능 끝
+
     container.appendChild(row);
   });
   if (wasAtBottom || msgs.length < 5) container.scrollTop = container.scrollHeight;
@@ -4884,8 +4966,166 @@ window.sendFreeChat = async function() {
 };
 
 // ═══════════════════════════════════════════════
-// 💬 스포트라이트 댓글
+// 🗑️ 삭제 기능 — 자유 채팅용
+// 소프트 삭제: deleted:true 필드로 표시, 내용은 유지
 // ═══════════════════════════════════════════════
+
+// 롱프레스 / 우클릭 컨텍스트 메뉴 연결
+function attachFreeMsgContextMenu(row, msgId) {
+  let pressTimer;
+  const open = (x, y) => showFreeMsgMenu(x, y, msgId);
+  row.addEventListener('contextmenu', e => { e.preventDefault(); open(e.clientX, e.clientY); });
+  row.addEventListener('touchstart', e => { pressTimer = setTimeout(() => open(e.touches[0].clientX, e.touches[0].clientY), 500); }, { passive: true });
+  row.addEventListener('touchend', () => clearTimeout(pressTimer));
+  row.addEventListener('touchmove', () => clearTimeout(pressTimer));
+}
+
+function showFreeMsgMenu(x, y, msgId) {
+  document.getElementById('freeMsgCtxMenu')?.remove();
+  const menu = document.createElement('div');
+  menu.className = 'msg-ctx-menu';
+  menu.id = 'freeMsgCtxMenu';
+  const item = document.createElement('div');
+  item.className = 'msg-ctx-item danger';
+  item.innerHTML = '<span>🗑️</span><span>삭제</span>';
+  item.onclick = () => { deleteFreeChatMsg(msgId); menu.remove(); };
+  menu.appendChild(item);
+  document.body.appendChild(menu);
+  const mw = 140, mh = 60;
+  menu.style.left = Math.min(x, window.innerWidth - mw - 8) + 'px';
+  menu.style.top  = Math.min(y, window.innerHeight - mh - 8) + 'px';
+  setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 50);
+}
+
+// 자유 채팅 메시지 소프트 삭제
+async function deleteFreeChatMsg(msgId) {
+  if (!confirm('메시지를 삭제할까요?')) return;
+  try {
+    await updateDoc(doc(db, 'freeChat', msgId), {
+      deleted: true,
+      deletedAt: serverTimestamp()
+    });
+  } catch(e) { showSocialToast('삭제 실패'); }
+}
+
+// ═══════════════════════════════════════════════
+// 삭제 기능 끝
+// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════
+// 🎒 견학 기능 — 자유 채팅용
+// 그룹채팅 견학(sendTourPokemon)과 동일한 구조,
+// Firestore 컬렉션만 'freeChat'으로 다름
+// ═══════════════════════════════════════════════
+
+window.toggleFreeTourPicker = function() {
+  const p = document.getElementById('freeTourPicker');
+  if (!p) return;
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) {
+    const searchInp = document.getElementById('freeTourPickerSearch');
+    if (searchInp) searchInp.value = '';
+    buildFreeTourPickerGrid();
+  }
+};
+
+window.closeFreeTourPicker = function() {
+  document.getElementById('freeTourPicker')?.classList.remove('open');
+};
+
+window.filterFreeTourPicker = function(q) {
+  buildFreeTourPickerGrid(q);
+};
+
+// 견학 피커 그리드 구성 (만난 포켓몬 목록 사용)
+function buildFreeTourPickerGrid(filterQuery) {
+  const grid = document.getElementById('freeTourPickerGrid');
+  if (!grid) return;
+  let metList = [];
+  if (window._metPokemonCache && window._metPokemonCache.length) {
+    metList = window._metPokemonCache;
+  } else {
+    try { metList = JSON.parse(localStorage.getItem('metPokemon') || '[]'); } catch(e) {}
+  }
+  if (!metList.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">만난 포켓몬이 없어요. 먼저 포켓몬과 만나보세요!</div>';
+    return;
+  }
+  const sorted = [...metList].sort((a, b) => (a.id||0) - (b.id||0));
+  const q = (filterQuery || '').trim().toLowerCase();
+  const filtered = q ? sorted.filter(p => (p.name||'').toLowerCase().includes(q) || String(p.id||'').includes(q)) : sorted;
+  grid.innerHTML = '';
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="font-size:.7rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.5rem">검색 결과가 없어요</div>';
+    return;
+  }
+  filtered.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'tour-picker-item';
+    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
+    item.onclick = () => sendFreeTourPokemon(p);
+    grid.appendChild(item);
+  });
+}
+
+// 자유 채팅 견학 카드의 '만난 포켓몬에 추가' 버튼 처리
+window.registerFreeTourPokemon = function(p, btn) {
+  if (!p?.id) return;
+  if (window.addMetPokemon) {
+    window.addMetPokemon(p);
+  } else {
+    const met = JSON.parse(localStorage.getItem('metPokemon') || '[]');
+    if (!met.find(m => m.id === p.id)) {
+      met.push({ id: p.id, name: p.name, image: p.image, date: new Date().toISOString().slice(0, 10) });
+      localStorage.setItem('metPokemon', JSON.stringify(met));
+    }
+  }
+  if (btn) { btn.disabled = true; btn.textContent = '만난 포켓몬에 추가됨 ✓'; }
+  showSocialToast(`${p.name}을(를) 만난 포켓몬에 추가했어요! 🎉`);
+};
+
+// 견학 포켓몬을 자유 채팅에 전송
+window.sendFreeTourPokemon = async function(p) {
+  if (!currentUser) return;
+  document.getElementById('freeTourPicker')?.classList.remove('open');
+  try {
+    await addDoc(collection(db, 'freeChat'), {
+      uid: currentUser.uid,
+      nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+      avatar: _myProfile?.avatar || '🎒',
+      username: _myProfile?.uid || '',
+      bio: _myProfile?.bio || '',
+      profileImage: _myProfile?.profileImage || null,
+      type: 'tour',
+      pokemon: { id: p.id, name: p.name, image: p.image || '' },
+      ts: serverTimestamp()
+    });
+    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1
+    const today = new Date().toISOString().slice(0, 10);
+    const lastTourDate = localStorage.getItem('pkdex_lastFreeTourBonusDate');
+    if (lastTourDate !== today) {
+      const cur = getUserSetting('dailyCount', 3);
+      const next = Math.min(1025, cur + 1);
+      if (next > cur) {
+        saveSetting('dailyCount', next);
+        localStorage.setItem('pkdex_lastFreeTourBonusDate', today);
+        const el = document.getElementById('s-dailyCount');
+        if (el) el.textContent = next;
+        const reinitBtn = document.getElementById('dexReinitBtn');
+        if (reinitBtn) reinitBtn.style.display = 'inline-flex';
+        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 늘었어요!`);
+      }
+    } else {
+      showSocialToast(`🎒 ${p.name} 견학을 보냈어요!`);
+    }
+  } catch(e) { showSocialToast('견학 전송 실패: ' + e.message); }
+};
+
+// ═══════════════════════════════════════════════
+// 견학 기능 끝
+// ═══════════════════════════════════════════════
+
+
 const _commentCache = {};
 
 window.toggleSpotlightComments = async function(docId) {
