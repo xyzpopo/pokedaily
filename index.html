@@ -106,15 +106,17 @@ body.light-mode .pokemon-card{background:var(--card);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 55% 25%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 75% 80%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(2px 2px at 45% 10%,rgba(255,203,5,.4) 0%,transparent 100%),radial-gradient(2px 2px at 85% 65%,rgba(59,76,202,.4) 0%,transparent 100%);pointer-events:none;z-index:0;}
-header{position:sticky;top:0;z-index:30;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(13,13,26,.94);min-height:50px;}
+header{position:sticky;top:0;z-index:30;padding:.5rem 1rem;display:flex;flex-direction:column;gap:.35rem;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(13,13,26,.94);}
 body.light-mode header{background:rgba(240,244,255,.94);}
+.header-row1{display:flex;align-items:center;gap:.55rem;}
+.header-row2{display:flex;align-items:center;gap:.45rem;}
 .logo{display:flex;align-items:center;gap:.55rem;}
 .pokeball-icon{width:26px;height:26px;background:linear-gradient(180deg,var(--red) 50%,white 50%);border-radius:50%;border:2.5px solid #333;position:relative;flex-shrink:0;animation:spin-slow 8s linear infinite;}
 .pokeball-icon::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;background:white;border-radius:50%;border:2px solid #333;z-index:1;}
 .pokeball-icon::after{content:'';position:absolute;top:calc(50% - 1.5px);left:0;right:0;height:2.5px;background:#333;}
 @keyframes spin-slow{to{transform:rotate(360deg);}}
 .logo h1{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--accent);text-shadow:0 0 20px var(--glow);}
-@media(max-width:360px){.logo h1{display:none;}}
+
 .refresh-btn{width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .refresh-btn:hover{border-color:rgba(255,203,5,.4);color:var(--accent);}
 .refresh-btn:active{transform:scale(.88);}
@@ -1287,16 +1289,20 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
   </div>
 </div>
 <header>
-  <div class="logo">
-    <div class="pokeball-icon"></div>
-    <h1>포켓몬 데일리 도감</h1>
+  <!-- 1행: 몬스터볼 + 제목 -->
+  <div class="header-row1">
+    <div class="logo">
+      <div class="pokeball-icon"></div>
+      <h1>포켓몬 데일리 도감</h1>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:.5rem">
+  <!-- 2행: 새로고침 · 알림 · 공지(popo만) · 트레이너뱃지 · 날짜 -->
+  <div class="header-row2">
     <button class="refresh-btn" id="refreshBtn" onclick="handleRefresh()" title="새로고침">↻</button>
     <button class="notif-btn" id="notifBtn" onclick="toggleNotifDropdown()">
       🔔<div class="notif-dot" id="notifDot"></div>
     </button>
-    <!-- 공지 버튼: 알림과 뱃지 사이에 위치, popo 아이디일 때만 표시 (기본 display:none) -->
+    <!-- 공지 버튼: popo 아이디일 때만 표시 (기본 display:none) -->
     <button class="announce-btn" id="announceBtn" onclick="toggleAnnounceModal()" title="공지 등록" style="display:none">📢</button>
     <div class="user-badge" id="userBadge" style="display:none;cursor:pointer" onclick="showTab('social')">
       <span id="headerAvatar" style="font-size:1.2rem;line-height:1">🎒</span>
@@ -6561,10 +6567,10 @@ async function loadNotifications() {
   if (!list) return;
   list.innerHTML = '<div class="notif-empty">불러오는 중...</div>';
   try {
+    // orderBy 제거 — where+orderBy 복합 인덱스 불필요, 클라이언트에서 정렬
     const snap = await getDocs(query(
       collection(db, 'notifications'),
       where('targetUid', '==', currentUser.uid),
-      orderBy('ts', 'desc'),
       limit(30)
     ));
     if (snap.empty) {
@@ -6572,10 +6578,16 @@ async function loadNotifications() {
       updateNotifDot(false);
       return;
     }
-    const hasUnread = snap.docs.some(d => !d.data().read);
+    // 클라이언트에서 ts 기준 내림차순 정렬
+    const docs = snap.docs.slice().sort((a, b) => {
+      const ta = a.data().ts?.toMillis ? a.data().ts.toMillis() : 0;
+      const tb = b.data().ts?.toMillis ? b.data().ts.toMillis() : 0;
+      return tb - ta;
+    });
+    const hasUnread = docs.some(d => !d.data().read);
     updateNotifDot(hasUnread);
     list.innerHTML = '';
-    snap.docs.forEach(d => {
+    docs.forEach(d => {
       const data = d.data();
       const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
       const timeStr = formatSmartTime(ts);
@@ -6590,28 +6602,23 @@ async function loadNotifications() {
           <div class="notif-time">${timeStr}</div>
         </div>`;
       item.onclick = async () => {
-        // 읽음 처리
         if (!data.read) {
           try { await updateDoc(doc(db, 'notifications', d.id), { read: true }); } catch(e){}
           item.classList.remove('unread');
         }
-        // 공지 타입이면 상세 모달
-        if (isAnnounce) {
-          openAnnounceDetail(data.announceTitle || '', data.announceBody || '', ts);
-        }
-        // 읽음 후 dot 갱신
+        if (isAnnounce) openAnnounceDetail(data.announceTitle || '', data.announceBody || '', ts);
         const stillUnread = list.querySelectorAll('.notif-item.unread').length;
         updateNotifDot(stillUnread > 0);
       };
       list.appendChild(item);
     });
     // 전체 읽음 처리 (비동기)
-    snap.docs.filter(d => !d.data().read).forEach(d => {
+    docs.filter(d => !d.data().read).forEach(d => {
       updateDoc(doc(db, 'notifications', d.id), { read: true }).catch(()=>{});
     });
     setTimeout(() => updateNotifDot(false), 500);
   } catch(e) {
-    list.innerHTML = '<div class="notif-empty">불러오기 실패</div>';
+    list.innerHTML = `<div class="notif-empty">불러오기 실패: ${e.message}</div>`;
   }
 }
 
@@ -6704,8 +6711,16 @@ window.submitAnnouncement = async function() {
     }
     await Promise.all(batch);
 
+    // 공지 배너(siteConfig/notice)도 함께 업데이트 — 상단 공지 바에 표시됨
+    await setDoc(doc(db, 'siteConfig', 'notice'), {
+      text: title + (body ? '\n' + body : ''),
+      updatedAt: serverTimestamp(),
+      updatedBy: currentUser.uid
+    });
+
     closeAnnounceModal();
     showSocialToast('공지가 모두에게 전송됐어요 📢');
+    if (window.loadSiteNotice) window.loadSiteNotice();
 
     // 본인 알림 dot 갱신
     updateNotifDot(true);
