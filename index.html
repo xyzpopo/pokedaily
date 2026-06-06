@@ -2410,7 +2410,7 @@ async function loadMyProfile() {
   const rawUsername = (resolvedUid || d.username || '').toLowerCase();
   _myProfile = {
     nickname: d.nickname || currentUser.nickname || '트레이너',
-    uid: rawUsername || d.nickname || '',  // 기존 uid 필드 유지
+    uid: rawUsername || d.username || '',  // 아이디 전용 (닉네임 폴백 제거 — 닉네임이 섞이면 popo 권한 체크 오동작)
     rawUsername,                            // 아이디 전용 — 닉네임 섞이지 않음
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
@@ -2426,7 +2426,10 @@ function renderMyProfile() {
   if (!_myProfile) return;
   const el = n => document.getElementById(n);
   if (el('profileNicknameDisplay')) el('profileNicknameDisplay').textContent = _myProfile.nickname;
-  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid); // ← 아이디 표시 (rawUsername = 닉네임 폴백 없는 순수 아이디)
+  // profileUidDisplay: 닉네임이 아닌 아이디(@아이디)를 표시
+  // rawUsername = usernames 컬렉션에서 가져온 순수 아이디 (닉네임 폴백 없음)
+  // uid 필드도 동일하게 아이디만 담고 있으므로 둘 다 아이디 기준
+  if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid);
   if (el('profileAvatarEmoji')) {
     if (_myProfile.profileImage) {
       el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
@@ -6394,12 +6397,12 @@ async function checkUnreadNotifs() {
 // 📢 공지 등록 (popo 전용)
 // ═══════════════════════════════════════════════
 function isPopoUser() {
-  // rawUsername 우선 사용 (닉네임 폴백 없는 순수 아이디)
+  // rawUsername: usernames 컬렉션에서 가져온 순수 아이디 (닉네임 폴백 없음)
+  // uid: rawUsername과 동일하게 아이디만 담도록 수정됨 (d.nickname 폴백 제거)
+  // rawUsername 우선, 없으면 uid로 판단 — 닉네임이 섞이지 않으므로 안전
   const myRaw = (_myProfile?.rawUsername || '').toLowerCase();
-  if (myRaw) return myRaw === 'popo';
-  // rawUsername 없을 때 (구버전 _myProfile): uid 필드 사용
   const myUid = (_myProfile?.uid || '').toLowerCase();
-  return myUid === 'popo';
+  return (myRaw || myUid) === 'popo';
 }
 
 // 공지 버튼 표시 여부 설정
