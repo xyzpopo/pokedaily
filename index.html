@@ -344,6 +344,54 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .restart-btn:hover{transform:scale(1.05);}
 .change-diff-btn{font-family:'Galmuri11',monospace;font-size:.78rem;color:var(--accent);background:transparent;border:1px solid rgba(255,203,5,.3);padding:.7rem 1.4rem;border-radius:30px;cursor:pointer;transition:all .2s;}
 .change-diff-btn:hover{background:rgba(255,203,5,.06);}
+/* ===== 제안 탭 ===== */
+.suggest-write-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem 1rem .85rem;margin-bottom:.9rem;}
+.suggest-write-title{font-family:'Galmuri11',monospace;font-size:.75rem;color:var(--accent);margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+.suggest-inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.48rem .75rem;font-size:.82rem;color:var(--text);font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
+.suggest-inp:focus{border-color:rgba(255,203,5,.5);}
+.suggest-inp::placeholder{color:var(--muted);}
+.suggest-textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.48rem .75rem;font-size:.78rem;color:var(--text);font-family:'Noto Sans KR',sans-serif;outline:none;resize:none;height:84px;line-height:1.6;transition:border-color .2s;}
+.suggest-textarea:focus{border-color:rgba(255,203,5,.5);}
+.suggest-textarea::placeholder{color:var(--muted);}
+.suggest-submit-btn{font-family:'Galmuri11',monospace;font-size:.73rem;background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:.45rem 1.2rem;cursor:pointer;font-weight:700;transition:all .2s;float:right;}
+.suggest-submit-btn:hover{opacity:.88;transform:scale(1.03);}
+.suggest-submit-btn:disabled{opacity:.45;cursor:default;transform:none;}
+.suggest-list{display:flex;flex-direction:column;gap:.7rem;margin-top:.2rem;clear:both;}
+.suggest-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:.85rem .95rem;transition:border-color .2s;}
+.suggest-card:hover{border-color:rgba(255,203,5,.2);}
+.suggest-card-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;}
+.suggest-card-avatar{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;overflow:hidden;}
+.suggest-card-meta{flex:1;min-width:0;}
+.suggest-card-author{font-family:'Galmuri11',monospace;font-size:.72rem;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.suggest-card-time{font-size:.58rem;color:var(--muted);font-family:'Galmuri11',monospace;}
+.suggest-card-title{font-family:'Galmuri11',monospace;font-size:.9rem;color:var(--text);margin-bottom:.35rem;line-height:1.45;word-break:break-word;}
+.suggest-card-body{font-size:.75rem;color:var(--muted);line-height:1.65;word-break:break-word;white-space:pre-wrap;margin-bottom:.55rem;}
+.suggest-card-actions{display:flex;align-items:center;gap:.5rem;padding-top:.45rem;border-top:1px solid var(--border);}
+.suggest-like-btn{display:flex;align-items:center;gap:.28rem;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:.25rem .65rem;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.suggest-like-btn:hover,.suggest-like-btn.liked{background:rgba(255,80,80,.1);border-color:rgba(255,100,100,.45);color:#ff6b6b;}
+.suggest-like-btn.liked{font-weight:700;}
+.suggest-comment-toggle{display:flex;align-items:center;gap:.28rem;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:.25rem .65rem;cursor:pointer;transition:all .2s;}
+.suggest-comment-toggle:hover{border-color:rgba(255,203,5,.35);color:var(--accent);}
+.suggest-del-btn{margin-left:auto;font-family:'Galmuri11',monospace;font-size:.62rem;background:transparent;border:1px solid transparent;color:var(--muted);border-radius:8px;padding:.22rem .5rem;cursor:pointer;transition:all .15s;}
+.suggest-del-btn:hover{border-color:rgba(255,100,100,.35);color:#ff6b6b;}
+.suggest-comments{margin-top:.6rem;display:flex;flex-direction:column;gap:.35rem;padding-top:.45rem;border-top:1px solid var(--border);}
+.suggest-comment-item{display:flex;gap:.45rem;align-items:flex-start;}
+.suggest-comment-avatar{width:22px;height:22px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;overflow:hidden;margin-top:.1rem;}
+.suggest-comment-bubble{flex:1;background:var(--surface);border-radius:0 10px 10px 10px;padding:.38rem .6rem;}
+.suggest-comment-author{font-family:'Galmuri11',monospace;font-size:.62rem;color:var(--accent);margin-bottom:.15rem;}
+.suggest-comment-text{font-size:.72rem;color:var(--text);line-height:1.5;word-break:break-word;white-space:pre-wrap;}
+.suggest-comment-time{font-size:.55rem;color:var(--muted);font-family:'Galmuri11',monospace;margin-top:.12rem;}
+.suggest-comment-del{background:transparent;border:none;color:var(--muted);font-size:.62rem;cursor:pointer;padding:.1rem .25rem;border-radius:4px;transition:color .15s;margin-left:.3rem;flex-shrink:0;}
+.suggest-comment-del:hover{color:#ff6b6b;}
+.suggest-comment-input-row{display:flex;gap:.4rem;align-items:flex-end;margin-top:.45rem;}
+.suggest-comment-inp{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.38rem .6rem;font-size:.75rem;color:var(--text);font-family:'Noto Sans KR',sans-serif;outline:none;resize:none;height:36px;transition:border-color .2s;}
+.suggest-comment-inp:focus{border-color:rgba(255,203,5,.5);}
+.suggest-comment-send{background:var(--accent);color:var(--bg);border:none;border-radius:9px;width:34px;height:34px;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
+.suggest-comment-send:hover{opacity:.85;}
+.suggest-empty{display:flex;flex-direction:column;align-items:center;padding:2.5rem 1rem;gap:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;font-size:.75rem;}
+.suggest-load-more{width:100%;font-family:'Galmuri11',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:.45rem;cursor:pointer;transition:all .18s;margin-top:.4rem;}
+.suggest-load-more:hover{border-color:var(--accent);color:var(--accent);}
+#suggestNewBadge{display:none;position:relative;top:auto;right:auto;margin-left:.25rem;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -537,7 +585,7 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
   .search-wrap{min-width:120px;}
 
   /* 소셜탭 내부 탭바 */
-  .social-tab-btn{font-size:.62rem;padding:.42rem .2rem;}
+  .social-tab-btn{font-size:.58rem;padding:.42rem .1rem;}
 
   /* 채팅 입력폼 */
   .chat-input-wrap{padding:.5rem .7rem;}
@@ -801,8 +849,66 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 /* 프로필 페이지 */
 .profile-hero{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.8rem 1rem 1.2rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:22px;position:relative;overflow:hidden;}
 .profile-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,var(--glow),transparent 60%);pointer-events:none;}
-.profile-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2.2rem;position:relative;box-shadow:0 0 24px var(--glow);cursor:pointer;transition:transform .2s;}
+
+/* 프로필 접기/펴기 토글 버튼 */
+.profile-collapse-btn{
+  position:absolute;top:.6rem;right:.7rem;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--muted);font-size:.7rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:2;
+  -webkit-tap-highlight-color:transparent;
+}
+.profile-collapse-btn:hover{border-color:var(--accent);color:var(--accent);}
+.profile-collapse-btn .btn-arrow{
+  display:inline-block;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.profile-hero.collapsed .profile-collapse-btn .btn-arrow{transform:rotate(180deg);}
+
+/* 접혔을 때 가변 영역 */
+.profile-hero-collapsible{
+  width:100%;display:flex;flex-direction:column;align-items:center;gap:1rem;
+  overflow:hidden;
+  max-height:400px;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1), opacity .25s ease, margin .25s ease;
+  opacity:1;
+}
+.profile-hero.collapsed .profile-hero-collapsible{
+  max-height:0;
+  opacity:0;
+  margin-top:-.5rem;
+}
+
+/* 접혔을 때 mini 행 */
+.profile-hero-mini{
+  display:none;align-items:center;gap:.75rem;width:100%;
+  padding:.1rem 0;
+}
+.profile-hero.collapsed .profile-hero-mini{display:flex;}
+.profile-mini-avatar{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid var(--accent);
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;overflow:hidden;flex-shrink:0;
+}
+.profile-mini-avatar img{width:100%;height:100%;object-fit:cover;object-position:var(--profile-img-pos,50% 50%);}
+.profile-mini-info{flex:1;min-width:0;}
+.profile-mini-name{font-family:'Galmuri11',monospace;font-size:.82rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.profile-mini-stats{font-family:'Galmuri11',monospace;font-size:.6rem;color:var(--muted);margin-top:.1rem;}
+.profile-mini-edit{
+  flex-shrink:0;font-family:'Galmuri11',monospace;font-size:.6rem;
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  border-radius:8px;padding:.22rem .55rem;cursor:pointer;
+  transition:all .15s;
+}
+.profile-mini-edit:hover{border-color:var(--accent);color:var(--accent);}
+.profile-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2.2rem;position:relative;box-shadow:0 0 24px var(--glow);cursor:pointer;transition:transform .2s;overflow:hidden;}
 .profile-avatar:hover{transform:scale(1.06);}
+.profile-avatar #profileAvatarEmoji{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;}
+.profile-avatar #profileAvatarEmoji img{width:100%;height:100%;object-fit:cover;object-position:var(--profile-img-pos,50% 50%);display:block;border-radius:0;}
 .profile-avatar-edit{position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:.7rem;}
 .profile-nickname{font-family:'Galmuri11',monospace;font-size:1.3rem;color:var(--accent);text-align:center;}
 .profile-uid{font-size:.72rem;color:var(--muted);font-family:'Galmuri11',monospace;}
@@ -880,13 +986,54 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .chat-time{font-size:.56rem;color:var(--muted);padding:0 .15rem;}
 
 /* ── 채팅 + 버튼 ── */
-.chat-plus-btn{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);color:var(--accent);font-size:1.3rem;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;padding:0;}
-.chat-plus-btn:hover,.chat-plus-btn.open{background:rgba(255,203,5,.12);border-color:var(--accent);}
-.chat-plus-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.28rem;padding:.7rem .3rem;background:transparent;border:none;cursor:pointer;transition:background .15s;width:100%;}
-.chat-plus-opt:hover{background:rgba(255,203,5,.07);}
-.chat-plus-opt:not(:last-child){border-right:1px solid var(--border);}
-.chat-plus-opt-icon{font-size:1.45rem;line-height:1;}
-.chat-plus-opt-label{font-family:'Galmuri11',monospace;font-size:.58rem;color:var(--muted);}
+.chat-plus-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--accent);font-size:1.25rem;font-weight:300;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;line-height:1;padding:0;position:relative;
+  transition:background .18s,border-color .18s,transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+.chat-plus-btn:hover{background:rgba(255,203,5,.12);border-color:var(--accent);}
+.chat-plus-btn.open{
+  background:rgba(255,203,5,.18);border-color:var(--accent);
+  box-shadow:0 0 14px rgba(255,203,5,.25);
+  transform:rotate(45deg) scale(1.07);
+}
+.chat-plus-btn:active{transform:scale(.86);}
+.chat-plus-btn.open:active{transform:rotate(45deg) scale(.86);}
+
+/* 패널 — 입력창 바로 위 */
+.chat-plus-panel-wrap{
+  position:absolute;bottom:calc(100% + 6px);left:0;
+  background:var(--card);border:1.5px solid rgba(255,203,5,.25);
+  border-radius:18px;z-index:60;
+  box-shadow:0 -2px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,203,5,.06);
+  overflow:hidden;width:200px;
+  transform-origin:bottom left;
+  animation:plusPanelIn .2s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes plusPanelIn{
+  from{opacity:0;transform:scale(.88) translateY(6px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+/* 2×2 그리드 */
+.chat-plus-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,203,5,.1);}
+.chat-plus-opt{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.38rem;padding:.9rem .5rem .75rem;
+  background:var(--card);border:none;cursor:pointer;
+  transition:background .15s;
+}
+.chat-plus-opt:hover{background:rgba(255,203,5,.08);}
+.chat-plus-opt:active{background:rgba(255,203,5,.16);}
+.chat-plus-opt:hover .chat-plus-opt-icon{transform:scale(1.2) translateY(-2px);}
+.chat-plus-opt-icon{font-size:1.55rem;line-height:1;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
+.chat-plus-opt-label{
+  font-family:'Galmuri11',monospace;font-size:.6rem;
+  color:var(--muted);transition:color .15s;letter-spacing:.02em;
+}
+.chat-plus-opt:hover .chat-plus-opt-label{color:var(--accent);}
 
 .chat-input-row{display:flex;gap:.45rem;padding-top:.6rem;border-top:1px solid var(--border);}
 .chat-input{flex:1;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.5rem .75rem;color:var(--text);outline:none;resize:none;height:40px;transition:border-color .2s;}
@@ -919,7 +1066,7 @@ main{position:relative;z-index:5;padding:1rem .9rem calc(68px + env(safe-area-in
 .friend-action-btn.danger:hover{border-color:#ff6b6b;color:#ff6b6b;}
 /* 소셜 내부 탭 (프로필/친구/메시지) pill 형태 */
 .social-tab-bar{display:flex;background:var(--surface);border-radius:14px;padding:.25rem;gap:.2rem;margin-bottom:1rem;}
-.social-tab-btn{flex:1;font-family:'Galmuri11',monospace;font-size:.68rem;border:none;background:transparent;color:var(--muted);padding:.5rem .3rem;border-radius:10px;cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.social-tab-btn{flex:1;font-family:'Galmuri11',monospace;font-size:.63rem;border:none;background:transparent;color:var(--muted);padding:.5rem .15rem;border-radius:10px;cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
 .social-tab-btn.active{background:var(--card);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.25);}
 /* 알림 드롭다운 위치 조정 (헤더 바로 아래) */
 .notif-dropdown{position:fixed;top:54px;right:.75rem;width:min(310px,calc(100vw - 1.5rem));max-height:min(420px,calc(100dvh - 70px));background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:500;overflow:hidden;transform:scale(.92) translateY(-8px);opacity:0;pointer-events:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);}
@@ -1020,10 +1167,21 @@ body.light-mode .my-code-setting-box{background:var(--surface);}
 .tour-picker.open{display:block;animation:fadeIn .2s ease;}
 .tour-picker-title{font-family:'Galmuri11',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.55rem;}
 .tour-picker-grid{display:flex;flex-wrap:wrap;gap:.4rem;}
-.tour-picker-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.4rem .5rem;cursor:pointer;transition:border-color .15s,transform .15s;}
+.tour-picker-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.4rem .5rem;cursor:pointer;transition:border-color .15s,transform .15s,background .15s;position:relative;}
 .tour-picker-item:hover{border-color:var(--accent);transform:scale(1.05);}
+.tour-picker-item.selected{border-color:var(--accent);background:rgba(255,203,5,.1);}
+.tour-picker-item .tour-check{display:none;position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--accent);border-radius:50%;font-size:.55rem;color:var(--bg);align-items:center;justify-content:center;line-height:1;}
+.tour-picker-item.selected .tour-check{display:flex;}
 .tour-picker-item img{width:44px;height:44px;image-rendering:pixelated;}
 .tour-picker-item span{font-size:.55rem;color:var(--text);font-family:'Galmuri11',monospace;}
+/* 견학 전송 바 */
+.tour-send-bar{display:none;align-items:center;justify-content:space-between;margin-top:.55rem;padding:.45rem .6rem;background:rgba(255,203,5,.08);border:1px solid rgba(255,203,5,.25);border-radius:10px;gap:.5rem;}
+.tour-send-bar.show{display:flex;}
+.tour-send-count{font-family:'Galmuri11',monospace;font-size:.68rem;color:var(--accent);}
+.tour-send-confirm{font-family:'Galmuri11',monospace;font-size:.68rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:.32rem .85rem;cursor:pointer;font-weight:700;transition:opacity .15s;}
+.tour-send-confirm:hover{opacity:.85;}
+.tour-send-cancel{font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .6rem;cursor:pointer;transition:all .15s;}
+.tour-send-cancel:hover{border-color:#ff6b6b;color:#ff6b6b;}
 /* ===== 단체 채팅 ===== */
 .group-create-btn{font-family:'Galmuri11',monospace;font-size:.72rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:0 .75rem;height:34px;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;}
 .group-create-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -1573,21 +1731,40 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
   <div id="social-page" class="page">
     <!-- 프로필 헤더 -->
     <div class="profile-hero" id="profileHero">
-      <div class="profile-avatar" id="profileAvatar" onclick="openAvatarPicker()">
-        <span id="profileAvatarEmoji">🎒</span>
-        <div class="profile-avatar-edit">✏️</div>
+
+      <!-- 접기/펴기 버튼 -->
+      <button class="profile-collapse-btn" id="profileCollapseBtn" onclick="toggleProfileCollapse()" title="프로필 접기/펴기">
+        <span class="btn-arrow">▲</span>
+      </button>
+
+      <!-- 접혔을 때 보이는 mini 행 -->
+      <div class="profile-hero-mini">
+        <div class="profile-mini-avatar" id="profileMiniAvatar"><span>🎒</span></div>
+        <div class="profile-mini-info">
+          <div class="profile-mini-name" id="profileMiniName">트레이너</div>
+          <div class="profile-mini-stats" id="profileMiniStats">만남 0 · 친구 0 · 퀴즈 0</div>
+        </div>
+        <button class="profile-mini-edit" onclick="expandProfileAndEdit()">✏️ 편집</button>
       </div>
-      <div class="profile-nickname" id="profileNicknameDisplay">트레이너</div>
-      <div class="profile-uid" id="profileUidDisplay">@id</div>
-      <div class="profile-bio-display" id="profileBioDisplay" onclick="startEditBio()">+ 자기소개 추가</div>
-      <div class="profile-stats-row">
-        <div class="profile-stat"><div class="profile-stat-val" id="ps-met">0</div><div class="profile-stat-label">만난 포켓몬</div></div>
-        <div class="profile-stat"><div class="profile-stat-val" id="ps-friends">0</div><div class="profile-stat-label">친구</div></div>
-        <div class="profile-stat"><div class="profile-stat-val" id="ps-quiz">0</div><div class="profile-stat-label">퀴즈 기록</div></div>
-      </div>
-      <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.2rem">
-        <button class="profile-save-btn" id="profileEditToggle" onclick="startEditProfile()" style="font-size:.72rem;padding:.38rem .85rem;">✏️ 프로필 편집</button>
-        <button class="profile-save-btn" onclick="document.getElementById('settings-page').classList.add('active');document.querySelectorAll('.page').forEach(p=>p!==document.getElementById('settings-page')&&p.classList.remove('active'));initSettingsUI();" style="font-size:.72rem;padding:.38rem .85rem;background:transparent;border:1px solid var(--border);color:var(--muted);">⚙️ 설정</button>
+
+      <!-- 펼쳐졌을 때 보이는 전체 영역 -->
+      <div class="profile-hero-collapsible" id="profileHeroCollapsible">
+        <div class="profile-avatar" id="profileAvatar" onclick="openAvatarPicker()">
+          <span id="profileAvatarEmoji">🎒</span>
+          <div class="profile-avatar-edit">✏️</div>
+        </div>
+        <div class="profile-nickname" id="profileNicknameDisplay">트레이너</div>
+        <div class="profile-uid" id="profileUidDisplay">@id</div>
+        <div class="profile-bio-display" id="profileBioDisplay" onclick="startEditBio()">+ 자기소개 추가</div>
+        <div class="profile-stats-row">
+          <div class="profile-stat"><div class="profile-stat-val" id="ps-met">0</div><div class="profile-stat-label">만난 포켓몬</div></div>
+          <div class="profile-stat"><div class="profile-stat-val" id="ps-friends">0</div><div class="profile-stat-label">친구</div></div>
+          <div class="profile-stat"><div class="profile-stat-val" id="ps-quiz">0</div><div class="profile-stat-label">퀴즈 기록</div></div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.2rem">
+          <button class="profile-save-btn" id="profileEditToggle" onclick="startEditProfile()" style="font-size:.72rem;padding:.38rem .85rem;">✏️ 프로필 편집</button>
+          <button class="profile-save-btn" onclick="document.getElementById('settings-page').classList.add('active');document.querySelectorAll('.page').forEach(p=>p!==document.getElementById('settings-page')&&p.classList.remove('active'));initSettingsUI();" style="font-size:.72rem;padding:.38rem .85rem;background:transparent;border:1px solid var(--border);color:var(--muted);">⚙️ 설정</button>
+        </div>
       </div>
     </div>
     <!-- 편집 패널 (숨김) -->
@@ -1607,10 +1784,33 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           <div id="avatarPickerInline" style="display:flex;flex-wrap:wrap;gap:.4rem;">
             <!-- JS로 채워짐 -->
           </div>
-          <div style="margin-top:.5rem;display:flex;align-items:center;gap:.5rem;">
-            <input type="file" id="profileImgFileInput" accept="image/*" style="display:none" onchange="uploadProfileImage(this)"/>
-            <button onclick="document.getElementById('profileImgFileInput').click()" style="font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .7rem;cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🖼️ 프로필 이미지 업로드</button>
-            <span id="profileImgStatus" style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;"></span>
+          <div style="margin-top:.65rem;">
+            <label style="font-size:.68rem;color:var(--muted);display:block;margin-bottom:.35rem;">프로필 이미지</label>
+            <!-- 미리보기 + 포지션 선택 -->
+            <div id="profileImgEditArea" style="display:none;margin-bottom:.5rem;">
+              <div style="display:flex;gap:.75rem;align-items:flex-start;">
+                <!-- 미리보기 원형 -->
+                <div style="flex-shrink:0;">
+                  <div id="profileImgPreviewCircle" style="width:72px;height:72px;border-radius:50%;border:2.5px solid var(--accent);overflow:hidden;background:var(--surface);position:relative;">
+                    <img id="profileImgPreviewImg" src="" alt="미리보기" style="width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;"/>
+                  </div>
+                  <div style="font-size:.55rem;color:var(--muted);font-family:'Galmuri11',monospace;text-align:center;margin-top:.3rem;">미리보기</div>
+                </div>
+                <!-- 포지션 그리드 -->
+                <div style="flex:1;">
+                  <div style="font-size:.62rem;color:var(--muted);font-family:'Galmuri11',monospace;margin-bottom:.3rem;">보일 부분 선택</div>
+                  <div id="profileImgPosGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.25rem;max-width:96px;">
+                    <!-- 9칸 포지션 버튼 JS로 채워짐 -->
+                  </div>
+                </div>
+              </div>
+              <button id="profileImgRemoveBtn" onclick="removeProfileImage()" style="margin-top:.45rem;font-family:'Galmuri11',monospace;font-size:.62rem;background:transparent;border:1px solid rgba(255,100,100,.35);color:#ff6b6b;border-radius:8px;padding:.25rem .65rem;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(255,100,100,.08)'" onmouseout="this.style.background='transparent'">🗑️ 이미지 제거</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <input type="file" id="profileImgFileInput" accept="image/*" style="display:none" onchange="uploadProfileImage(this)"/>
+              <button onclick="document.getElementById('profileImgFileInput').click()" style="font-family:'Galmuri11',monospace;font-size:.65rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .7rem;cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🖼️ 이미지 업로드</button>
+              <span id="profileImgStatus" style="font-size:.6rem;color:var(--muted);font-family:'Galmuri11',monospace;"></span>
+            </div>
           </div>
         </div>
         <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.3rem;">
@@ -1656,6 +1856,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       <button class="social-tab-btn active" id="ptab-friends" onclick="showSocialTab('friends')">👥 친구<span class="tab-badge" id="friendReqBadge2" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
       <button class="social-tab-btn" id="ptab-messages" onclick="showSocialTab('messages')">💬 메시지<span class="tab-badge" id="msgUnreadBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;">0</span></button>
       <button class="social-tab-btn" id="ptab-free" onclick="showSocialTab('free')">🌐 자유</button>
+      <button class="social-tab-btn" id="ptab-suggest" onclick="showSocialTab('suggest')">💡 제안<span class="tab-badge" id="suggestNewBadge" style="display:none;position:relative;top:auto;right:auto;margin-left:.25rem;"></span></button>
     </div>
 
     <!-- 친구 탭 -->
@@ -1788,6 +1989,13 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           </div>
           <input id="tourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
           <div class="tour-picker-grid" id="tourPickerGrid"></div>
+          <div class="tour-send-bar" id="tourSendBar">
+            <span class="tour-send-count" id="tourSendCount">0마리 선택됨</span>
+            <div style="display:flex;gap:.4rem;">
+              <button class="tour-send-cancel" onclick="clearTourSelection()">취소</button>
+              <button class="tour-send-confirm" onclick="sendSelectedTourPokemons()">견학 보내기 ➤</button>
+            </div>
+          </div>
         </div>
         <!-- 답장 미리보기 -->
         <div class="reply-preview" id="replyPreview">
@@ -1796,29 +2004,29 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
           <button class="reply-preview-close" onclick="cancelReply()">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
-        <!-- 채팅 첨부 옵션 패널 -->
-        <div id="chatPlusPanel" style="display:none;position:absolute;bottom:54px;left:.6rem;right:.6rem;background:var(--card);border:1.5px solid var(--border);border-radius:16px;z-index:60;box-shadow:0 -4px 24px rgba(0,0,0,.35);overflow:hidden;">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
-            <button class="chat-plus-opt" onclick="closeChatPlus();document.getElementById('chatImgInput').click()">
-              <span class="chat-plus-opt-icon">🖼️</span>
-              <span class="chat-plus-opt-label">이미지</span>
-            </button>
-            <button class="chat-plus-opt" id="tourSendBtn" onclick="closeChatPlus();toggleTourPicker()">
-              <span class="chat-plus-opt-icon">🎒</span>
-              <span class="chat-plus-opt-label">견학</span>
-            </button>
-            <button class="chat-plus-opt" onclick="closeChatPlus();openPollCreator()">
-              <span class="chat-plus-opt-icon">📊</span>
-              <span class="chat-plus-opt-label">투표</span>
-            </button>
-            <button class="chat-plus-opt" onclick="closeChatPlus();openNoticeEdit()">
-              <span class="chat-plus-opt-icon">📢</span>
-              <span class="chat-plus-opt-label">공지</span>
-            </button>
-          </div>
-        </div>
-        <div class="chat-input-row">
+        <div class="chat-input-row" style="position:relative;">
           <input type="file" id="chatImgInput" accept="image/*" style="display:none" onchange="sendImageMessage(this)"/>
+          <!-- 채팅 첨부 옵션 패널 — + 버튼 기준으로 위로 뜸 -->
+          <div id="chatPlusPanel" style="display:none;" class="chat-plus-panel-wrap">
+            <div class="chat-plus-grid">
+              <button class="chat-plus-opt" onclick="closeChatPlus();document.getElementById('chatImgInput').click()">
+                <span class="chat-plus-opt-icon">🖼️</span>
+                <span class="chat-plus-opt-label">이미지</span>
+              </button>
+              <button class="chat-plus-opt" id="tourSendBtn" onclick="closeChatPlus();toggleTourPicker()">
+                <span class="chat-plus-opt-icon">🎒</span>
+                <span class="chat-plus-opt-label">견학</span>
+              </button>
+              <button class="chat-plus-opt" onclick="closeChatPlus();openPollCreator()">
+                <span class="chat-plus-opt-icon">📊</span>
+                <span class="chat-plus-opt-label">투표</span>
+              </button>
+              <button class="chat-plus-opt" onclick="closeChatPlus();openNoticeEdit()">
+                <span class="chat-plus-opt-icon">📢</span>
+                <span class="chat-plus-opt-label">공지</span>
+              </button>
+            </div>
+          </div>
           <button class="chat-plus-btn" id="chatPlusBtn" onclick="toggleChatPlus()" title="첨부">+</button>
           <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
@@ -1845,6 +2053,13 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
       </div>
       <input id="freeTourPickerSearch" class="add-friend-inp" placeholder="🔍 포켓몬 검색..." oninput="filterFreeTourPicker(this.value)" style="width:100%;margin-bottom:.5rem;font-size:.75rem;padding:.4rem .65rem;"/>
       <div class="tour-picker-grid" id="freeTourPickerGrid"></div>
+      <div class="tour-send-bar" id="freeTourSendBar">
+        <span class="tour-send-count" id="freeTourSendCount">0마리 선택됨</span>
+        <div style="display:flex;gap:.4rem;">
+          <button class="tour-send-cancel" onclick="clearFreeTourSelection()">취소</button>
+          <button class="tour-send-confirm" onclick="sendSelectedFreeTourPokemons()">견학 보내기 ➤</button>
+        </div>
+      </div>
     </div>
     <!-- ▲ 견학 기능 끝 -->
     <div id="freeChatMessages" style="height:clamp(200px,40vh,420px);overflow-y:auto;display:flex;flex-direction:column;gap:.4rem;padding:.5rem .2rem;margin-bottom:.5rem;scroll-behavior:smooth;"></div>
@@ -1857,6 +2072,27 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFreeChat();}"></textarea>
       <button onclick="sendFreeChat()" style="background:var(--accent);color:var(--bg);border:none;border-radius:12px;padding:.5rem .85rem;font-family:'Galmuri11',monospace;font-size:.82rem;cursor:pointer;font-weight:700;flex-shrink:0;">➤</button>
     </div>
+  </div>
+
+  <!-- ═══════════ 제안 패널 ═══════════ -->
+  <div id="socialSuggestPanel" style="display:none;">
+    <!-- 글쓰기 박스 -->
+    <div class="suggest-write-box">
+      <div class="suggest-write-title">💡 제안하기</div>
+      <input class="suggest-inp" id="suggestTitleInp" placeholder="제목을 입력하세요" maxlength="60"/>
+      <textarea class="suggest-textarea" id="suggestBodyInp" placeholder="어떤 기능이 있으면 좋을지, 불편한 점은 없는지 자유롭게 적어주세요 :)"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+        <button class="suggest-submit-btn" id="suggestSubmitBtn" onclick="submitSuggestion()">등록하기 ✉️</button>
+      </div>
+    </div>
+    <!-- 제안 목록 -->
+    <div class="suggest-list" id="suggestList">
+      <div class="suggest-empty">
+        <span style="font-size:2rem;">💭</span>
+        <span>아직 제안이 없어요.<br>첫 번째로 의견을 남겨보세요!</span>
+      </div>
+    </div>
+    <button class="suggest-load-more" id="suggestLoadMore" style="display:none;" onclick="loadMoreSuggestions()">더 보기 ▼</button>
   </div>
 
 <!-- ═══════════ 유저 프로필 모달 ═══════════ -->
@@ -1982,7 +2218,7 @@ body.light-mode .pokemon-spotlight{background:var(--card);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, limitToLast, addDoc, onSnapshot, getDocs, serverTimestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, limitToLast, startAfter, addDoc, onSnapshot, getDocs, serverTimestamp, arrayUnion, arrayRemove, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Firestore 복합 인덱스 필요:
 // chats 컬렉션: participants (Array) ASC + lastTs (Timestamp) DESC
@@ -2446,6 +2682,7 @@ async function loadMyProfile() {
     bio: d.bio || '',
     avatar: d.avatar || '🎒',
     profileImage: d.profileImage || null,
+    profileImagePos: d.profileImagePos || '50% 50%',
     met: (d.met||[]).length,
     quizHistory: (d.quizHistory||[]).length,
   };
@@ -2457,14 +2694,11 @@ function renderMyProfile() {
   if (!_myProfile) return;
   const el = n => document.getElementById(n);
   if (el('profileNicknameDisplay')) el('profileNicknameDisplay').textContent = _myProfile.nickname;
-  // profileUidDisplay: 닉네임이 아닌 아이디(@아이디)를 표시
-  // rawUsername = usernames 컬렉션에서 가져온 순수 아이디 (닉네임 폴백 없음)
-  // uid 필드도 동일하게 아이디만 담고 있으므로 둘 다 아이디 기준
-  // 최종 폴백: currentUser.loginId (로그인 시 입력한 아이디, @pkdex.com 제거한 값)
   if (el('profileUidDisplay')) el('profileUidDisplay').textContent = '@' + (_myProfile.rawUsername || _myProfile.uid || currentUser?.loginId || '');
   if (el('profileAvatarEmoji')) {
     if (_myProfile.profileImage) {
-      el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+      const pos = _myProfile.profileImagePos || '50% 50%';
+      el('profileAvatarEmoji').innerHTML = `<img src="${_myProfile.profileImage}" alt="프로필" style="width:100%;height:100%;object-fit:cover;object-position:${pos};display:block;"/>`;
     } else {
       el('profileAvatarEmoji').textContent = _myProfile.avatar;
     }
@@ -2479,6 +2713,31 @@ function renderMyProfile() {
   if (el('profileBioDisplay')) el('profileBioDisplay').textContent = _myProfile.bio || '+ 자기소개 추가';
   if (el('ps-met')) el('ps-met').textContent = _myProfile.met;
   if (el('ps-quiz')) el('ps-quiz').textContent = _myProfile.quizHistory;
+
+  // mini 행 동기화
+  _syncProfileMini();
+}
+
+function _syncProfileMini() {
+  if (!_myProfile) return;
+  const miniAvatar = document.getElementById('profileMiniAvatar');
+  const miniName   = document.getElementById('profileMiniName');
+  const miniStats  = document.getElementById('profileMiniStats');
+  if (miniAvatar) {
+    if (_myProfile.profileImage) {
+      const pos = _myProfile.profileImagePos || '50% 50%';
+      miniAvatar.innerHTML = `<img src="${_myProfile.profileImage}" style="width:100%;height:100%;object-fit:cover;object-position:${pos};" alt="프로필"/>`;
+    } else {
+      miniAvatar.innerHTML = `<span style="font-size:1.1rem;">${_myProfile.avatar || '🎒'}</span>`;
+    }
+  }
+  if (miniName) miniName.textContent = _myProfile.nickname || '트레이너';
+  if (miniStats) {
+    const met     = _myProfile.met     || 0;
+    const friends = _myProfile.friends || document.getElementById('ps-friends')?.textContent || 0;
+    const quiz    = _myProfile.quizHistory || 0;
+    miniStats.textContent = `만남 ${met} · 친구 ${friends} · 퀴즈 ${quiz}`;
+  }
 }
 
 window.startEditProfile = function() {
@@ -2494,6 +2753,33 @@ window.startEditProfile = function() {
       `<button onclick="selectAvatarInline('${a}')" style="font-size:1.4rem;background:${a===(_myProfile?.avatar||'🎒')?'rgba(255,203,5,.2)':'var(--surface)'};border:2px solid ${a===(_myProfile?.avatar||'🎒')?'var(--accent)':'var(--border)'};border-radius:10px;width:40px;height:40px;cursor:pointer;transition:all .15s;" id="av-${a.codePointAt(0)}">${a}</button>`
     ).join('');
   }
+  // 프로필 이미지 미리보기 + 포지션 피커
+  const imgArea = document.getElementById('profileImgEditArea');
+  const previewImg = document.getElementById('profileImgPreviewImg');
+  const posGrid = document.getElementById('profileImgPosGrid');
+  const currentImg = _myProfile?.profileImage || null;
+  const currentPos = _myProfile?.profileImagePos || '50% 50%';
+  if (imgArea && previewImg) {
+    if (currentImg) {
+      imgArea.style.display = 'block';
+      previewImg.src = currentImg;
+      previewImg.style.objectPosition = currentPos;
+    } else {
+      imgArea.style.display = 'none';
+    }
+  }
+  // 포지션 그리드 9칸
+  if (posGrid) {
+    const positions = [
+      ['좌상','0% 0%'],['상','50% 0%'],['우상','100% 0%'],
+      ['좌','0% 50%'],['중앙','50% 50%'],['우','100% 50%'],
+      ['좌하','0% 100%'],['하','50% 100%'],['우하','100% 100%'],
+    ];
+    posGrid.innerHTML = positions.map(([label, pos]) =>
+      `<button onclick="setProfileImgPos('${pos}')" data-pos="${pos}"
+        style="font-size:.52rem;font-family:'Galmuri11',monospace;border-radius:6px;border:1.5px solid ${pos===currentPos?'var(--accent)':'var(--border)'};background:${pos===currentPos?'rgba(255,203,5,.15)':'var(--surface)'};color:${pos===currentPos?'var(--accent)':'var(--muted)'};padding:.25rem .1rem;cursor:pointer;transition:all .15s;width:100%;">${label}</button>`
+    ).join('');
+  }
 };
 window.selectAvatarInline = function(av) {
   if (_myProfile) { _myProfile._pendingAvatar = av; _myProfile._pendingClearImage = true; }
@@ -2505,6 +2791,41 @@ window.selectAvatarInline = function(av) {
   // 미리보기 즉시 반영
   const emojiEl = document.getElementById('profileAvatarEmoji');
   if (emojiEl) emojiEl.textContent = av;
+  // 이미지 편집 영역 숨기기
+  const imgArea = document.getElementById('profileImgEditArea');
+  if (imgArea) imgArea.style.display = 'none';
+};
+
+window.setProfileImgPos = function(pos) {
+  if (_myProfile) _myProfile._pendingImgPos = pos;
+  // 미리보기 업데이트
+  const previewImg = document.getElementById('profileImgPreviewImg');
+  if (previewImg) previewImg.style.objectPosition = pos;
+  // 실제 프로필 아바타에도 즉시 반영
+  const avatarImg = document.querySelector('#profileAvatarEmoji img');
+  if (avatarImg) avatarImg.style.objectPosition = pos;
+  // 포지션 버튼 강조 업데이트
+  document.querySelectorAll('#profileImgPosGrid button').forEach(btn => {
+    const isActive = btn.dataset.pos === pos;
+    btn.style.borderColor = isActive ? 'var(--accent)' : 'var(--border)';
+    btn.style.background = isActive ? 'rgba(255,203,5,.15)' : 'var(--surface)';
+    btn.style.color = isActive ? 'var(--accent)' : 'var(--muted)';
+  });
+};
+
+window.removeProfileImage = async function() {
+  if (!currentUser) return;
+  try {
+    await updateDoc(doc(db,'users',currentUser.uid), { profileImage: null, profileImagePos: null });
+    if (_myProfile) { _myProfile.profileImage = null; _myProfile.profileImagePos = null; }
+    // 아바타를 이모지로 복원
+    const emojiEl = document.getElementById('profileAvatarEmoji');
+    if (emojiEl) emojiEl.textContent = _myProfile?.avatar || '🎒';
+    const headerAv = document.getElementById('headerAvatar');
+    if (headerAv) headerAv.textContent = _myProfile?.avatar || '🎒';
+    document.getElementById('profileImgEditArea').style.display = 'none';
+    showSocialToast('프로필 이미지를 제거했어요');
+  } catch(e) { showSocialToast('제거 실패: '+e.message); }
 };
 window.cancelEditProfile = function() {
   document.getElementById('profileEditPanel').style.display = 'none';
@@ -2512,6 +2833,45 @@ window.cancelEditProfile = function() {
 };
 window.startEditBio = function() { window.startEditProfile(); };
 window.openAvatarPicker = function() { window.startEditProfile(); };
+
+// ── 프로필 접기 / 펴기 ──────────────────────
+let _profileCollapsed = false;
+
+window.toggleProfileCollapse = function() {
+  _profileCollapsed = !_profileCollapsed;
+  const hero = document.getElementById('profileHero');
+  if (hero) hero.classList.toggle('collapsed', _profileCollapsed);
+  // 접힐 때 편집 패널도 닫기
+  if (_profileCollapsed) {
+    document.getElementById('profileEditPanel').style.display = 'none';
+  }
+  // mini 행 최신 상태 동기화
+  _syncProfileMini();
+  try { localStorage.setItem('pkdex_profileCollapsed', _profileCollapsed ? '1' : '0'); } catch(e) {}
+};
+
+window.expandProfileAndEdit = function() {
+  // 접혀 있으면 먼저 펼치고 편집 패널 열기
+  if (_profileCollapsed) {
+    _profileCollapsed = false;
+    const hero = document.getElementById('profileHero');
+    if (hero) hero.classList.remove('collapsed');
+    try { localStorage.setItem('pkdex_profileCollapsed', '0'); } catch(e) {}
+  }
+  window.startEditProfile();
+};
+
+// 소셜 페이지 진입 시 이전 상태 복원
+function restoreProfileCollapseState() {
+  try {
+    const saved = localStorage.getItem('pkdex_profileCollapsed');
+    if (saved === '1') {
+      _profileCollapsed = true;
+      const hero = document.getElementById('profileHero');
+      if (hero) hero.classList.add('collapsed');
+    }
+  } catch(e) {}
+}
 
 window.saveProfile = async function() {
   if (!currentUser) return;
@@ -2521,14 +2881,17 @@ window.saveProfile = async function() {
   // 아바타 이모지를 새로 선택했으면 profileImage 제거
   const clearImage = !!(_myProfile?._pendingClearImage);
   const newProfileImage = clearImage ? null : (_myProfile?.profileImage || null);
+  const newImgPos = _myProfile?._pendingImgPos || _myProfile?.profileImagePos || '50% 50%';
   try {
     const updateData = { nickname: nn, bio, avatar };
     if (clearImage) updateData.profileImage = null;
+    if (!clearImage && _myProfile?._pendingImgPos) updateData.profileImagePos = newImgPos;
     await updateDoc(doc(db, 'users', currentUser.uid), updateData);
     if (_myProfile) {
       _myProfile.nickname = nn; _myProfile.bio = bio; _myProfile.avatar = avatar;
       _myProfile.profileImage = newProfileImage;
-      delete _myProfile._pendingAvatar; delete _myProfile._pendingClearImage;
+      if (!clearImage && _myProfile._pendingImgPos) _myProfile.profileImagePos = newImgPos;
+      delete _myProfile._pendingAvatar; delete _myProfile._pendingClearImage; delete _myProfile._pendingImgPos;
     }
     currentUser.nickname = nn;
     window._currentUser = currentUser;
@@ -2625,7 +2988,7 @@ async function loadFriends() {
   const list = document.getElementById('friendList');
   const titleEl = document.getElementById('friendListTitle');
   if (titleEl) titleEl.textContent = '친구 목록 (' + _friends.length + '명)';
-  if (_myProfile) { _myProfile.friends = _friends.length; const el = document.getElementById('ps-friends'); if(el) el.textContent = _friends.length; }
+  if (_myProfile) { _myProfile.friends = _friends.length; const el = document.getElementById('ps-friends'); if(el) el.textContent = _friends.length; _syncProfileMini(); }
 
   if (!list) return;
   list.innerHTML = '';
@@ -3048,6 +3411,8 @@ function subscribeMessages(roomId, isGroup) {
         bodyHtml = renderPollCard(data, msgId);
       } else if (data.type === 'tour') {
         bodyHtml = renderTourCard(data, isMe, msgId);
+      } else if (data.type === 'tour_multi') {
+        bodyHtml = renderTourMultiCard(data, isMe, msgId);
       } else if (data.type === 'image') {
         bodyHtml = `<div class="chat-img-bubble" onclick="openImgPreview('${escapeHtml(data.imageUrl||'')}')"><img src="${escapeHtml(data.imageUrl||'')}" alt="이미지" loading="lazy"/></div>`;
       } else {
@@ -3154,6 +3519,25 @@ function renderTourCard(data, isMe, msgId) {
   </div>`;
 }
 
+function renderTourMultiCard(data, isMe, msgId) {
+  const pokemons = data.pokemons || [];
+  const rows = pokemons.map((p, i) => {
+    const met = isMetPokemon ? isMetPokemon(p.id) : false;
+    return `<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05);">
+      <img style="width:36px;height:36px;image-rendering:pixelated;flex-shrink:0;" src="${p.image||''}" alt="${p.name||''}" onerror="this.src=''"/>
+      <div style="flex:1;min-width:0;">
+        <div class="tour-card-name" style="font-size:.75rem;">${escapeHtml(p.name||'')}</div>
+        <div class="tour-card-num">#${String(p.id||0).padStart(3,'0')}</div>
+      </div>
+      ${!isMe ? `<button class="tour-meet-btn" style="width:auto;padding:.22rem .5rem;font-size:.58rem;margin-top:0;" id="tourMeet_${msgId}_${i}" ${met?'disabled':''} onclick="registerTourPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')},'${msgId}_${i}')">${met?'✓':'추가'}</button>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="tour-card${isMe?' me':''}" style="max-width:220px;">
+    <div class="tour-card-label">🎒 견학 포켓몬 ${pokemons.length}마리</div>
+    ${rows}
+  </div>`;
+}
+
 // ── 읽음 업데이트 ────────────────────────────
 async function markChatRead(roomId) {
   try { await setDoc(doc(db,'chats',roomId),{['unread_'+currentUser.uid]:0},{merge:true}); } catch(e){}
@@ -3230,13 +3614,10 @@ function showMsgContextMenu(x, y, { msgId, data, isMe, roomId }) {
 
   const items = [
     { icon:'↩️', label:'답장', action: () => setReplyTo(msgId, data.text||'', data.from) },
-    { icon:'🔍', label:'검색에서 보기', action: () => { toggleMsgSearch(); document.getElementById('msgSearchInp').value = data.text?.slice(0,20)||''; searchMessages(data.text?.slice(0,20)||''); } },
   ];
   if (isMe) {
     items.push({ icon:'🗑️', label:'삭제', danger:true, action: () => deleteMsg(roomId, msgId) });
   }
-  // 관리자(isMe = 방 생성자)라면 고정
-  items.push({ icon:'📌', label: data.pinned ? '고정 해제' : '고정', action: () => pinMsg(roomId, msgId, data.text||'', !data.pinned) });
 
   items.forEach(item => {
     const el = document.createElement('div');
@@ -3355,13 +3736,21 @@ async function updateRoomMeta(roomId, lastMsg) {
 }
 
 // ── 견학 보내기 ───────────────────────────────
-window.toggleTourPicker = function() {
+let _selectedTourPokemons = new Map(); // id -> pokemon object
+
+window.toggleTourPicker = async function() {
   const p = document.getElementById('tourPicker');
   if (!p) return;
   p.classList.toggle('open');
   if (p.classList.contains('open')) {
     const searchInp = document.getElementById('tourPickerSearch');
     if (searchInp) { searchInp.value = ''; }
+    _selectedTourPokemons.clear();
+    updateTourSendBar();
+    // 캐시 없으면 Firebase에서 불러오기
+    if (!window._metPokemonCache || !window._metPokemonCache.length) {
+      await getMetList();
+    }
     buildTourPickerGrid();
   }
 };
@@ -3369,7 +3758,28 @@ window.toggleTourPicker = function() {
 window.closeTourPicker = function() {
   const p = document.getElementById('tourPicker');
   if (p) p.classList.remove('open');
+  _selectedTourPokemons.clear();
+  updateTourSendBar();
 };
+
+window.clearTourSelection = function() {
+  _selectedTourPokemons.clear();
+  document.querySelectorAll('#tourPickerGrid .tour-picker-item').forEach(el => el.classList.remove('selected'));
+  updateTourSendBar();
+};
+
+function updateTourSendBar() {
+  const bar = document.getElementById('tourSendBar');
+  const count = document.getElementById('tourSendCount');
+  if (!bar) return;
+  const n = _selectedTourPokemons.size;
+  if (n > 0) {
+    bar.classList.add('show');
+    if (count) count.textContent = `${n}마리 선택됨`;
+  } else {
+    bar.classList.remove('show');
+  }
+}
 
 window.filterTourPicker = function(q) {
   buildTourPickerGrid(q);
@@ -3402,27 +3812,55 @@ function buildTourPickerGrid(filterQuery) {
   }
   filtered.forEach(p => {
     const item = document.createElement('div');
-    item.className = 'tour-picker-item';
-    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
-    item.onclick = () => sendTourPokemon(p);
+    item.className = 'tour-picker-item' + (_selectedTourPokemons.has(p.id) ? ' selected' : '');
+    item.innerHTML = `<div class="tour-check">✓</div><img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
+    item.onclick = () => {
+      if (_selectedTourPokemons.has(p.id)) {
+        _selectedTourPokemons.delete(p.id);
+        item.classList.remove('selected');
+      } else {
+        _selectedTourPokemons.set(p.id, p);
+        item.classList.add('selected');
+      }
+      updateTourSendBar();
+    };
     grid.appendChild(item);
   });
 }
 
-window.sendTourPokemon = async function(p) {
+window.sendSelectedTourPokemons = async function() {
   if (!currentUser || !_currentRoomId) return;
+  const pokemons = [..._selectedTourPokemons.values()];
+  if (!pokemons.length) return;
   document.getElementById('tourPicker')?.classList.remove('open');
+  _selectedTourPokemons.clear();
+  updateTourSendBar();
   try {
     const msgsRef = collection(db,'chats',_currentRoomId,'messages');
-    await addDoc(msgsRef, {
-      from: currentUser.uid,
-      type: 'tour',
-      pokemon: { id:p.id, name:p.name, image:p.image||'' },
-      ts: serverTimestamp(),
-      readBy: [currentUser.uid]
-    });
-    await updateRoomMeta(_currentRoomId, `🎒 ${p.name} 견학`);
-    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 (최대 1025)
+    if (pokemons.length === 1) {
+      // 단일 견학 — 기존 방식
+      const p = pokemons[0];
+      await addDoc(msgsRef, {
+        from: currentUser.uid,
+        type: 'tour',
+        pokemon: { id:p.id, name:p.name, image:p.image||'' },
+        ts: serverTimestamp(),
+        readBy: [currentUser.uid]
+      });
+      await updateRoomMeta(_currentRoomId, `🎒 ${p.name} 견학`);
+    } else {
+      // 다수 견학 — 하나의 메시지로 묶기
+      const names = pokemons.map(p => p.name).join(', ');
+      await addDoc(msgsRef, {
+        from: currentUser.uid,
+        type: 'tour_multi',
+        pokemons: pokemons.map(p => ({ id:p.id, name:p.name, image:p.image||'' })),
+        ts: serverTimestamp(),
+        readBy: [currentUser.uid]
+      });
+      await updateRoomMeta(_currentRoomId, `🎒 ${pokemons.length}마리 견학`);
+    }
+    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 (최대 1025) — 즉시 적용
     const today = new Date().toISOString().slice(0,10);
     const lastTourDate = localStorage.getItem('pkdex_lastTourBonusDate');
     if (lastTourDate !== today) {
@@ -3431,15 +3869,26 @@ window.sendTourPokemon = async function(p) {
       if (next > cur) {
         saveSetting('dailyCount', next);
         localStorage.setItem('pkdex_lastTourBonusDate', today);
-        // 설정 UI가 열려 있으면 갱신
         const el = document.getElementById('s-dailyCount');
         if (el) el.textContent = next;
-        const reinitBtn = document.getElementById('dexReinitBtn');
-        if (reinitBtn) reinitBtn.style.display = 'inline-flex';
-        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 늘었어요!`);
+        // 즉시 덱 새로고침 (버튼 클릭 없이 바로 적용)
+        if (typeof init === 'function') {
+          const loadingEl = document.getElementById('dex-loading');
+          const contentEl = document.getElementById('dex-content');
+          if (loadingEl) loadingEl.style.display = 'flex';
+          if (contentEl) contentEl.style.display = 'none';
+          init();
+        }
+        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
       }
     }
   } catch(e){ showSocialToast('견학 전송 실패: '+e.message); }
+};
+
+// 하위 호환성 — 단일 포켓몬 직접 전송 (기존 코드에서 호출 시)
+window.sendTourPokemon = async function(p) {
+  _selectedTourPokemons.set(p.id, p);
+  await window.sendSelectedTourPokemons();
 };
 
 window.registerTourPokemon = function(p, msgId) {
@@ -3664,7 +4113,7 @@ async function loadDmList() {
           : escapeHtml(fData.avatar || '🎒');
         avatar = `<div class="dm-avatar">${avatarContent}</div>`;
         name = fData.nickname || '트레이너';
-        previewSub = fData.username ? '@' + fData.username : '';
+        previewSub = '';
       }
 
       const lastMsgText = isMuted ? '🔕 알림 꺼짐' : escapeHtml(data.lastMsg||'');
@@ -4018,23 +4467,49 @@ window.uploadProfileImage = async function(input) {
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result;
+    const defaultPos = '50% 50%';
     try {
-      await updateDoc(doc(db,'users',currentUser.uid), { profileImage: base64 });
-      // 프로필 아바타 영역에 이미지 표시
+      await updateDoc(doc(db,'users',currentUser.uid), { profileImage: base64, profileImagePos: defaultPos });
+      if (_myProfile) { _myProfile.profileImage = base64; _myProfile.profileImagePos = defaultPos; delete _myProfile._pendingClearImage; }
+
+      // 프로필 아바타 영역에 이미지 표시 (올바른 크기로)
       const emojiEl = document.getElementById('profileAvatarEmoji');
       if (emojiEl) {
-        emojiEl.innerHTML = `<img src="${base64}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
+        emojiEl.innerHTML = `<img src="${base64}" alt="프로필" style="width:100%;height:100%;object-fit:cover;object-position:${defaultPos};display:block;"/>`;
       }
       const headerAv = document.getElementById('headerAvatar');
       if (headerAv) {
         headerAv.innerHTML = `<img src="${base64}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt="프로필"/>`;
       }
-      if (_myProfile) _myProfile.profileImage = base64;
-      if (statusEl) statusEl.textContent = '저장됨 ✓';
-      setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 2000);
+
+      // 편집 패널 내 미리보기 표시 + 포지션 피커 초기화
+      const imgArea = document.getElementById('profileImgEditArea');
+      const previewImg = document.getElementById('profileImgPreviewImg');
+      const posGrid = document.getElementById('profileImgPosGrid');
+      if (imgArea) imgArea.style.display = 'block';
+      if (previewImg) { previewImg.src = base64; previewImg.style.objectPosition = defaultPos; }
+      if (posGrid) {
+        const positions = [
+          ['좌상','0% 0%'],['상','50% 0%'],['우상','100% 0%'],
+          ['좌','0% 50%'],['중앙','50% 50%'],['우','100% 50%'],
+          ['좌하','0% 100%'],['하','50% 100%'],['우하','100% 100%'],
+        ];
+        posGrid.innerHTML = positions.map(([label, pos]) =>
+          `<button onclick="setProfileImgPos('${pos}')" data-pos="${pos}"
+            style="font-size:.52rem;font-family:'Galmuri11',monospace;border-radius:6px;border:1.5px solid ${pos===defaultPos?'var(--accent)':'var(--border)'};background:${pos===defaultPos?'rgba(255,203,5,.15)':'var(--surface)'};color:${pos===defaultPos?'var(--accent)':'var(--muted)'};padding:.25rem .1rem;cursor:pointer;transition:all .15s;width:100%;">${label}</button>`
+        ).join('');
+      }
+
+      if (statusEl) statusEl.textContent = '';
       showSocialToast('프로필 이미지가 변경됐어요 🖼️');
       // 친구들에게도 업데이트
       await updateFriendNicknameCache(_myProfile?.nickname || currentUser.nickname, _myProfile?.avatar || '🎒', base64);
+
+      // ✅ 업로드 완료 후 편집 패널 닫기
+      setTimeout(() => {
+        document.getElementById('profileEditPanel').style.display = 'none';
+        if (_myProfile) { delete _myProfile._pendingAvatar; delete _myProfile._pendingClearImage; }
+      }, 800);
     } catch(err) {
       if (statusEl) statusEl.textContent = '실패';
       showSocialToast('저장 실패: ' + err.message);
@@ -4731,26 +5206,29 @@ window.closeChatInviteModal = function(e) {
 let _socialTab = 'friends';
 window.showSocialTab = function(tab) {
   _socialTab = tab;
-  document.getElementById('socialFriendsPanel').style.display = tab === 'friends' ? 'block' : 'none';
+  document.getElementById('socialFriendsPanel').style.display  = tab === 'friends'  ? 'block' : 'none';
   document.getElementById('socialMessagesPanel').style.display = tab === 'messages' ? 'block' : 'none';
-  document.getElementById('socialFreePanel').style.display = tab === 'free' ? 'block' : 'none';
-  ['friends','messages','free'].forEach(t => {
+  document.getElementById('socialFreePanel').style.display     = tab === 'free'     ? 'block' : 'none';
+  document.getElementById('socialSuggestPanel').style.display  = tab === 'suggest'  ? 'block' : 'none';
+  ['friends','messages','free','suggest'].forEach(t => {
     const el = document.getElementById('ptab-' + t);
     if (el) el.classList.toggle('active', t === tab);
   });
   if (tab === 'messages') loadDmList();
-  if (tab === 'friends') loadFriends();
-  if (tab === 'free') initFreeChat();
+  if (tab === 'friends')  loadFriends();
+  if (tab === 'free')     initFreeChat();
+  if (tab === 'suggest')  initSuggestTab();
 };
 
 window._loadMyProfile = loadMyProfile;
 window.initSocialPage = async function() {
+  _suggestInited = false;
   await loadMyProfile();
+  restoreProfileCollapseState();
   loadSiteNotice();
   await loadSpotlight();
   if (_socialTab === 'friends') await loadFriends();
   else await loadDmList();
-  // 내 친구 코드 칩 로드
   loadMyCodeChip();
 };
 
@@ -4917,6 +5395,22 @@ function renderFreeChatMessages(msgs) {
         ${!isMe ? `<button class="tour-meet-btn" ${alreadyMet?'disabled':''} onclick="registerFreeTourPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')},this)">${alreadyMet?'이미 만남 ✓':'만난 포켓몬에 추가 🤝'}</button>` : ''}
       `;
     }
+    // ▼ 다수 견학
+    else if (msg.type === 'tour_multi' && msg.pokemons) {
+      bubbleEl.className = 'tour-card' + (isMe ? ' me' : '');
+      const rows = msg.pokemons.map((p, i) => {
+        const alreadyMet = (window._metPokemonCache || []).find(m => m.id === p.id);
+        return `<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05);">
+          <img style="width:36px;height:36px;image-rendering:pixelated;flex-shrink:0;" src="${p.image||''}" alt="${p.name||''}" onerror="this.src=''"/>
+          <div style="flex:1;min-width:0;">
+            <div class="tour-card-name" style="font-size:.75rem;">${escapeHtml(p.name||'')}</div>
+            <div class="tour-card-num">#${String(p.id||0).padStart(3,'0')}</div>
+          </div>
+          ${!isMe ? `<button class="tour-meet-btn" style="width:auto;padding:.22rem .5rem;font-size:.58rem;margin-top:0;" ${alreadyMet?'disabled':''} onclick="registerFreeTourPokemon(${JSON.stringify(p).replace(/"/g,'&quot;')},this)">${alreadyMet?'✓':'추가'}</button>` : ''}
+        </div>`;
+      }).join('');
+      bubbleEl.innerHTML = `<div class="tour-card-label">🎒 견학 포켓몬 ${msg.pokemons.length}마리</div>${rows}`;
+    }
     // ▲ 견학 기능 끝
     else {
       bubbleEl.className = 'free-msg-bubble' + (isMe ? ' me' : '');
@@ -5025,20 +5519,48 @@ async function deleteFreeChatMsg(msgId) {
 // Firestore 컬렉션만 'freeChat'으로 다름
 // ═══════════════════════════════════════════════
 
-window.toggleFreeTourPicker = function() {
+let _selectedFreeTourPokemons = new Map();
+
+window.toggleFreeTourPicker = async function() {
   const p = document.getElementById('freeTourPicker');
   if (!p) return;
   p.classList.toggle('open');
   if (p.classList.contains('open')) {
     const searchInp = document.getElementById('freeTourPickerSearch');
     if (searchInp) searchInp.value = '';
+    _selectedFreeTourPokemons.clear();
+    updateFreeTourSendBar();
+    if (!window._metPokemonCache || !window._metPokemonCache.length) {
+      await getMetList();
+    }
     buildFreeTourPickerGrid();
   }
 };
 
 window.closeFreeTourPicker = function() {
   document.getElementById('freeTourPicker')?.classList.remove('open');
+  _selectedFreeTourPokemons.clear();
+  updateFreeTourSendBar();
 };
+
+window.clearFreeTourSelection = function() {
+  _selectedFreeTourPokemons.clear();
+  document.querySelectorAll('#freeTourPickerGrid .tour-picker-item').forEach(el => el.classList.remove('selected'));
+  updateFreeTourSendBar();
+};
+
+function updateFreeTourSendBar() {
+  const bar = document.getElementById('freeTourSendBar');
+  const count = document.getElementById('freeTourSendCount');
+  if (!bar) return;
+  const n = _selectedFreeTourPokemons.size;
+  if (n > 0) {
+    bar.classList.add('show');
+    if (count) count.textContent = `${n}마리 선택됨`;
+  } else {
+    bar.classList.remove('show');
+  }
+}
 
 window.filterFreeTourPicker = function(q) {
   buildFreeTourPickerGrid(q);
@@ -5068,9 +5590,18 @@ function buildFreeTourPickerGrid(filterQuery) {
   }
   filtered.forEach(p => {
     const item = document.createElement('div');
-    item.className = 'tour-picker-item';
-    item.innerHTML = `<img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
-    item.onclick = () => sendFreeTourPokemon(p);
+    item.className = 'tour-picker-item' + (_selectedFreeTourPokemons.has(p.id) ? ' selected' : '');
+    item.innerHTML = `<div class="tour-check">✓</div><img src="${p.image||''}" alt="${p.name||''}"/><span>${p.name||''}</span>`;
+    item.onclick = () => {
+      if (_selectedFreeTourPokemons.has(p.id)) {
+        _selectedFreeTourPokemons.delete(p.id);
+        item.classList.remove('selected');
+      } else {
+        _selectedFreeTourPokemons.set(p.id, p);
+        item.classList.add('selected');
+      }
+      updateFreeTourSendBar();
+    };
     grid.appendChild(item);
   });
 }
@@ -5092,22 +5623,41 @@ window.registerFreeTourPokemon = function(p, btn) {
 };
 
 // 견학 포켓몬을 자유 채팅에 전송
-window.sendFreeTourPokemon = async function(p) {
+window.sendSelectedFreeTourPokemons = async function() {
   if (!currentUser) return;
+  const pokemons = [..._selectedFreeTourPokemons.values()];
+  if (!pokemons.length) return;
   document.getElementById('freeTourPicker')?.classList.remove('open');
+  _selectedFreeTourPokemons.clear();
+  updateFreeTourSendBar();
   try {
-    await addDoc(collection(db, 'freeChat'), {
-      uid: currentUser.uid,
-      nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
-      avatar: _myProfile?.avatar || '🎒',
-      username: _myProfile?.uid || '',
-      bio: _myProfile?.bio || '',
-      profileImage: _myProfile?.profileImage || null,
-      type: 'tour',
-      pokemon: { id: p.id, name: p.name, image: p.image || '' },
-      ts: serverTimestamp()
-    });
-    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1
+    if (pokemons.length === 1) {
+      const p = pokemons[0];
+      await addDoc(collection(db, 'freeChat'), {
+        uid: currentUser.uid,
+        nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+        avatar: _myProfile?.avatar || '🎒',
+        username: _myProfile?.uid || '',
+        bio: _myProfile?.bio || '',
+        profileImage: _myProfile?.profileImage || null,
+        type: 'tour',
+        pokemon: { id: p.id, name: p.name, image: p.image || '' },
+        ts: serverTimestamp()
+      });
+    } else {
+      await addDoc(collection(db, 'freeChat'), {
+        uid: currentUser.uid,
+        nickname: _myProfile?.nickname || currentUser.nickname || '트레이너',
+        avatar: _myProfile?.avatar || '🎒',
+        username: _myProfile?.uid || '',
+        bio: _myProfile?.bio || '',
+        profileImage: _myProfile?.profileImage || null,
+        type: 'tour_multi',
+        pokemons: pokemons.map(p => ({ id: p.id, name: p.name, image: p.image || '' })),
+        ts: serverTimestamp()
+      });
+    }
+    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 — 즉시 적용
     const today = new Date().toISOString().slice(0, 10);
     const lastTourDate = localStorage.getItem('pkdex_lastFreeTourBonusDate');
     if (lastTourDate !== today) {
@@ -5118,18 +5668,369 @@ window.sendFreeTourPokemon = async function(p) {
         localStorage.setItem('pkdex_lastFreeTourBonusDate', today);
         const el = document.getElementById('s-dailyCount');
         if (el) el.textContent = next;
-        const reinitBtn = document.getElementById('dexReinitBtn');
-        if (reinitBtn) reinitBtn.style.display = 'inline-flex';
-        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 늘었어요!`);
+        if (typeof init === 'function') {
+          const loadingEl = document.getElementById('dex-loading');
+          const contentEl = document.getElementById('dex-content');
+          if (loadingEl) loadingEl.style.display = 'flex';
+          if (contentEl) contentEl.style.display = 'none';
+          init();
+        }
+        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
       }
     } else {
-      showSocialToast(`🎒 ${p.name} 견학을 보냈어요!`);
+      const label = pokemons.length === 1 ? `${pokemons[0].name} 견학` : `${pokemons.length}마리 견학`;
+      showSocialToast(`🎒 ${label}을 보냈어요!`);
     }
   } catch(e) { showSocialToast('견학 전송 실패: ' + e.message); }
 };
 
+// 하위 호환성
+window.sendFreeTourPokemon = async function(p) {
+  _selectedFreeTourPokemons.set(p.id, p);
+  await window.sendSelectedFreeTourPokemons();
+};
+
 // ═══════════════════════════════════════════════
 // 견학 기능 끝
+// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════
+// 💡 제안 탭
+// ═══════════════════════════════════════════════
+const SUGGEST_PAGE_SIZE = 10;
+let _suggestLastDoc = null;
+let _suggestUnsub   = null;
+let _suggestInited  = false;
+
+window.initSuggestTab = function() {
+  if (_suggestInited) return;
+  _suggestInited = true;
+  _suggestLastDoc = null;
+  loadSuggestions(true);
+};
+
+// ── 제안 목록 불러오기 ───────────────────────
+async function loadSuggestions(reset = false) {
+  try {
+    let q = query(
+      collection(db, 'suggestions'),
+      orderBy('ts', 'desc'),
+      limit(SUGGEST_PAGE_SIZE)
+    );
+    if (!reset && _suggestLastDoc) {
+      q = query(
+        collection(db, 'suggestions'),
+        orderBy('ts', 'desc'),
+        startAfter(_suggestLastDoc),
+        limit(SUGGEST_PAGE_SIZE)
+      );
+    }
+    const snap = await getDocs(q);
+    _suggestLastDoc = snap.docs[snap.docs.length - 1] || _suggestLastDoc;
+
+    const list = document.getElementById('suggestList');
+    if (reset) list.innerHTML = '';
+
+    if (snap.empty && reset) {
+      list.innerHTML = `<div class="suggest-empty"><span style="font-size:2rem">💭</span><span>아직 제안이 없어요.<br>첫 번째로 의견을 남겨보세요!</span></div>`;
+      document.getElementById('suggestLoadMore').style.display = 'none';
+      return;
+    }
+
+    snap.docs.forEach(d => {
+      if (!document.getElementById('scard-' + d.id)) {
+        list.appendChild(buildSuggestCard(d.id, d.data()));
+      }
+    });
+
+    document.getElementById('suggestLoadMore').style.display =
+      snap.docs.length === SUGGEST_PAGE_SIZE ? 'block' : 'none';
+  } catch(e) { showSocialToast('불러오기 실패: ' + e.message); }
+}
+
+window.loadMoreSuggestions = () => loadSuggestions(false);
+
+// ── 제안 카드 DOM 빌드 ───────────────────────
+function buildSuggestCard(id, data) {
+  const isMe = currentUser && data.uid === currentUser.uid;
+  const isPopo = isPopoUser();
+
+  const card = document.createElement('div');
+  card.className = 'suggest-card';
+  card.id = 'scard-' + id;
+
+  // 시간 포맷
+  const ts = data.ts?.toDate ? data.ts.toDate() : new Date();
+  const timeStr = formatSuggestTime(ts);
+
+  // 아바타
+  const avatarHtml = data.profileImage
+    ? `<img src="${data.profileImage}" style="width:100%;height:100%;object-fit:cover;" alt=""/>`
+    : (data.avatar || '🎒');
+
+  // 좋아요 상태
+  const myUid  = currentUser?.uid || '';
+  const likes  = data.likes || [];
+  const liked  = likes.includes(myUid);
+  const likeCount = likes.length;
+
+  card.innerHTML = `
+    <div class="suggest-card-header">
+      <div class="suggest-card-avatar">${avatarHtml}</div>
+      <div class="suggest-card-meta">
+        <div class="suggest-card-author">${escapeHtml(data.nickname || '트레이너')}</div>
+        <div class="suggest-card-time">${timeStr}</div>
+      </div>
+    </div>
+    <div class="suggest-card-title">${escapeHtml(data.title || '')}</div>
+    <div class="suggest-card-body">${escapeHtml(data.body || '')}</div>
+    <div class="suggest-card-actions">
+      <button class="suggest-like-btn${liked?' liked':''}" id="slike-${id}" onclick="toggleSuggestLike('${id}',this)">
+        ❤️ <span id="slike-count-${id}">${likeCount}</span>
+      </button>
+      <button class="suggest-comment-toggle" onclick="toggleSuggestComments('${id}')">
+        💬 <span id="scmt-count-${id}">${data.commentCount || 0}</span>
+      </button>
+      ${(isMe || isPopo) ? `<button class="suggest-del-btn" onclick="deleteSuggestion('${id}')">🗑️ 삭제</button>` : ''}
+    </div>
+    <div class="suggest-comments" id="scmts-${id}" style="display:none;">
+      <div id="scmt-list-${id}"></div>
+      <div class="suggest-comment-input-row">
+        <textarea class="suggest-comment-inp" id="scmt-inp-${id}" placeholder="댓글 달기..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addSuggestComment('${id}');}"></textarea>
+        <button class="suggest-comment-send" onclick="addSuggestComment('${id}')">➤</button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function formatSuggestTime(date) {
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000);
+  if (diff < 60)    return '방금 전';
+  if (diff < 3600)  return Math.floor(diff/60) + '분 전';
+  if (diff < 86400) return Math.floor(diff/3600) + '시간 전';
+  return date.toLocaleDateString('ko-KR', {month:'numeric',day:'numeric'});
+}
+
+// ── 제안 등록 ────────────────────────────────
+window.submitSuggestion = async function() {
+  if (!currentUser) { showSocialToast('로그인이 필요해요'); return; }
+  const title = document.getElementById('suggestTitleInp').value.trim();
+  const body  = document.getElementById('suggestBodyInp').value.trim();
+  if (!title) { showSocialToast('제목을 입력해주세요'); return; }
+  if (!body)  { showSocialToast('내용을 입력해주세요'); return; }
+
+  const btn = document.getElementById('suggestSubmitBtn');
+  btn.disabled = true; btn.textContent = '등록 중...';
+
+  try {
+    const docRef = await addDoc(collection(db, 'suggestions'), {
+      uid:          currentUser.uid,
+      nickname:     _myProfile?.nickname || currentUser.nickname || '트레이너',
+      avatar:       _myProfile?.avatar   || '🎒',
+      profileImage: _myProfile?.profileImage || null,
+      title, body,
+      likes:        [],
+      commentCount: 0,
+      ts:           serverTimestamp()
+    });
+
+    // popo에게 알림 전송
+    await sendSuggestNotifToPopo(docRef.id, title);
+
+    document.getElementById('suggestTitleInp').value = '';
+    document.getElementById('suggestBodyInp').value  = '';
+
+    // 목록 맨 위에 즉시 삽입
+    const list = document.getElementById('suggestList');
+    const emptyEl = list.querySelector('.suggest-empty');
+    if (emptyEl) emptyEl.remove();
+    const tempData = {
+      uid: currentUser.uid, title, body, likes: [], commentCount: 0,
+      nickname:     _myProfile?.nickname     || '트레이너',
+      avatar:       _myProfile?.avatar       || '🎒',
+      profileImage: _myProfile?.profileImage || null,
+      ts: { toDate: () => new Date() }
+    };
+    list.prepend(buildSuggestCard(docRef.id, tempData));
+    showSocialToast('제안이 등록됐어요 💡');
+  } catch(e) { showSocialToast('등록 실패: ' + e.message); }
+  finally { btn.disabled = false; btn.textContent = '등록하기 ✉️'; }
+};
+
+// popo 유저를 찾아 알림 전송
+async function sendSuggestNotifToPopo(suggestId, title) {
+  try {
+    // popo 아이디를 가진 유저의 UID를 usernames 컬렉션에서 조회
+    const usernameSnap = await getDocs(
+      query(collection(db,'usernames'), where('username','==','popo'))
+    );
+    let popoUid = null;
+    usernameSnap.forEach(d => { popoUid = d.id; });
+    if (!popoUid) {
+      // fallback: users 컬렉션에서 loginId === 'popo' 인 유저 탐색
+      const usersSnap = await getDocs(
+        query(collection(db,'users'), where('username','==','popo'))
+      );
+      usersSnap.forEach(d => { popoUid = d.id; });
+    }
+    if (!popoUid) return;
+
+    const senderName = _myProfile?.nickname || '트레이너';
+    await addDoc(collection(db,'notifications'), {
+      targetUid:  popoUid,
+      type:       'suggestion',
+      text:       `💡 새 제안: "${title}" — ${senderName}`,
+      suggestId,
+      from:       currentUser.uid,
+      ts:         serverTimestamp(),
+      read:       false
+    });
+  } catch(e) { console.warn('popo 알림 실패:', e); }
+}
+
+// ── 좋아요 토글 ──────────────────────────────
+window.toggleSuggestLike = async function(id, btn) {
+  if (!currentUser) { showSocialToast('로그인이 필요해요'); return; }
+  const ref   = doc(db, 'suggestions', id);
+  const snap  = await getDoc(ref);
+  if (!snap.exists()) return;
+  const likes = snap.data().likes || [];
+  const myUid = currentUser.uid;
+  const isLiked = likes.includes(myUid);
+  const newLikes = isLiked
+    ? likes.filter(u => u !== myUid)
+    : [...likes, myUid];
+  await updateDoc(ref, { likes: newLikes });
+  btn.classList.toggle('liked', !isLiked);
+  document.getElementById('slike-count-' + id).textContent = newLikes.length;
+};
+
+// ── 댓글 영역 토글 ───────────────────────────
+window.toggleSuggestComments = async function(id) {
+  const area = document.getElementById('scmts-' + id);
+  if (!area) return;
+  const isOpen = area.style.display !== 'none';
+  area.style.display = isOpen ? 'none' : 'flex';
+  area.style.flexDirection = 'column';
+  if (!isOpen) await loadSuggestComments(id);
+};
+
+// ── 댓글 불러오기 ────────────────────────────
+async function loadSuggestComments(suggestId) {
+  const listEl = document.getElementById('scmt-list-' + suggestId);
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="font-size:.65rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.25rem 0;">불러오는 중...</div>';
+  try {
+    const snap = await getDocs(
+      query(collection(db,'suggestions',suggestId,'comments'), orderBy('ts','asc'))
+    );
+    listEl.innerHTML = '';
+    snap.docs.forEach(d => listEl.appendChild(buildCommentEl(suggestId, d.id, d.data())));
+    if (snap.empty) {
+      listEl.innerHTML = '<div style="font-size:.65rem;color:var(--muted);font-family:Galmuri11,monospace;padding:.25rem 0;">아직 댓글이 없어요</div>';
+    }
+  } catch(e) { listEl.innerHTML = ''; }
+}
+
+function buildCommentEl(suggestId, cmtId, data) {
+  const isMe   = currentUser && data.uid === currentUser.uid;
+  const isPopo = isPopoUser();
+  const ts     = data.ts?.toDate ? data.ts.toDate() : new Date();
+  const div = document.createElement('div');
+  div.className = 'suggest-comment-item';
+  div.id = 'scmt-item-' + cmtId;
+  const avatarHtml = data.profileImage
+    ? `<img src="${data.profileImage}" style="width:100%;height:100%;object-fit:cover;" alt=""/>`
+    : (data.avatar || '🎒');
+  div.innerHTML = `
+    <div class="suggest-comment-avatar">${avatarHtml}</div>
+    <div class="suggest-comment-bubble" style="flex:1;">
+      <div style="display:flex;align-items:center;gap:.3rem;">
+        <span class="suggest-comment-author">${escapeHtml(data.nickname||'트레이너')}</span>
+        ${(isMe||isPopo) ? `<button class="suggest-comment-del" onclick="deleteComment('${suggestId}','${cmtId}')">✕</button>` : ''}
+      </div>
+      <div class="suggest-comment-text">${escapeHtml(data.text||'')}</div>
+      <div class="suggest-comment-time">${formatSuggestTime(ts)}</div>
+    </div>
+  `;
+  return div;
+}
+
+// ── 댓글 추가 ────────────────────────────────
+window.addSuggestComment = async function(suggestId) {
+  if (!currentUser) { showSocialToast('로그인이 필요해요'); return; }
+  const inp = document.getElementById('scmt-inp-' + suggestId);
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+
+  try {
+    const cmtRef = await addDoc(
+      collection(db, 'suggestions', suggestId, 'comments'),
+      {
+        uid:          currentUser.uid,
+        nickname:     _myProfile?.nickname     || '트레이너',
+        avatar:       _myProfile?.avatar       || '🎒',
+        profileImage: _myProfile?.profileImage || null,
+        text,
+        ts: serverTimestamp()
+      }
+    );
+    // commentCount +1
+    await updateDoc(doc(db,'suggestions', suggestId), { commentCount: increment(1) });
+    const countEl = document.getElementById('scmt-count-' + suggestId);
+    if (countEl) countEl.textContent = parseInt(countEl.textContent||'0') + 1;
+
+    // 즉시 DOM에 추가
+    const listEl = document.getElementById('scmt-list-' + suggestId);
+    if (listEl) {
+      const emptyMsg = listEl.querySelector('div');
+      if (emptyMsg && emptyMsg.textContent.includes('없어요')) emptyMsg.remove();
+      const tempData = {
+        uid: currentUser.uid, text,
+        nickname:     _myProfile?.nickname     || '트레이너',
+        avatar:       _myProfile?.avatar       || '🎒',
+        profileImage: _myProfile?.profileImage || null,
+        ts: { toDate: () => new Date() }
+      };
+      listEl.appendChild(buildCommentEl(suggestId, cmtRef.id, tempData));
+      listEl.scrollTop = listEl.scrollHeight;
+    }
+  } catch(e) { showSocialToast('댓글 실패: ' + e.message); }
+};
+
+// ── 댓글 삭제 ────────────────────────────────
+window.deleteComment = async function(suggestId, cmtId) {
+  if (!currentUser) return;
+  try {
+    await deleteDoc(doc(db,'suggestions',suggestId,'comments',cmtId));
+    await updateDoc(doc(db,'suggestions',suggestId), { commentCount: increment(-1) });
+    document.getElementById('scmt-item-' + cmtId)?.remove();
+    const countEl = document.getElementById('scmt-count-' + suggestId);
+    if (countEl) countEl.textContent = Math.max(0, parseInt(countEl.textContent||'1') - 1);
+  } catch(e) { showSocialToast('삭제 실패: ' + e.message); }
+};
+
+// ── 제안 삭제 ────────────────────────────────
+window.deleteSuggestion = async function(id) {
+  if (!currentUser) return;
+  if (!confirm('이 제안을 삭제할까요?')) return;
+  try {
+    await deleteDoc(doc(db,'suggestions',id));
+    document.getElementById('scard-' + id)?.remove();
+    showSocialToast('삭제됐어요');
+    // 목록이 비었으면 빈 메시지 표시
+    const list = document.getElementById('suggestList');
+    if (list && !list.querySelector('.suggest-card')) {
+      list.innerHTML = `<div class="suggest-empty"><span style="font-size:2rem">💭</span><span>아직 제안이 없어요.<br>첫 번째로 의견을 남겨보세요!</span></div>`;
+    }
+  } catch(e) { showSocialToast('삭제 실패: ' + e.message); }
+};
+// ═══════════════════════════════════════════════
+// 💡 제안 탭 끝
 // ═══════════════════════════════════════════════
 
 
