@@ -2397,6 +2397,11 @@ async function unmarkMet(id) {
   renderMetPage();
 }
 
+window.deleteMetPokemon = async function(id, name) {
+  if (!confirm(`${name}을(를) 만난 포켓몬에서 삭제할까요?`)) return;
+  await unmarkMet(id);
+};
+
 window.clearMetPokemon = async function() {
   if (!currentUser) return;
   if (!confirm('만난 포켓몬 기록을 모두 초기화할까요?')) return;
@@ -2498,7 +2503,10 @@ async function renderMetPage() {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem">
           <span class="met-list-date">${m.date}</span>
-          <button onclick="event.stopPropagation();openNicknameEdit(${m.id},'${(nick||'').replace(/'/g,"\\'")}',this)" style="font-size:.58rem;color:var(--muted);background:transparent;border:1px solid var(--border);padding:.15rem .4rem;border-radius:6px;cursor:pointer;font-family:'Galmuri11',monospace">✏️ 별명</button>
+          <div style="display:flex;gap:.3rem">
+            <button onclick="event.stopPropagation();openNicknameEdit(${m.id},'${(nick||'').replace(/'/g,"\\'")}',this)" style="font-size:.58rem;color:var(--muted);background:transparent;border:1px solid var(--border);padding:.15rem .4rem;border-radius:6px;cursor:pointer;font-family:'Galmuri11',monospace">✏️ 별명</button>
+            <button onclick="event.stopPropagation();deleteMetPokemon(${m.id},'${m.name}')" style="font-size:.58rem;color:var(--muted);background:transparent;border:1px solid var(--border);padding:.15rem .4rem;border-radius:6px;cursor:pointer;font-family:'Galmuri11',monospace;transition:all .15s" onmouseover="this.style.color='#ff6b6b';this.style.borderColor='rgba(255,100,100,.45)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">🗑️</button>
+          </div>
         </div>`;
       row.onclick = () => openModalById(m.id);
       listEl.appendChild(row);
@@ -2517,7 +2525,10 @@ async function renderMetPage() {
         <div class="met-num">No.${String(m.id).padStart(4,'0')}</div>
         <div class="met-name">${m.name}</div>
         ${nick ? `<div class="met-nickname">💬 ${nick}</div>` : `<div class="met-date">${m.date}</div>`}
-        <button onclick="event.stopPropagation();openNicknameEdit(${m.id},'${(nick||'').replace(/'/g,"\\'")}',this)" style="font-size:.5rem;color:var(--muted);background:transparent;border:none;cursor:pointer;margin-top:.1rem">✏️</button>`;
+        <div style="display:flex;align-items:center;gap:.3rem;margin-top:.1rem">
+          <button onclick="event.stopPropagation();openNicknameEdit(${m.id},'${(nick||'').replace(/'/g,"\\'")}',this)" style="font-size:.5rem;color:var(--muted);background:transparent;border:none;cursor:pointer">✏️</button>
+          <button onclick="event.stopPropagation();deleteMetPokemon(${m.id},'${m.name}')" style="font-size:.5rem;color:var(--muted);background:transparent;border:none;cursor:pointer;transition:color .15s" onmouseover="this.style.color='#ff6b6b'" onmouseout="this.style.color='var(--muted)'">🗑️</button>
+        </div>`;
       card.onclick = () => openModalById(m.id);
       grid.appendChild(card);
     });
@@ -7645,7 +7656,7 @@ window.submitAnnouncement = async function() {
     const notifText = '공지 : ' + title;
     const batch = [];
     for (const uid of allUids) {
-      batch.push(addDoc(collection(db, 'notifications'), {
+      batch.push(addDoc(collection(db, 'notifications', uid, 'items'), {
         targetUid: uid,
         type: 'announce',
         text: notifText,
