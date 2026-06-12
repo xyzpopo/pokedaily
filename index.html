@@ -3923,21 +3923,24 @@ window.sendSelectedTourPokemons = async function() {
     if (lastTourDate !== today) {
       const cur = getUserSetting('dailyCount', 3);
       const next = Math.min(1025, cur + 1);
-      if (next > cur) {
-        saveSetting('dailyCount', next);
-        localStorage.setItem('pkdex_lastTourBonusDate', today);
-        const el = document.getElementById('s-dailyCount');
-        if (el) el.textContent = next;
-        // 즉시 덱 새로고침 (버튼 클릭 없이 바로 적용)
-        if (typeof init === 'function') {
-          const loadingEl = document.getElementById('dex-loading');
-          const contentEl = document.getElementById('dex-content');
-          if (loadingEl) loadingEl.style.display = 'flex';
-          if (contentEl) contentEl.style.display = 'none';
-          init();
-        }
-        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
+      // saveSetting 대신 직접 저장 → showSettingsToast 노출 방지 & 서버 덮어쓰기 방지
+      localStorage.setItem('pkdex_cfg_dailyCount', JSON.stringify(next));
+      localStorage.setItem('pkdex_lastTourBonusDate', today);
+      if (window.saveSettingToServer) window.saveSettingToServer('dailyCount', next);
+      const el = document.getElementById('s-dailyCount');
+      if (el) el.textContent = next;
+      // 즉시 덱 새로고침
+      if (typeof init === 'function') {
+        const loadingEl = document.getElementById('dex-loading');
+        const contentEl = document.getElementById('dex-content');
+        if (loadingEl) loadingEl.style.display = 'flex';
+        if (contentEl) contentEl.style.display = 'none';
+        init();
       }
+      showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
+    } else {
+      const label = pokemons.length === 1 ? `${pokemons[0].name} 견학` : `${pokemons.length}마리 견학`;
+      showSocialToast(`🎒 ${label}을 보냈어요!`);
     }
   } catch(e){ showSocialToast('견학 전송 실패: '+e.message); }
 };
@@ -5714,26 +5717,26 @@ window.sendSelectedFreeTourPokemons = async function() {
         ts: serverTimestamp()
       });
     }
-    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 — 즉시 적용
+    // 견학 보상: 하루 1회 오늘의 포켓몬 최대치 +1 — 즉시 적용 (채팅방/자유채팅 통합 1회)
     const today = new Date().toISOString().slice(0, 10);
-    const lastTourDate = localStorage.getItem('pkdex_lastFreeTourBonusDate');
+    const lastTourDate = localStorage.getItem('pkdex_lastTourBonusDate');
     if (lastTourDate !== today) {
       const cur = getUserSetting('dailyCount', 3);
       const next = Math.min(1025, cur + 1);
-      if (next > cur) {
-        saveSetting('dailyCount', next);
-        localStorage.setItem('pkdex_lastFreeTourBonusDate', today);
-        const el = document.getElementById('s-dailyCount');
-        if (el) el.textContent = next;
-        if (typeof init === 'function') {
-          const loadingEl = document.getElementById('dex-loading');
-          const contentEl = document.getElementById('dex-content');
-          if (loadingEl) loadingEl.style.display = 'flex';
-          if (contentEl) contentEl.style.display = 'none';
-          init();
-        }
-        showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
+      // saveSetting 대신 직접 저장 → showSettingsToast 노출 방지 & 서버 덮어쓰기 방지
+      localStorage.setItem('pkdex_cfg_dailyCount', JSON.stringify(next));
+      localStorage.setItem('pkdex_lastTourBonusDate', today);
+      if (window.saveSettingToServer) window.saveSettingToServer('dailyCount', next);
+      const el = document.getElementById('s-dailyCount');
+      if (el) el.textContent = next;
+      if (typeof init === 'function') {
+        const loadingEl = document.getElementById('dex-loading');
+        const contentEl = document.getElementById('dex-content');
+        if (loadingEl) loadingEl.style.display = 'flex';
+        if (contentEl) contentEl.style.display = 'none';
+        init();
       }
+      showSocialToast(`🎒 견학 보상! 오늘의 포켓몬 최대 ${next}마리로 바로 늘었어요!`);
     } else {
       const label = pokemons.length === 1 ? `${pokemons[0].name} 견학` : `${pokemons.length}마리 견학`;
       showSocialToast(`🎒 ${label}을 보냈어요!`);
